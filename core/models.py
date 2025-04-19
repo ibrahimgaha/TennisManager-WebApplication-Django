@@ -8,3 +8,4 @@ class User(AbstractUser):
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']  # on garde username mais email devient identifiant
+

@@ -1,0 +1,46 @@
+# Django specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Environments
+.env
+*.env
+
+# Django migrations
+*/migrations/*
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.tox/
+
+# Coverage reports
+.coverage
+.coverage.*
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pylint
+.pylint.d/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Python virtual environments
+venv/
+ENV/
+env/

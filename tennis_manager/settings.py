@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'core',
-    'match'
+    'match',
+    'abonnement_salle_de_sport',
 ]
 
 MIDDLEWARE = [

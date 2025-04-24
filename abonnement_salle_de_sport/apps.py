@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 
 
-class CoreConfig(AppConfig):
+class AbonnementSalleDeSportConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'core'
-    
+    name = 'abonnement_salle_de_sport'

@@ -7,7 +7,9 @@ from reservations.views import list_terrains,add_terrain,delete_terrain,update_t
 
 
 urlpatterns = [
-    path('api/', include('core.urls')),
+    path('auth/', include('core.urls')),
+    path('', include('match.urls')),
+    path('abonnement/', include('abonnement_salle_de_sport.urls')),
     path('admin/', admin.site.urls),
      path('admin/', admin.site.urls),
     path('res/terrains/', list_terrains, name='list_terrains'),

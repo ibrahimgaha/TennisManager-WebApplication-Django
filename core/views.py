@@ -102,7 +102,7 @@ class RegisterFaceLoginView(APIView):
             username = email.split('@')[0]  # Use the part before '@' as a default username
 
             # Create the user and store the face encoding
-            user = User.objects.create_user(username=username, email=email, password=password)  # Now including username
+            user = User.objects.create_user(username=username, email=email, password=password,role='joueur')  # Now including username
             user.face_encoding = json.dumps(face_encoding.tolist())  # Save face encoding as JSON string
             user.save()
 

@@ -2,9 +2,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
+    ROLE_CHOICES = (
+        ('coach', 'Coach'),
+        ('joueur', 'Joueur'),
+        ('admin', 'Admin'),
+    )
+
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)  # Pour reconnaissance faciale
-    face_encoding = models.TextField(null=True, blank=True)  # Store the encoding here (base64 or any other format)
-    
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    face_encoding = models.TextField(null=True, blank=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='joueur')  # New field
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  # on garde username mais email devient identifiant
+    REQUIRED_FIELDS = ['username']

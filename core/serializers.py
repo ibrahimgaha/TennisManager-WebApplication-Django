@@ -9,13 +9,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'avatar']
+        fields = ['id', 'username', 'email', 'password', 'avatar','role']
 
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
-            avatar=validated_data.get('avatar')
+            avatar=validated_data.get('avatar'),
+            role='joueur'  # Default role
+
         )
         user.set_password(validated_data['password'])
         user.save()

@@ -4,8 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-from reservations.models import CustomUser, Reservation, ReservationCoach, Terrain,Coach,Schedule
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule
+from core.models import User
 #from rest_framework.response import Response
 #from rest_framework.decorators import api_view
 @csrf_exempt
@@ -25,7 +28,10 @@ def list_terrains(request):
     #terrains = Terrain.objects.all().values()
     #return Response(terrains,terrain_id)
 
-@csrf_exempt
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def get_terrain_by_id(request, terrain_id):
     terrain = get_object_or_404(Terrain, id=terrain_id)
     return JsonResponse({
@@ -35,8 +41,16 @@ def get_terrain_by_id(request, terrain_id):
         'price_per_hour': str(terrain.price_per_hour)
     })
 
-@csrf_exempt
+def is_admin(user):
+    return user.role == 'admin'
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def add_terrain(request):
+    user = request.user  # Get the logged-in user
+    if not is_admin(user):
+        return JsonResponse({'error': 'You are not authorized to perform this action.'}, status=403)
+
     if request.method == 'POST':
         data = json.loads(request.body)
         terrain = Terrain.objects.create(
@@ -47,14 +61,28 @@ def add_terrain(request):
         return JsonResponse({'message': 'Terrain added successfully', 'terrain_id': terrain.id})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
 @csrf_exempt
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_terrain(request, terrain_id):
+    if request.user.role != 'admin':
+        return JsonResponse({'error': 'You are not authorized to perform this action.'}, status=403)
+
     terrain = get_object_or_404(Terrain, id=terrain_id)
     terrain.delete()
     return JsonResponse({'message': 'Terrain deleted successfully'})
 
-@csrf_exempt
+
+
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def update_terrain(request, terrain_id):
+    if request.user.role != 'admin':
+        return JsonResponse({'error': 'You are not authorized to perform this action.'}, status=403)
+
     if request.method == 'PUT':
         data = json.loads(request.body)
         terrain = get_object_or_404(Terrain, id=terrain_id)
@@ -65,14 +93,25 @@ def update_terrain(request, terrain_id):
         
         terrain.save()
         return JsonResponse({'message': 'Terrain updated successfully'})
+    
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-@csrf_exempt
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def make_reservation(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+
+        # Get the user from the JWT token (it should already be an instance of your custom User model)
+        user = request.user  # This should already be an instance of `User`
         
-        user = CustomUser.objects.get(id=data['user_id'])
+        # If not, you can explicitly check the type and cast it to the correct custom user model
+        if not isinstance(user, User):
+            return JsonResponse({'error': 'Invalid user type'}, status=400)
+        
         terrain = Terrain.objects.get(id=data['terrain_id'])
         
         start_time = data['start_time']
@@ -81,6 +120,7 @@ def make_reservation(request):
         start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
         end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
         
+        # Calculate duration in hours
         duration = (end_time_obj - start_time_obj).seconds / 3600
         if duration < 1:
             duration = 1
@@ -88,6 +128,7 @@ def make_reservation(request):
         
         total_price = duration * terrain.price_per_hour
         
+        # Create the reservation
         reservation = Reservation.objects.create(
             user=user,
             terrain=terrain,
@@ -104,29 +145,49 @@ def make_reservation(request):
                 'date': data['date'],
                 'start_time': start_time,
                 'end_time': end_time,
-                'total_price': total_price
+                'total_price': str(total_price)
             }
         })
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def get_all_coaches(request):
-    coaches = Coach.objects.all().values("id", "name", "specialty", "price_per_hour", "phone", "email", "experience_years")
-    return JsonResponse(list(coaches), safe=False)
+    try:
+        coaches = Coach.objects.all().values(
+            "id", "name", "specialty", "price_per_hour", "phone", "email", "experience_years"
+        )
+        return JsonResponse(list(coaches), safe=False, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def check_coach_availability(request, coach_id, date):
-    schedules = Schedule.objects.filter(coach_id=coach_id, date=date, is_booked=False).values("start_time", "end_time")
-    return JsonResponse({"available_times": list(schedules)})
+    try:
+        # Ensure the coach exists
+        coach = get_object_or_404(Coach, id=coach_id)
 
+        schedules = Schedule.objects.filter(
+            coach=coach,
+            date=date,
+            is_booked=False
+        ).values("start_time", "end_time")
 
+        return JsonResponse({"available_times": list(schedules)}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
-@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def make_coach_reservation(request, coach_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user = get_object_or_404(CustomUser, id=data['user_id'])
+            user = get_object_or_404(User, id=data['user_id'])
             coach = get_object_or_404(Coach, id=coach_id)
             date = data['date']
             

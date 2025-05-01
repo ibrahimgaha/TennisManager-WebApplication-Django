@@ -1,7 +1,7 @@
 from django.urls import path
 
 from reservations.views import add_terrain, check_availability, check_coach_availability, delete_coach_reservation, get_all_coaches, get_terrain_by_id, list_terrains, make_coach_reservation, make_reservation,delete_terrain, update_coach_reservation,update_terrain,getTerrainbyid
-
+from core.views import RegisterView
 
 urlpatterns = [
     path('terrains/', list_terrains, name='list_terrains'),
@@ -19,6 +19,9 @@ urlpatterns = [
 
     path('reservations/coach/<int:reservation_id>/delete/', delete_coach_reservation, name='delete_coach_reservation'),
     path('reservations/coach/<int:reservation_id>/update/', update_coach_reservation, name='update_coach_reservation'),
+    path('register/', RegisterView.as_view(), name='register'),
+
+    
 
 ]
 

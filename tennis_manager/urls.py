@@ -8,6 +8,8 @@ urlpatterns = [
     path('', include('match.urls')),
     path('abonnement/', include('abonnement_salle_de_sport.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('abonnement_tennis.urls')),  # Inclure les URL de l'application abonnement_tennis
+
 ]
 
 # Serve media files during development

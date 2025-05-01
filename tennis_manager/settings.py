@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'core',
     'match',
     'abonnement_salle_de_sport',
+    'abonnement_tennis',
 ]
 
 MIDDLEWARE = [

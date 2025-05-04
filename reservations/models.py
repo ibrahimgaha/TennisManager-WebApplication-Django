@@ -30,18 +30,16 @@ class Reservation(models.Model):
         return f"{self.user.username} - {self.terrain.name} ({self.date} {self.start_time}-{self.end_time})"
 
     def calculate_price(self):
-        # Convert start and end times to datetime objects to calculate the duration
         start = timedelta(hours=self.start_time.hour, minutes=self.start_time.minute)
         end = timedelta(hours=self.end_time.hour, minutes=self.end_time.minute)
 
-        # Calculate the duration in hours
-        duration = (end - start).seconds / 3600  # Convert seconds to hours
+     
+        duration = (end - start).seconds / 3600  
 
-        # If the duration is less than 1 hour, treat it as 1 hour
+      
         if duration < 1:
             duration = 1
 
-        # Calculate the total price based on the duration
         total_price = duration * self.terrain.price_per_hour
 
         return total_price
@@ -49,40 +47,53 @@ class Reservation(models.Model):
 
 
 
-# Coach Model
 class Coach(models.Model):
     name = models.CharField(max_length=100)
-    specialty = models.CharField(max_length=100)
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     phone = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(unique=True)
-    experience_years = models.IntegerField(default=0)
+    experience = models.IntegerField(null=True)  # Allow experience to be null
 
-    
-# Schedule Model
-class Schedule(models.Model):
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="schedules")
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    is_booked = models.BooleanField(default=False)
-
+    class Meta:
+        db_table = 'coach'
     def __str__(self):
-        return f"{self.coach.name} - {self.date} ({self.start_time} to {self.end_time})"
+        return self.name
+
+
+
+
     
 class ReservationCoach(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="reservations", null=True)  # Fix: Added coach field
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # Store computed price
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)  # This should be directly referencing Coach
+    date = models.DateField(default=False)
+    start_time = models.TimeField(default=False)
+    end_time = models.TimeField(default=False)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'reservations_coach'  # Keep this name
 
     def save(self, *args, **kwargs):
         duration = (self.end_time.hour + self.end_time.minute / 60) - (self.start_time.hour + self.start_time.minute / 60)
-        duration = max(duration, 1)  # Ensure at least 1 hour charge
+        duration = max(duration, 1)
         self.total_price = Decimal(duration) * self.coach.price_per_hour
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Reservation by {self.user.username} with {self.coach.name} on {self.date} from {self.start_time} to {self.end_time}"
+        return f"Reservation by {self.user.username} with {self.coach.name} on {self.date}"
+
+
+class Schedule(models.Model):
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="schedules")  # Same here, directly reference Coach
+
+    date = models.DateField(default=False)
+    start_time = models.TimeField(default=False)
+    end_time = models.TimeField(default=False)
+    is_booked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.coach.name} - {self.date} ({self.start_time} to {self.end_time})"
+
+    class Meta:
+        db_table = 'reservations_coach_model'  # Optional, based on your needs

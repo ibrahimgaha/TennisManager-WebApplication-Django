@@ -97,38 +97,36 @@ def update_terrain(request, terrain_id):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def make_reservation(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        user = request.user
 
-        # Get the user from the JWT token (it should already be an instance of your custom User model)
-        user = request.user  # This should already be an instance of `User`
-        
-        # If not, you can explicitly check the type and cast it to the correct custom user model
-        if not isinstance(user, User):
-            return JsonResponse({'error': 'Invalid user type'}, status=400)
-        
-        terrain = Terrain.objects.get(id=data['terrain_id'])
-        
+        # Vérifie que l'utilisateur est bien un joueur
+        if not hasattr(user, 'role') or user.role.lower() != 'joueur':
+            return JsonResponse({'error': 'Only users with role "joueur" can make a reservation.'}, status=403)
+
+        try:
+            terrain = Terrain.objects.get(id=data['terrain_id'])
+        except Terrain.DoesNotExist:
+            return JsonResponse({'error': 'Terrain not found.'}, status=404)
+
         start_time = data['start_time']
         end_time = data['end_time']
-        
+
         start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
         end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
-        
-        # Calculate duration in hours
+
         duration = (end_time_obj - start_time_obj).seconds / 3600
         if duration < 1:
             duration = 1
         duration = Decimal(duration)
-        
+
         total_price = duration * terrain.price_per_hour
-        
-        # Create the reservation
+
         reservation = Reservation.objects.create(
             user=user,
             terrain=terrain,
@@ -136,7 +134,7 @@ def make_reservation(request):
             start_time=start_time,
             end_time=end_time
         )
-        
+
         return JsonResponse({
             'message': 'Reservation created successfully',
             'reservation': {
@@ -148,19 +146,153 @@ def make_reservation(request):
                 'total_price': str(total_price)
             }
         })
-    
+
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_reservation(request, reservation_id):
+    user = request.user
+    if not hasattr(user, 'role') or user.role.lower() != 'joueur':
+        return JsonResponse({'error': 'Only players can update reservations.'}, status=403)
+
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+    except Reservation.DoesNotExist:
+        return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    if reservation.user != user:
+        return JsonResponse({'error': 'You are not allowed to update this reservation.'}, status=403)
+
+    data = json.loads(request.body)
+    try:
+        terrain = Terrain.objects.get(id=data['terrain_id'])
+    except Terrain.DoesNotExist:
+        return JsonResponse({'error': 'Terrain not found.'}, status=404)
+
+    reservation.terrain = terrain
+    reservation.date = data['date']
+    reservation.start_time = data['start_time']
+    reservation.end_time = data['end_time']
+    reservation.save()
+
+    return JsonResponse({'message': 'Reservation updated successfully'})
+
+
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_reservation(request, reservation_id):
+    user = request.user
+    if not hasattr(user, 'role') or user.role.lower() != 'joueur':
+        return JsonResponse({'error': 'Only players can delete reservations.'}, status=403)
+
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+    except Reservation.DoesNotExist:
+        return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    if reservation.user != user:
+        return JsonResponse({'error': 'You are not allowed to delete this reservation.'}, status=403)
+
+    reservation.delete()
+    return JsonResponse({'message': 'Reservation deleted successfully'}, status=204)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_reservations(request):
+    user = request.user
+
+    if not hasattr(user, 'role') or user.role.lower() != 'joueur':
+        return JsonResponse({'error': 'Only players can view their reservations.'}, status=403)
+
+    # Récupère toutes les réservations de l'utilisateur
+    reservations = Reservation.objects.filter(user=user)
+
+    if not reservations:
+        return JsonResponse({'message': 'No reservations found for this user.'}, status=404)
+
+    # Format des réservations à renvoyer
+    reservation_list = []
+    for reservation in reservations:
+        reservation_list.append({
+            'id': reservation.id,
+            'terrain': reservation.terrain.name,
+            'date': reservation.date,
+            'start_time': reservation.start_time,
+            'end_time': reservation.end_time,
+        })
+
+    return JsonResponse({'reservations': reservation_list}, status=200)
+
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_all_coaches(request):
     try:
         coaches = Coach.objects.all().values(
-            "id", "name", "specialty", "price_per_hour", "phone", "email", "experience_years"
+            "id", "name", "price_per_hour", "phone", "email", "experience"
         )
         return JsonResponse(list(coaches), safe=False, status=200)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+
+
+def is_coach(user):
+    return user.role == 'coach'
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def create_or_update_schedule(request):
+    user = request.user
+
+    # Check if the user is an admin (can control other coaches' schedules)
+    if user.role != 'admin':  # Ensure the user is an admin
+        return Response({"error": "Authenticated user is not an admin."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get the coach_id from the request data (this will be provided by the admin)
+    coach_id = request.data.get('coach_id')  # Ensure the admin specifies which coach's schedule to modify
+
+    if not coach_id:
+        return Response({"error": "Coach ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        coach = Coach.objects.get(id=coach_id)  # Get the coach by ID
+    except Coach.DoesNotExist:
+        return Response({"error": "Coach not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Parse the schedule data from the request
+    schedule_data = request.data.get('schedule', [])
+
+    if not schedule_data:
+        return Response({"error": "No schedule data provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Iterate over the provided schedule data and save or update the schedule for the specified coach
+    for item in schedule_data:
+        date = item.get('date')
+        start_time = item.get('start_time')
+        end_time = item.get('end_time')
+
+        if not date or not start_time or not end_time:
+            return Response({"error": "Invalid schedule data provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create or update the schedule entry for the specified coach
+        schedule, created = Schedule.objects.update_or_create(
+            coach=coach,  # Use the specified coach
+            date=date,
+            start_time=start_time,
+            end_time=end_time,
+            defaults={'is_booked': False}  # You can add more default values if needed
+        )
+
+    return Response({"status": "success", "message": "Schedule has been updated/created successfully."}, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -191,22 +323,21 @@ def make_coach_reservation(request, coach_id):
             coach = get_object_or_404(Coach, id=coach_id)
             date = data['date']
             
-            # Convert string times to Python time objects
+          
             try:
                 requested_start_time = datetime.strptime(data['start_time'], "%H:%M").time()
                 requested_end_time = datetime.strptime(data['end_time'], "%H:%M").time()
             except ValueError as e:
                 return JsonResponse({'error': f'Invalid time format: {str(e)}'}, status=400)
 
-            # Define allowed reservation interval (6 AM to 6 PM)
+           
             min_time = time(6, 0)
             max_time = time(18, 0)
 
-            # Ensure reservation is within allowed hours
+           
             if not (min_time <= requested_start_time < max_time and min_time < requested_end_time <= max_time):
                 return JsonResponse({'error': 'Reservations are only allowed between 06:00 and 18:00.'}, status=400)
 
-            # Check if requested time fits within an available schedule
             available_schedule = Schedule.objects.filter(
                 coach=coach,
                 date=date,
@@ -218,11 +349,11 @@ def make_coach_reservation(request, coach_id):
             if not available_schedule:
                 return JsonResponse({'error': 'Coach is not available at this time.'}, status=400)
 
-            # Mark the schedule as booked
+          
             available_schedule.is_booked = True
             available_schedule.save()
 
-            # Calculate duration & total price
+           
             duration = max(
                 (requested_end_time.hour + requested_end_time.minute / 60) -
                 (requested_start_time.hour + requested_start_time.minute / 60),
@@ -352,3 +483,87 @@ def delete_coach_reservation(request, reservation_id):
         return JsonResponse({'message': 'Reservation deleted successfully'})
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def add_coach(request):
+    user = request.user  
+    if not is_admin(user):
+        return JsonResponse({'error': 'You are not authorized to perform this action.'}, status=403)
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+     
+        required_fields = ['name',  'price_per_hour', 'phone', 'email', 'experience']
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+
+        try:
+            coach = Coach.objects.create(
+                name=data['name'],
+                price_per_hour=Decimal(data['price_per_hour']),
+                phone=data['phone'],
+                email=data['email'],
+                experience=data['experience']
+            )
+            return JsonResponse({'message': 'Coach added successfully', 'coach_id': coach.id})
+        except Exception as e:
+            return JsonResponse({'error': f'Error creating coach: {str(e)}'}, status=500)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+from rest_framework.response import Response
+from rest_framework import status
+
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_coach(request, coach_id):
+    user = request.user  
+    if not is_admin(user):
+        return JsonResponse({'error': 'You are not authorized to perform this action.'}, status=403)
+
+    try:
+        coach = Coach.objects.get(id=coach_id)
+        coach.delete()
+        return Response({'message': 'Coach deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except Coach.DoesNotExist:
+        return Response({'error': 'Coach not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def get_player_coach_reservations(request):
+    user = request.user
+
+    # Verify if the user is a player
+    if not hasattr(user, 'role') or user.role.lower() != 'joueur':
+        return JsonResponse({'error': 'Only players can view their coach reservations.'}, status=403)
+
+    # Retrieve all coach reservations for the current player
+    reservations = ReservationCoach.objects.filter(user=user)
+
+    if not reservations:
+        return JsonResponse({'message': 'No coach reservations found for this player.'}, status=404)
+
+    # Format reservations to return in the response
+    reservation_list = []
+    for reservation in reservations:
+        reservation_list.append({
+            'id': reservation.id,
+            'coach': reservation.coach.name,
+            'date': reservation.date,
+            'start_time': reservation.start_time,
+            'end_time': reservation.end_time,
+            'total_price': str(reservation.total_price),
+        })
+
+    return JsonResponse({'reservations': reservation_list}, status=200)

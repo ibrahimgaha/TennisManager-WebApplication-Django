@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 
-
+#hj bzkb
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

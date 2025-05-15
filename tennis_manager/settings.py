@@ -31,7 +31,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f29f17a64bbfddc3bc95575b706d02657dfeaaf
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'reservations',
     'match',
     'abonnement_salle_de_sport',
+    'abonnement_tennis',
 ]
 
 MIDDLEWARE = [
@@ -59,9 +63,13 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
     ),
 }
+
 
 ROOT_URLCONF = 'tennis_manager.urls'
 

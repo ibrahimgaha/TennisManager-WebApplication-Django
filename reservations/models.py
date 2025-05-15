@@ -4,12 +4,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-
-
-# Custom User Model
-class CustomUser(models.Model):
-    phone = models.CharField(max_length=15, blank=True, null=True)
-    username = models.CharField(max_length=20,blank=True, null=True )
+from core.models import User
 
 # Terrain Model
 class Terrain(models.Model):
@@ -22,7 +17,7 @@ class Terrain(models.Model):
         return self.name
 
 class Reservation(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     terrain = models.ForeignKey(Terrain, on_delete=models.CASCADE)
     date = models.DateField()
     start_time = models.TimeField()
@@ -76,7 +71,7 @@ class Schedule(models.Model):
         return f"{self.coach.name} - {self.date} ({self.start_time} to {self.end_time})"
     
 class ReservationCoach(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="reservations", null=True)  # Fix: Added coach field
     date = models.DateField()
     start_time = models.TimeField()

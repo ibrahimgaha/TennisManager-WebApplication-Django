@@ -9,8 +9,10 @@ from core.views import RegisterView
 urlpatterns = [
     path('auth/', include('core.urls')),
     path('', include('match.urls')),
-    path('abonnement/', include('abonnement_salle_de_sport.urls')),
+    path('api/', include('abonnement_salle_de_sport.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('abonnement_tennis.urls')),  # Inclure les URL de l'application abonnement_tennis
+
      path('admin/', admin.site.urls),
     path('res/terrains/', list_terrains, name='list_terrains'),
     path('res/terrains/add/', add_terrain, name='add_terrain'),  # ✅ Fixed path

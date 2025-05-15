@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from .models import AbonnementSalleDeSport, AbonnementEquipement
-
-class AbonnementSalleDeSportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AbonnementSalleDeSport
-        fields = ['id', 'utilisateur', 'date_debut', 'date_fin', 'salle', 'est_actif', 'date_creation']
-        read_only_fields = ['utilisateur', 'date_creation']
+from .models import AbonnementEquipement
 
 class AbonnementEquipementSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import AbonnementSalleDeSportCreateView, AbonnementEquipementCreateView
+from .views import AbonnementEquipementCreateView, EquipementChoicesView
 
 urlpatterns = [
-    path('salle/', AbonnementSalleDeSportCreateView.as_view(), name='abonnement-salle-create'),
-    path('equipement/', AbonnementEquipementCreateView.as_view(), name='abonnement-equipement-create'),
+    # Vue pour créer un abonnement à un équipement
+    path('abonnement-equipement/', AbonnementEquipementCreateView.as_view(), name='abonnement-equipement-create'),
+
+    # Vue pour récupérer les choix d'équipement
+    path('equipement-choices/', EquipementChoicesView.as_view(), name='equipement-choices'),
 ]

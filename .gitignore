@@ -44,3 +44,4 @@ dmypy.json
 venv/
 ENV/
 env/
+db.sqlite3

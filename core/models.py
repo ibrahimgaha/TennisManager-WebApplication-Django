@@ -6,6 +6,8 @@ class User(AbstractUser):
         ('coach', 'Coach'),
         ('joueur', 'Joueur'),
         ('admin', 'Admin'),
+        ('abonnée', 'Abonné'),  # NEW ROLE ADDED HERE
+
     )
 
     email = models.EmailField(unique=True)

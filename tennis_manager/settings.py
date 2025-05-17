@@ -70,7 +70,7 @@ ROOT_URLCONF = 'tennis_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,6 +80,13 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # or the folder where your static files actually reside
 ]
 
 WSGI_APPLICATION = 'tennis_manager.wsgi.application'

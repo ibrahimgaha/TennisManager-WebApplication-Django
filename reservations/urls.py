@@ -1,8 +1,9 @@
+from django.conf import settings
 from django.urls import path
-
+from django.conf.urls.static import static
 from reservations.views import add_coach, add_terrain, check_availability, check_coach_availability, create_or_update_schedule, delete_coach, delete_coach_reservation, delete_reservation, get_all_coaches, get_player_coach_reservations, get_terrain_by_id, get_user_reservations, list_terrains, make_coach_reservation, make_reservation,delete_terrain, update_coach_reservation, update_reservation,update_terrain,getTerrainbyid
 from core.views import RegisterView
-
+from .views import nav
 urlpatterns = [
     path('terrains/', list_terrains, name='list_terrains'),
     path('terrains/add/', add_terrain, name='add_terrain'),
@@ -26,9 +27,9 @@ urlpatterns = [
         path('reservations/', get_user_reservations, name='get_user_reservations'),
  path('create-or-update-schedule/', create_or_update_schedule, name='create-or-update-schedule'),
      path('player/reservations/', get_player_coach_reservations, name='get_player_coach_reservations'),
-
+path('home/',nav,name='navbar')
 
     
 
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

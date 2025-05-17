@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta,time
 from decimal import Decimal
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -567,3 +567,5 @@ def get_player_coach_reservations(request):
         })
 
     return JsonResponse({'reservations': reservation_list}, status=200)
+def nav(request):
+    return render(request, 'html/navbar.html')

@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Navbar</title>
+
+    <!-- Bootstrap from CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+
+    <!-- Your local static CSS files -->
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css.map' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css.map' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/3dslider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/prettyPhoto.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    
+    <!-- You probably don't need .map files linked in HTML -->
+</head>
+<body>
+  <section id="top">
+    <header>
+      <div className="container">
+        <div className="header-top">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="full">
+                <div className="logo">
+                  <a href="C:\Users\fafaf\ppg-front\public\index.html"><img src="reservations\templates\html\static\images\logo.png" alt="#" /></a>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="right_top_section">
+                {/* Social Icons */}
+                <ul className="social-icons pull-left">
+                  <li><a className="facebook" href="#"><i className="fa fa-facebook"></i></a></li>
+                  <li><a className="twitter" href="#"><i className="fa fa-twitter"></i></a></li>
+                  <li><a className="youtube" href="#"><i className="fa fa-youtube-play"></i></a></li>
+                  <li><a className="pinterest" href="#"><i className="fa fa-pinterest-p"></i></a></li>
+                </ul>
+                {/* End Social Icons */}
+
+                {/* Button Section */}
+                <ul className="login">
+                  <li className="login-modal">
+                    <a href="#" className="login"><i className="fa fa-user"></i>Login</a>
+                  </li>
+                  <li>
+                    <div className="cart-option">
+                      <a href="#"><i className="fa fa-shopping-cart"></i>Register</a>
+                    </div>
+                  </li>
+                </ul>
+                {/* End Button Section */}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="header-bottom">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="full">
+                <div className="main-menu-section">
+                  <div className="menu">
+                    <nav className="navbar navbar-inverse">
+                      <div className="navbar-header">
+                        <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
+                          <span className="sr-only">Toggle navigation</span>
+                          <span className="icon-bar"></span>
+                          <span className="icon-bar"></span>
+                          <span className="icon-bar"></span>
+                        </button>
+                        <a className="navbar-brand" href="#">Menu</a>
+                      </div>
+                      <div className="collapse navbar-collapse js-navbar-collapse">
+                        <ul className="nav navbar-nav">
+                          <li className="active"><a href="index.html">Home</a></li>
+                          <li><a href="about.html">About</a></li>
+                          <li><a href="team.html">Team</a></li>
+                          <li><a href="news.html">News</a></li>
+                          <li className="dropdown mega-dropdown">
+                            <a href="match" className="dropdown-toggle" data-toggle="dropdown">Match<span className="caret"></span></a>
+                            <ul className="dropdown-menu mega-dropdown-menu">
+                              <li className="col-sm-8">
+                                <ul>
+                                  <li className="dropdown-header">Men Collection</li>
+                                  <div id="menCollection" className="carousel slide" data-ride="carousel">
+                                    <div className="carousel-inner">
+                                      <div className="item active">
+                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
+                                      </div>
+                                      <div className="item">
+                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
+                                      </div>
+                                      <div className="item">
+                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
+                                      </div>
+                                    </div>
+                                    <a className="left carousel-control" href="#menCollection" role="button" data-slide="prev">
+                                      <span className="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                      <span className="sr-only">Previous</span>
+                                    </a>
+                                    <a className="right carousel-control" href="#menCollection" role="button" data-slide="next">
+                                      <span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                      <span className="sr-only">Next</span>
+                                    </a>
+                                  </div>
+                                </ul>
+                              </li>
+                              <li className="col-sm-4">
+                                <ul className="menu-inner">
+                                  <li className="dropdown-header">Next Matches</li>
+                                  <li><a href="#">Contrary vs classical</a></li>
+                                  <li><a href="#">Discovered vs undoubtable</a></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                          <li><a href="blog.html">Blog</a></li>
+                          <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                      </div>
+                    </nav>
+                    <div className="search-bar">
+                      <div id="imaginary_container">
+                        <div className="input-group stylish-input-group">
+                          <input type="text" className="form-control" placeholder="Search" />
+                          <span className="input-group-addon">
+                            <button type="submit"><i className="fa fa-search" aria-hidden="true"></i></button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div className="full-slider">
+      <div id="carousel-example-generic" className="carousel slide">
+        <ol className="carousel-indicators">
+          <li data-target="#carousel-example-generic" data-slide-to="0" className="active"></li>
+          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+          <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+        </ol>
+
+        <div className="carousel-inner" role="listbox">
+          <div className="item active deepskyblue" data-ride="carousel" data-interval="5000">
+            <div className="carousel-caption">
+              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
+              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                <div className="slider-contant" data-animation="animated fadeInRight">
+                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
+                  <p>If you use this site regularly and would like to help keep the site on the Internet, please consider donating a small sum to help pay..</p>
+                  <button className="btn btn-primary btn-lg">Read More</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="item skyblue" data-ride="carousel" data-interval="5000">
+            <div className="carousel-caption">
+              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
+              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                <div className="slider-contant" data-animation="animated fadeInRight">
+                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
+                  <p>You can make a case for several potential winners of the expanded European Championships.</p>
+                  <button className="btn btn-primary btn-lg">Button</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="item darkerskyblue" data-ride="carousel" data-interval="5000">
+            <div className="carousel-caption">
+              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
+              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                <div className="slider-contant" data-animation="animated fadeInRight">
+                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
+                  <p>You can make a case for several potential winners of the expanded European Championships.</p>
+                  <button className="btn btn-primary btn-lg">Button</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a className="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+          <span className="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span className="sr-only">Previous</span>
+        </a>
+        <a className="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+          <span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span className="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+  </section>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="{% static 'js/3dslider.js' %}"></script>
+  <script src="{% static 'js/all.js' %}"></script>
+  <script src="{% static 'js/animate.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script src="{% static 'js/hoverdir.js' %}"></script>
+  <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+  <script src="{% static 'js/jquery.vide.js' %}"></script>
+  <script src="{% static 'js/map.js' %}"></script>
+  <script src="{% static 'js/modernizer.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.js' %}"></script>
+  <script src="{% static 'js/portfolio.js' %}"></script>
+  <script src="{% static 'js/retina.js' %}"></script>
+  <script src="{% static 'js/scroll.js' %}"></script>
+</body>
+</html>
+

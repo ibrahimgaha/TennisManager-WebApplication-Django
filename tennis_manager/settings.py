@@ -31,10 +31,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f29f17a64bbfddc3bc95575b706d02657dfeaaf
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,18 +63,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
     'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-    ),
 }
-
 
 ROOT_URLCONF = 'tennis_manager.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,6 +80,13 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # or the folder where your static files actually reside
 ]
 
 WSGI_APPLICATION = 'tennis_manager.wsgi.application'

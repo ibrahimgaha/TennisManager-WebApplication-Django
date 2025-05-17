@@ -2,16 +2,16 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-from reservations.views import list_terrains,add_terrain,delete_terrain,update_terrain,get_terrain_by_id,make_reservation,check_coach_availability,make_coach_reservation,delete_coach_reservation,update_coach_reservation, get_all_coaches
+from reservations.views import create_or_update_schedule, delete_coach, delete_reservation, get_player_coach_reservations, get_user_reservations, list_terrains,add_terrain,delete_terrain, update_reservation,update_terrain,get_terrain_by_id,make_reservation,check_coach_availability,make_coach_reservation,delete_coach_reservation,update_coach_reservation, get_all_coaches,nav
 from core.views import RegisterView
-
-
+from reservations.views import add_coach
 urlpatterns = [
     path('auth/', include('core.urls')),
     path('', include('match.urls')),
     path('api/', include('abonnement_salle_de_sport.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('abonnement_tennis.urls')),  # Inclure les URL de l'application abonnement_tennis
+    path('home/',nav,name='navbar'),
 
      path('admin/', admin.site.urls),
     path('res/terrains/', list_terrains, name='list_terrains'),
@@ -28,6 +28,16 @@ urlpatterns = [
     path('reservations/coach/<int:reservation_id>/update/', update_coach_reservation, name='update_coach_reservation'),
     path('core/', include('core.urls')),
     path('register/', RegisterView.as_view(), name='register'),
+   path('coaches/<int:coach_id>/delete/', delete_coach, name='delete_coach'),
+    path('add_coach/',add_coach, name='add_coach'),
+   
+    path('reservations/<int:reservation_id>/update/', update_reservation, name='update_reservation'),
+    path('reservations/<int:reservation_id>/delete/', delete_reservation, name='delete_reservation'),
+    path('reservations/', get_user_reservations, name='get_user_reservations'),
+     path('create-or-update-schedule/', create_or_update_schedule, name='create-or-update-schedule'),
+     path('player/reservations/', get_player_coach_reservations, name='get_player_coach_reservations'),
+
+    
 ]
 
 

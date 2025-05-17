@@ -117,3 +117,18 @@ class RegisterFaceLoginView(APIView):
             if os.path.exists(full_image_path):
                 os.remove(full_image_path)
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class CoachListView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Retrieve all users with the role 'coach'
+        coaches = User.objects.filter(role='coach')
+        
+        # If no coaches found, return a 404 response
+        if not coaches.exists():
+            return Response({"message": "No coaches found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Create a list of coaches with desired data (e.g., username and email)
+        coach_data = [{"username": coach.username, "email": coach.email} for coach in coaches]
+
+        return Response(coach_data, status=status.HTTP_200_OK)

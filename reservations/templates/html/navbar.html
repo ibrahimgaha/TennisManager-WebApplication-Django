@@ -1,231 +1,304 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Navbar</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Responsive Navbar</title>
 
-    <!-- Bootstrap from CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <!-- Fonts and Styles -->
+  <link rel="stylesheet" type="text/css" href="style.css" />
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-    <!-- Your local static CSS files -->
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css.map' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css.map' %}" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/3dslider.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/prettyPhoto.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+    }
+
+    nav {
+      padding: 5px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+                  rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+      background-color: black;
+      
+      position: sticky;
+      top: 0;            /* sticks to top when scrolling */
+      z-index: 10;
+    }
     
-    <!-- You probably don't need .map files linked in HTML -->
+
+    nav .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    nav .logo img {
+      height: 50px;
+      margin-right: 50px;
+      margin-left:-50px
+    }
+
+    nav .logo h1 {
+      font-size: 1.1rem;
+      background: linear-gradient(to right,rgb(133, 239, 80) 0%,rgb(202, 246, 179) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    nav ul li {
+      margin-left: 1.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #FFF;
+      font-size: 95%;
+      font-weight: 400;
+      padding: 4px 8px;
+      border-radius: 5px;
+      
+    }
+
+    nav ul li a:hover {
+      background-color:rgb(67, 66, 66);
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+    }
+
+    .hamburger .line {
+      width: 25px;
+      height: 2px;
+      background-color: #1f1f1f;
+      margin: 5px auto;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .hamburger-active .line:nth-child(1) {
+      transform: rotate(45deg) translateY(8px);
+    }
+
+    .hamburger-active .line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-active .line:nth-child(3) {
+      transform: rotate(-45deg) translateY(-8px);
+    }
+
+    .menubar {
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 60%;
+      height: 100vh;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 100px;
+      transition: left 0.3s ease-in-out;
+      z-index: 2;
+    }
+
+    .menubar.active {
+      left: 0;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .menubar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .menubar ul li {
+      margin-bottom: 32px;
+    }
+
+    .menubar ul li a {
+      text-decoration: none;
+      color: #000;
+      font-size: 95%;
+      font-weight: 400;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .menubar ul li a:hover {
+      background-color: #f5f5f5;
+    }
+
+    @media screen and (max-width: 790px) {
+      .hamburger {
+        display: block;
+      }
+
+      nav ul {
+        display: none;
+      }
+    }
+    .right-side {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+  
+    .social-icons {
+      display: flex;
+      gap: 15px;
+     
+      align-items: center;
+    }
+  
+    .social-icons a {
+      color: #c7ea46; /* tennis ball color */
+      transition: color 0.3s ease;
+      display: flex;
+      
+      align-items: center;
+    }
+  
+    .social-icons a:hover {
+      color: #a5d025; /* darker tennis ball on hover */
+    }
+  
+    .social-icons svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+  
+    .hamburger {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 22px;
+      width: 26px;
+    }
+  
+    .hamburger .line {
+      width: 100%;
+      height: 3px;
+      background: white;
+      border-radius: 10px;
+    }
+  
+    /* Optional: On small screens, you can add responsive styling */
+    @media (max-width: 768px) {
+      ul {
+        display: none; /* Hide menu on mobile for hamburger */
+      }
+    }
+ 
+
+
+
+
+
+
+
+
+    
+  </style>
 </head>
+
 <body>
-  <section id="top">
-    <header>
-      <div className="container">
-        <div className="header-top">
-          <div className="row">
-            <div className="col-md-6">
-              <div className="full">
-                <div className="logo">
-                  <a href="C:\Users\fafaf\ppg-front\public\index.html"><img src="reservations\templates\html\static\images\logo.png" alt="#" /></a>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="right_top_section">
-                {/* Social Icons */}
-                <ul className="social-icons pull-left">
-                  <li><a className="facebook" href="#"><i className="fa fa-facebook"></i></a></li>
-                  <li><a className="twitter" href="#"><i className="fa fa-twitter"></i></a></li>
-                  <li><a className="youtube" href="#"><i className="fa fa-youtube-play"></i></a></li>
-                  <li><a className="pinterest" href="#"><i className="fa fa-pinterest-p"></i></a></li>
-                </ul>
-                {/* End Social Icons */}
+  {% load static %}
+  <nav>
+    <div class="logo">
+      <img src="{% static 'images/image-removebg-preview (1).png' %}" alt="logo" />
+      <h1 style="margin-left:-45px">Tennis</h1><h1>Club</h1>
+    </div>
 
-                {/* Button Section */}
-                <ul className="login">
-                  <li className="login-modal">
-                    <a href="#" className="login"><i className="fa fa-user"></i>Login</a>
-                  </li>
-                  <li>
-                    <div className="cart-option">
-                      <a href="#"><i className="fa fa-shopping-cart"></i>Register</a>
-                    </div>
-                  </li>
-                </ul>
-                {/* End Button Section */}
-              </div>
-            </div>
-          </div>
-        </div>
+  
 
-        <div className="header-bottom">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="full">
-                <div className="main-menu-section">
-                  <div className="menu">
-                    <nav className="navbar navbar-inverse">
-                      <div className="navbar-header">
-                        <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
-                          <span className="sr-only">Toggle navigation</span>
-                          <span className="icon-bar"></span>
-                          <span className="icon-bar"></span>
-                          <span className="icon-bar"></span>
-                        </button>
-                        <a className="navbar-brand" href="#">Menu</a>
-                      </div>
-                      <div className="collapse navbar-collapse js-navbar-collapse">
-                        <ul className="nav navbar-nav">
-                          <li className="active"><a href="index.html">Home</a></li>
-                          <li><a href="about.html">About</a></li>
-                          <li><a href="team.html">Team</a></li>
-                          <li><a href="news.html">News</a></li>
-                          <li className="dropdown mega-dropdown">
-                            <a href="match" className="dropdown-toggle" data-toggle="dropdown">Match<span className="caret"></span></a>
-                            <ul className="dropdown-menu mega-dropdown-menu">
-                              <li className="col-sm-8">
-                                <ul>
-                                  <li className="dropdown-header">Men Collection</li>
-                                  <div id="menCollection" className="carousel slide" data-ride="carousel">
-                                    <div className="carousel-inner">
-                                      <div className="item active">
-                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
-                                      </div>
-                                      <div className="item">
-                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
-                                      </div>
-                                      <div className="item">
-                                        <div className="banner-for-match"><a href="#"><img className="img-responsive" src="images/match-banner1.jpg" alt="#" /></a></div>
-                                      </div>
-                                    </div>
-                                    <a className="left carousel-control" href="#menCollection" role="button" data-slide="prev">
-                                      <span className="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                      <span className="sr-only">Previous</span>
-                                    </a>
-                                    <a className="right carousel-control" href="#menCollection" role="button" data-slide="next">
-                                      <span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                      <span className="sr-only">Next</span>
-                                    </a>
-                                  </div>
-                                </ul>
-                              </li>
-                              <li className="col-sm-4">
-                                <ul className="menu-inner">
-                                  <li className="dropdown-header">Next Matches</li>
-                                  <li><a href="#">Contrary vs classical</a></li>
-                                  <li><a href="#">Discovered vs undoubtable</a></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </li>
-                          <li><a href="blog.html">Blog</a></li>
-                          <li><a href="contact.html">Contact</a></li>
-                        </ul>
-                      </div>
-                    </nav>
-                    <div className="search-bar">
-                      <div id="imaginary_container">
-                        <div className="input-group stylish-input-group">
-                          <input type="text" className="form-control" placeholder="Search" />
-                          <span className="input-group-addon">
-                            <button type="submit"><i className="fa fa-search" aria-hidden="true"></i></button>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
+    <div class="right-side">
+
+    </div>
+      <div class="social-icons" style="margin-left: 1250px;">
+
+        <a href="#" aria-label="Facebook" class="facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M22.675 0h-21.35c-0.732 0-1.325 0.593-1.325 1.325v21.351c0 0.731 0.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.097 1.893-4.787 4.659-4.787 1.325 0 2.466 0.099 2.797 0.143v3.243h-1.919c-1.504 0-1.795 0.715-1.795 1.763v2.313h3.587l-0.467 3.622h-3.12v9.294h6.116c0.73 0 1.324-0.593 1.324-1.324v-21.35c0-0.732-0.594-1.325-1.325-1.325z"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584 0.012 4.85 0.07 1.206 0.057 2.032 0.247 2.505 0.414a4.92 4.92 0 0 1 1.675 1.006 4.92 4.92 0 0 1 1.006 1.675c0.167 0.474 0.357 1.3 0.414 2.505 0.058 1.267 0.07 1.647 0.07 4.85s-0.012 3.584-0.07 4.85c-0.057 1.206-0.247 2.032-0.414 2.505a4.92 4.92 0 0 1-1.006 1.675 4.92 4.92 0 0 1-1.675 1.006c-0.474 0.167-1.3 0.357-2.505 0.414-1.267 0.058-1.647 0.07-4.85 0.07s-3.584-0.012-4.85-0.07c-1.206-0.057-2.032-0.247-2.505-0.414a4.902 4.902 0 0 1-2.681-2.681c-0.167-0.474-0.357-1.3-0.414-2.505-0.058-1.267-0.07-1.647-0.07-4.85s0.012-3.584 0.07-4.85c0.057-1.206 0.247-2.032 0.414-2.505a4.902 4.902 0 0 1 2.681-2.681c0.474-0.167 1.3-0.357 2.505-0.414 1.267-0.058 1.647-0.07 4.85-0.07zm0-2.163c-3.259 0-3.67 0.014-4.947 0.072-1.276 0.058-2.71 0.274-3.68 1.243-0.97 0.97-1.185 2.404-1.243 3.68-0.058 1.277-0.072 1.688-0.072 4.947s0.014 3.67 0.072 4.947c0.058 1.276 0.274 2.71 1.243 3.68 0.97 0.97 2.404 1.185 3.68 1.243 1.277 0.058 1.688 0.072 4.947 0.072s3.67-0.014 4.947-0.072c1.276-0.058 2.71-0.274 3.68-1.243 0.97-0.97 1.185-2.404 1.243-3.68 0.058-1.277 0.072-1.688 0.072-4.947s-0.014-3.67-0.072-4.947c-0.058-1.276-0.274-2.71-1.243-3.68-0.97-0.97-2.404-1.185-3.68-1.243-1.277-0.058-1.688-0.072-4.947-0.072z"/>
+            <path d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998z"/>
+            <circle cx="18.406" cy="5.594" r="1.44"/>
+          </svg>
+        </a>
       </div>
-    </header>
-
-    <div className="full-slider">
-      <div id="carousel-example-generic" className="carousel slide">
-        <ol className="carousel-indicators">
-          <li data-target="#carousel-example-generic" data-slide-to="0" className="active"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-        </ol>
-
-        <div className="carousel-inner" role="listbox">
-          <div className="item active deepskyblue" data-ride="carousel" data-interval="5000">
-            <div className="carousel-caption">
-              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
-              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                <div className="slider-contant" data-animation="animated fadeInRight">
-                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
-                  <p>If you use this site regularly and would like to help keep the site on the Internet, please consider donating a small sum to help pay..</p>
-                  <button className="btn btn-primary btn-lg">Read More</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="item skyblue" data-ride="carousel" data-interval="5000">
-            <div className="carousel-caption">
-              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
-              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                <div className="slider-contant" data-animation="animated fadeInRight">
-                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
-                  <p>You can make a case for several potential winners of the expanded European Championships.</p>
-                  <button className="btn btn-primary btn-lg">Button</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="item darkerskyblue" data-ride="carousel" data-interval="5000">
-            <div className="carousel-caption">
-              <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
-              <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                <div className="slider-contant" data-animation="animated fadeInRight">
-                  <h3>If you Don’t Practice<br />You <span className="color-yellow">Don’t Deserve</span><br />to win!</h3>
-                  <p>You can make a case for several potential winners of the expanded European Championships.</p>
-                  <button className="btn btn-primary btn-lg">Button</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <a className="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-          <span className="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-          <span className="sr-only">Previous</span>
-        </a>
-        <a className="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-          <span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-          <span className="sr-only">Next</span>
-        </a>
+  
+      <div class="hamburger" aria-label="Menu Toggle" role="button" tabindex="0">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
       </div>
     </div>
-  </section>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="{% static 'js/3dslider.js' %}"></script>
-  <script src="{% static 'js/all.js' %}"></script>
-  <script src="{% static 'js/animate.js' %}"></script>
-  <script src="{% static 'js/custom.js' %}"></script>
-  <script src="{% static 'js/hoverdir.js' %}"></script>
-  <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
-  <script src="{% static 'js/jquery.vide.js' %}"></script>
-  <script src="{% static 'js/map.js' %}"></script>
-  <script src="{% static 'js/modernizer.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.js' %}"></script>
-  <script src="{% static 'js/portfolio.js' %}"></script>
-  <script src="{% static 'js/retina.js' %}"></script>
-  <script src="{% static 'js/scroll.js' %}"></script>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Services</a></li>
+     
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+    <div class="hamburger">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </div>
+  </nav>
+
+  <div class="menubar">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </div>
+
+
+  <script>
+    const hamburger = document.querySelector(".hamburger");
+    const menubar = document.querySelector(".menubar");
+
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("hamburger-active");
+      menubar.classList.toggle("active");
+    });
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  </script>
 </body>
 </html>
-

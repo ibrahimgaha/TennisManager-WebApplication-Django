@@ -1,0 +1,46 @@
+{% load static %}
+<style>
+  /* Title base style */
+  .sppb-addon-title {
+    font-family: Teko, sans-serif;
+    text-transform: uppercase;
+    font-style: italic;
+    letter-spacing: 5px;
+    font-weight: 900;
+    color: #b5ff35;
+    word-spacing: -5px; 
+    margin-left:-950px
+  }
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  .hero-section .container {
+    position: relative;
+    z-index: 2;
+  }
+</style>
+
+<section class="hero-section text-white text-center" 
+         style="background-image: url('https://media.istockphoto.com/id/1412188048/photo/tennis-balls-and-racket-on-the-grass-court.jpg?s=612x612&w=0&k=20&c=r9NHYjskuj8I7br4sQOUTM6as6ECdHYpsYoJ6WaaPOk='); 
+                background-size: cover; background-position: center; padding: 150px 0;">
+  <div class="container" style="margin-top:-50px">
+    <h5 class="sppb-addon-title">
+      Sport for Healthy Lifetime
+    </h5>
+    <h1 class="display-3 fw-bold" style="font-weight: 900; margin-left:-850px">
+      Playing with Family 
+    </h1>
+    <h1 class="display-3 fw-bold" style="font-weight: 900; margin-left:-1050px">
+        & Friends
+      </h1>
+  
+    <p class="mt-4 fs-5" style="max-width: 700px; margin: auto;  margin-left:-90px">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+  </div>
+</section>

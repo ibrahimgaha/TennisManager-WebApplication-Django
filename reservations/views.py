@@ -569,3 +569,16 @@ def get_player_coach_reservations(request):
     return JsonResponse({'reservations': reservation_list}, status=200)
 def nav(request):
     return render(request, 'html/navbar.html')
+
+
+def footer(request):
+    return render(request, 'html/footer.html')
+
+
+
+def home(request):
+    return render(request, 'html/home.html')
+
+
+def base(request):
+    return render(request, 'html/base.html')

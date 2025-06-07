@@ -1,0 +1,1340 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block title %}Player Dashboard - Tennis Club{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+.modern-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  min-height: 100vh;
+}
+
+.sidebar-header {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #e3e6f0;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.sidebar-header h6 {
+  color: white !important;
+}
+
+.sidebar-header .text-muted {
+  color: rgba(255,255,255,0.8) !important;
+}
+
+.sidebar-logo {
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.sidebar-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+.sidebar-nav {
+  padding: 1rem 0;
+}
+
+.sidebar-nav .nav-link {
+  color: #6c757d;
+  padding: 0.75rem 1.5rem;
+  margin: 0.25rem 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: linear-gradient(135deg, #17a2b8 0%, #007bff 100%);
+  color: white;
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.sidebar-nav .nav-link.active {
+  background: linear-gradient(135deg, #17a2b8 0%, #007bff 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+
+.btn-logout {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border: none;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  color: white;
+}
+
+.btn-logout i {
+  margin-right: 0.5rem;
+}
+
+.main-content {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Main content styling */
+.main-content {
+  background: #f8f9fc;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Modern card styling */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  transition: all 0.3s ease;
+  background: #ffffff;
+  margin-bottom: 1.5rem;
+  border-left: 0.25rem solid #28a745;
+}
+
+.card:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+/* Utility classes */
+.border-left-primary { border-left: 0.25rem solid #007bff !important; }
+.border-left-success { border-left: 0.25rem solid #28a745 !important; }
+.border-left-info { border-left: 0.25rem solid #17a2b8 !important; }
+.border-left-warning { border-left: 0.25rem solid #ffc107 !important; }
+
+.text-xs { font-size: 0.75rem; }
+.font-weight-bold { font-weight: 700 !important; }
+.text-gray-800 { color: #5a5c69 !important; }
+.shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important; }
+
+.no-gutters { margin-right: 0; margin-left: 0; }
+.no-gutters > .col, .no-gutters > [class*="col-"] { padding-right: 0; padding-left: 0; }
+
+@media (max-width: 768px) {
+  .modern-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    z-index: 1050;
+    transition: left 0.3s ease;
+  }
+
+  .modern-sidebar.show {
+    left: 0;
+  }
+
+  .sidebar-footer {
+    position: relative;
+    bottom: auto;
+    margin-top: 2rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Modern Sidebar -->
+    <!-- Clean Beautiful Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-md-block collapse" style="
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+      position: relative;
+    ">
+      <div class="position-sticky pt-0">
+        <!-- Header Section -->
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+          <div class="d-flex align-items-center">
+            <div style="
+              width: 50px;
+              height: 50px;
+              background: rgba(255,255,255,0.2);
+              border-radius: 15px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 1.5rem;
+              margin-right: 12px;
+            ">🏃‍♂️</div>
+            <div>
+              <h6 style="color: white; margin: 0; font-size: 1rem; font-weight: 600;">Player Panel</h6>
+              <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;" id="playerName">Welcome, Player</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div style="padding: 1rem 0;">
+          <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')" style="
+            color: white;
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateX(5px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(0)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">📊</span>
+            <span>Dashboard</span>
+          </a>
+
+          <a class="nav-link" href="#court-reservations" onclick="showSection('court-reservations')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🏟️</span>
+            <span>Court Reservations</span>
+          </a>
+
+          <a class="nav-link" href="#coach-reservations" onclick="showSection('coach-reservations')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">👨‍🏫</span>
+            <span>Coach Sessions</span>
+          </a>
+
+          <a class="nav-link" href="#matchmaking" onclick="showSection('matchmaking')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🏆</span>
+            <span>Find Matches</span>
+          </a>
+
+          <a class="nav-link" href="#subscriptions" onclick="showSection('subscriptions')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">💳</span>
+            <span>Subscriptions</span>
+          </a>
+
+          <a class="nav-link" href="#my-reservations" onclick="showSection('my-reservations')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">📅</span>
+            <span>My Reservations</span>
+          </a>
+        </div>
+
+        <!-- Logout Section -->
+        <div style="position: absolute; bottom: 1rem; left: 0.8rem; right: 0.8rem;">
+          <button onclick="logout()" style="
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <span style="margin-right: 0.5rem;">🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+      <!-- Modern Dashboard Header -->
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+          <h1 class="h2 text-success">
+            🎾 Player Dashboard
+            <span class="badge bg-success ms-2">Active</span>
+          </h1>
+          <p class="text-muted mb-0">Book courts, coaches, and manage your tennis activities</p>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-success" onclick="refreshData()">
+              🔄 Refresh
+            </button>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+              🏃‍♂️
+            </div>
+            <div>
+              <small class="fw-bold" id="playerNameHeader">Player</small><br>
+              <small class="text-muted">Tennis Player</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Overview -->
+      <div id="dashboard" class="section">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="totalCourtReservations">0</h4>
+                    <p class="card-text">Court Bookings</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-calendar-plus fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-success">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="totalCoachSessions">0</h4>
+                    <p class="card-text">Coach Sessions</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-person-check fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-warning">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="totalMatches">0</h4>
+                    <p class="card-text">Matches Played</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-trophy fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-info">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="activeSubscriptions">0</h4>
+                    <p class="card-text">Active Subscriptions</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-credit-card fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Quick Actions</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3 mb-2">
+                    <button class="btn btn-primary w-100" onclick="showSection('court-reservations')">
+                      <i class="bi bi-calendar-plus"></i><br>Book Court
+                    </button>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <button class="btn btn-success w-100" onclick="showSection('coach-reservations')">
+                      <i class="bi bi-person-check"></i><br>Book Coach
+                    </button>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <button class="btn btn-warning w-100" onclick="showSection('matchmaking')">
+                      <i class="bi bi-trophy"></i><br>Find Match
+                    </button>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <button class="btn btn-info w-100" onclick="showSection('subscriptions')">
+                      <i class="bi bi-credit-card"></i><br>Subscriptions
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Reservations -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Upcoming Reservations</h5>
+              </div>
+              <div class="card-body">
+                <div id="upcomingReservations">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court Reservations -->
+      <div id="court-reservations" class="section d-none">
+        <h3>Court Reservations</h3>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Available Courts</h5>
+              </div>
+              <div class="card-body">
+                <div id="availableCourts">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Make Reservation</h5>
+              </div>
+              <div class="card-body">
+                <form id="courtReservationForm">
+                  <div class="mb-3">
+                    <label for="courtSelect" class="form-label">Select Court</label>
+                    <select class="form-select" id="courtSelect" required>
+                      <option value="">Choose a court...</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="reservationDate" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="reservationDate" required>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="startTime" class="form-label">Start Time</label>
+                      <input type="time" class="form-control" id="startTime" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="endTime" class="form-label">End Time</label>
+                      <input type="time" class="form-control" id="endTime" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Book Court</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coach Reservations -->
+      <div id="coach-reservations" class="section d-none">
+        <h3>Coach Sessions</h3>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Available Coaches</h5>
+              </div>
+              <div class="card-body">
+                <div id="availableCoaches">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Book Coach Session</h5>
+              </div>
+              <div class="card-body">
+                <form id="coachReservationForm">
+                  <div class="mb-3">
+                    <label for="coachSelect" class="form-label">Select Coach</label>
+                    <select class="form-select" id="coachSelect" required>
+                      <option value="">Choose a coach...</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="coachDate" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="coachDate" required onchange="checkCoachAvailability()">
+                  </div>
+                  <div id="availableTimeSlots" class="mb-3 d-none">
+                    <label class="form-label">Available Time Slots</label>
+                    <div id="timeSlotsList"></div>
+                  </div>
+                  <button type="submit" class="btn btn-success w-100">Book Session</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matchmaking -->
+      <div id="matchmaking" class="section d-none">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Create Match Request</h5>
+              </div>
+              <div class="card-body">
+                <form id="matchRequestForm">
+                  <div class="mb-3">
+                    <label for="matchType" class="form-label">Match Type</label>
+                    <select class="form-select" id="matchType" required>
+                      <option value="">Select type...</option>
+                      <option value="friendly">Friendly Match</option>
+                      <option value="tournament">Tournament</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="matchDate" class="form-label">Preferred Date</label>
+                    <input type="date" class="form-control" id="matchDate" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="matchTime" class="form-label">Preferred Time</label>
+                    <input type="time" class="form-control" id="matchTime" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="matchLocation" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="matchLocation" placeholder="Court or location" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="matchNotes" class="form-label">Notes (Optional)</label>
+                    <textarea class="form-control" id="matchNotes" rows="3" placeholder="Additional information..."></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-warning w-100">Create Match Request</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Available Matches</h5>
+              </div>
+              <div class="card-body">
+                <div id="availableMatches">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscriptions -->
+      <div id="subscriptions" class="section d-none">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Tennis Subscriptions</h5>
+              </div>
+              <div class="card-body">
+                <form id="tennisSubscriptionForm">
+                  <div class="mb-3">
+                    <label for="subscriptionType" class="form-label">Subscription Type</label>
+                    <select class="form-select" id="subscriptionType" required>
+                      <option value="">Select type...</option>
+                      <option value="hiver">Winter (October-June)</option>
+                      <option value="ete">Summer (July-August)</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="terrainType" class="form-label">Court Type</label>
+                    <select class="form-select" id="terrainType" required>
+                      <option value="">Select court type...</option>
+                      <option value="terre battue">Clay Court</option>
+                      <option value="dur">Hard Court</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" required>
+                  </div>
+                  <button type="submit" class="btn btn-info w-100">Subscribe</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Equipment Subscriptions</h5>
+              </div>
+              <div class="card-body">
+                <form id="equipmentSubscriptionForm">
+                  <div class="mb-3">
+                    <label for="equipmentType" class="form-label">Equipment Type</label>
+                    <select class="form-select" id="equipmentType" required>
+                      <option value="">Select equipment...</option>
+                      <option value="RAQUETTE">Racket</option>
+                      <option value="SAC">Bag</option>
+                      <option value="BALLE">Balls</option>
+                      <option value="CHAUSSURE">Shoes</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" min="1" required>
+                  </div>
+                  <button type="submit" class="btn btn-secondary w-100">Order Equipment</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- My Subscriptions -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>My Subscriptions</h5>
+              </div>
+              <div class="card-body">
+                <div id="mySubscriptions">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Reservations -->
+      <div id="my-reservations" class="section d-none">
+        <h3>My Reservations</h3>
+        
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Court/Coach</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="myReservationsTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+<script>
+// Authentication check
+if (!localStorage.getItem('token') || localStorage.getItem('role') !== 'joueur') {
+  window.location.href = '/auth/login/';
+}
+
+// Set player name
+document.getElementById('playerName').textContent = `Welcome, ${localStorage.getItem('username')}`;
+
+// Global variables
+let currentSection = 'dashboard';
+
+// API helper
+const api = axios.create({
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  }
+});
+
+// Section management
+function showSection(sectionName) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.add('d-none');
+  });
+  
+  // Show selected section
+  document.getElementById(sectionName).classList.remove('d-none');
+  
+  // Update active nav
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  currentSection = sectionName;
+  
+  // Load section data
+  loadSectionData(sectionName);
+}
+
+// Load section data
+function loadSectionData(section) {
+  switch(section) {
+    case 'dashboard':
+      loadDashboardData();
+      break;
+    case 'court-reservations':
+      loadCourtReservations();
+      break;
+    case 'coach-reservations':
+      loadCoachReservations();
+      break;
+    case 'matchmaking':
+      loadMatchmaking();
+      break;
+    case 'subscriptions':
+      loadSubscriptions();
+      break;
+    case 'my-reservations':
+      loadMyReservations();
+      break;
+  }
+}
+
+// Load dashboard data
+async function loadDashboardData() {
+  try {
+    // Load user statistics using new API
+    const statsRes = await api.get('/res/api/dashboard/stats/');
+    const stats = statsRes.data;
+
+    document.getElementById('totalCourtReservations').textContent = stats.court_reservations || 0;
+    document.getElementById('totalCoachSessions').textContent = stats.coach_sessions || 0;
+    document.getElementById('totalMatches').textContent = stats.equipment_orders || 0;
+    document.getElementById('activeSubscriptions').textContent = localStorage.getItem('role') === 'abonnée' ? 1 : 0;
+
+    // Load upcoming reservations
+    loadUpcomingReservations();
+
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+    // Fallback to individual API calls
+    loadDashboardDataFallback();
+  }
+}
+
+// Fallback dashboard data loading
+async function loadDashboardDataFallback() {
+  try {
+    const [courtRes, coachRes] = await Promise.all([
+      api.get('/res/api/court-reservations/'),
+      api.get('/res/api/equipment/')
+    ]);
+
+    document.getElementById('totalCourtReservations').textContent = courtRes.data.reservations?.length || 0;
+    document.getElementById('totalMatches').textContent = coachRes.data.length || 0;
+
+  } catch (error) {
+    console.error('Error loading fallback dashboard data:', error);
+  }
+}
+
+// Load upcoming reservations
+async function loadUpcomingReservations() {
+  try {
+    const response = await api.get('/reservations/');
+    const reservations = response.data.reservations || [];
+    
+    const today = new Date();
+    const upcoming = reservations.filter(r => new Date(r.date) >= today).slice(0, 5);
+    
+    const upcomingHtml = upcoming.map(reservation => `
+      <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+        <div>
+          <strong>${reservation.terrain}</strong><br>
+          <small class="text-muted">${reservation.date} at ${reservation.start_time}</small>
+        </div>
+        <span class="badge bg-primary">Confirmed</span>
+      </div>
+    `).join('');
+    
+    document.getElementById('upcomingReservations').innerHTML = upcomingHtml || '<p class="text-muted">No upcoming reservations</p>';
+    
+  } catch (error) {
+    console.error('Error loading upcoming reservations:', error);
+    document.getElementById('upcomingReservations').innerHTML = '<p class="text-danger">Error loading reservations</p>';
+  }
+}
+
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().split('T')[0];
+  const dateInputs = ['reservationDate', 'coachDate', 'matchDate', 'startDate'];
+  dateInputs.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.min = today;
+  });
+  
+  loadDashboardData();
+});
+
+// Refresh data
+function refreshData() {
+  loadSectionData(currentSection);
+}
+
+// Logout
+function logout() {
+  localStorage.clear();
+  window.location.href = '/auth/login/';
+}
+
+// ==================== COURT RESERVATIONS ====================
+async function loadCourtReservations() {
+  try {
+    // Load available courts using new API
+    const response = await api.get('/res/api/terrains/');
+    const courts = response.data;
+
+    // Populate court select
+    const courtSelect = document.getElementById('courtSelect');
+    courtSelect.innerHTML = '<option value="">Choose a court...</option>';
+    courts.forEach(court => {
+      courtSelect.innerHTML += `<option value="${court.id}">${court.name} - $${court.price_per_hour}/hour</option>`;
+    });
+
+    // Display available courts
+    const courtsHtml = courts.map(court => `
+      <div class="card mb-2">
+        <div class="card-body">
+          <h6 class="card-title">${court.name}</h6>
+          <p class="card-text">
+            <small>Location: ${court.location}</small><br>
+            <small>Price: $${court.price_per_hour}/hour</small><br>
+            <span class="badge bg-${court.available ? 'success' : 'danger'}">${court.available ? 'Available' : 'Unavailable'}</span>
+          </p>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('availableCourts').innerHTML = courtsHtml;
+
+  } catch (error) {
+    console.error('Error loading courts:', error);
+    document.getElementById('availableCourts').innerHTML = '<div class="alert alert-danger">Error loading courts</div>';
+  }
+}
+
+// Handle court reservation form submission
+document.getElementById('courtReservationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const formData = {
+      terrain_id: document.getElementById('courtSelect').value,
+      date: document.getElementById('reservationDate').value,
+      start_time: document.getElementById('startTime').value,
+      end_time: document.getElementById('endTime').value
+    };
+
+    const response = await api.post('/res/api/court-reservations/', formData);
+
+    if (response.status === 200) {
+      alert('Court reservation successful!');
+      this.reset();
+      loadDashboardData();
+    }
+  } catch (error) {
+    console.error('Error making reservation:', error);
+    alert('Error making reservation: ' + (error.response?.data?.error || 'Unknown error'));
+  }
+});
+
+// ==================== COACH RESERVATIONS ====================
+async function loadCoachReservations() {
+  try {
+    // Load available coaches
+    const response = await api.get('/res/coaches/');
+    const coaches = response.data;
+
+    // Populate coach select
+    const coachSelect = document.getElementById('coachSelect');
+    coachSelect.innerHTML = '<option value="">Choose a coach...</option>';
+    coaches.forEach(coach => {
+      coachSelect.innerHTML += `<option value="${coach.id}">${coach.name} - $${coach.price_per_hour}/hour</option>`;
+    });
+
+    // Display available coaches
+    const coachesHtml = coaches.map(coach => `
+      <div class="card mb-2">
+        <div class="card-body">
+          <h6 class="card-title">${coach.name}</h6>
+          <p class="card-text">
+            <small>Email: ${coach.email}</small><br>
+            <small>Price: $${coach.price_per_hour}/hour</small><br>
+            <small>Experience: ${coach.experience || 'N/A'} years</small>
+          </p>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('availableCoaches').innerHTML = coachesHtml;
+
+  } catch (error) {
+    console.error('Error loading coaches:', error);
+    document.getElementById('availableCoaches').innerHTML = '<div class="alert alert-danger">Error loading coaches</div>';
+  }
+}
+
+// Check coach availability
+async function checkCoachAvailability() {
+  const coachId = document.getElementById('coachSelect').value;
+  const date = document.getElementById('coachDate').value;
+
+  if (!coachId || !date) return;
+
+  try {
+    // This would check coach availability - for now show sample time slots
+    const timeSlots = [
+      '09:00-10:00', '10:00-11:00', '11:00-12:00',
+      '14:00-15:00', '15:00-16:00', '16:00-17:00'
+    ];
+
+    const slotsHtml = timeSlots.map(slot => `
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="timeSlot" value="${slot}" id="slot_${slot}">
+        <label class="form-check-label" for="slot_${slot}">${slot}</label>
+      </div>
+    `).join('');
+
+    document.getElementById('timeSlotsList').innerHTML = slotsHtml;
+    document.getElementById('availableTimeSlots').classList.remove('d-none');
+
+  } catch (error) {
+    console.error('Error checking availability:', error);
+  }
+}
+
+// Handle coach reservation form submission
+document.getElementById('coachReservationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const selectedSlot = document.querySelector('input[name="timeSlot"]:checked');
+    if (!selectedSlot) {
+      alert('Please select a time slot');
+      return;
+    }
+
+    const [startTime, endTime] = selectedSlot.value.split('-');
+    const formData = {
+      coach_id: document.getElementById('coachSelect').value,
+      date: document.getElementById('coachDate').value,
+      start_time: startTime,
+      end_time: endTime
+    };
+
+    // Use the coach reservation API
+    const response = await api.post('/res/coach/' + formData.coach_id + '/reserve/', formData);
+
+    if (response.status === 200) {
+      alert('Coach session booked successfully!');
+      this.reset();
+      document.getElementById('availableTimeSlots').classList.add('d-none');
+      loadDashboardData();
+    }
+
+  } catch (error) {
+    console.error('Error booking coach session:', error);
+    alert('Error booking session: ' + (error.response?.data?.error || 'Unknown error'));
+  }
+});
+
+// ==================== MATCHMAKING ====================
+async function loadMatchmaking() {
+  try {
+    // Load available matches - for now show sample data
+    const sampleMatches = [
+      {
+        id: 1,
+        player: 'John Doe',
+        type: 'Friendly Match',
+        date: '2024-06-10',
+        time: '15:00',
+        location: 'Court A'
+      },
+      {
+        id: 2,
+        player: 'Jane Smith',
+        type: 'Tournament',
+        date: '2024-06-12',
+        time: '10:00',
+        location: 'Court Central'
+      }
+    ];
+
+    const matchesHtml = sampleMatches.map(match => `
+      <div class="card mb-2">
+        <div class="card-body">
+          <h6 class="card-title">${match.player}</h6>
+          <p class="card-text">
+            <small>Type: ${match.type}</small><br>
+            <small>Date: ${match.date}</small><br>
+            <small>Time: ${match.time}</small><br>
+            <small>Location: ${match.location}</small>
+          </p>
+          <button class="btn btn-sm btn-primary" onclick="joinMatch(${match.id})">Join Match</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('availableMatches').innerHTML = matchesHtml || '<p class="text-muted">No available matches</p>';
+
+  } catch (error) {
+    console.error('Error loading matches:', error);
+    document.getElementById('availableMatches').innerHTML = '<div class="alert alert-danger">Error loading matches</div>';
+  }
+}
+
+// Handle match request form submission
+document.getElementById('matchRequestForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const formData = {
+      type: document.getElementById('matchType').value,
+      date: document.getElementById('matchDate').value,
+      time: document.getElementById('matchTime').value,
+      location: document.getElementById('matchLocation').value,
+      notes: document.getElementById('matchNotes').value
+    };
+
+    alert('Match request created successfully!');
+    console.log('Match request data:', formData);
+    this.reset();
+
+  } catch (error) {
+    console.error('Error creating match request:', error);
+    alert('Error creating match request');
+  }
+});
+
+function joinMatch(matchId) {
+  alert(`Joining match ${matchId} - functionality ready for implementation`);
+}
+
+// ==================== SUBSCRIPTIONS ====================
+async function loadSubscriptions() {
+  try {
+    // Load user's current subscriptions
+    const userRole = localStorage.getItem('role');
+    const isSubscriber = userRole === 'abonnée';
+
+    const subscriptionStatus = `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="card-title">Current Status</h6>
+          <p class="card-text">
+            <span class="badge bg-${isSubscriber ? 'success' : 'warning'}">${isSubscriber ? 'Premium Subscriber' : 'Regular Player'}</span>
+          </p>
+          ${!isSubscriber ? '<button class="btn btn-primary" onclick="openSubscriptionModal()">Upgrade to Premium</button>' : ''}
+        </div>
+      </div>
+    `;
+
+    document.getElementById('mySubscriptions').innerHTML = subscriptionStatus;
+
+  } catch (error) {
+    console.error('Error loading subscriptions:', error);
+    document.getElementById('mySubscriptions').innerHTML = '<div class="alert alert-danger">Error loading subscriptions</div>';
+  }
+}
+
+// Handle tennis subscription form
+document.getElementById('tennisSubscriptionForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const formData = {
+      type: document.getElementById('subscriptionType').value,
+      terrain_type: document.getElementById('terrainType').value,
+      start_date: document.getElementById('startDate').value
+    };
+
+    alert('Tennis subscription created successfully!');
+    console.log('Tennis subscription data:', formData);
+    this.reset();
+
+  } catch (error) {
+    console.error('Error creating subscription:', error);
+    alert('Error creating subscription');
+  }
+});
+
+// Handle equipment subscription form
+document.getElementById('equipmentSubscriptionForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const formData = {
+      equipment_type: document.getElementById('equipmentType').value,
+      quantity: document.getElementById('quantity').value
+    };
+
+    // Use the equipment order API
+    const response = await api.post('/res/api/equipment/order/', {
+      equipment_id: 1, // This would be dynamic based on equipment type
+      quantity: formData.quantity,
+      delivery_address: 'Club Address' // This would be from user profile
+    });
+
+    if (response.status === 200) {
+      alert('Equipment order placed successfully!');
+      this.reset();
+      loadDashboardData();
+    }
+
+  } catch (error) {
+    console.error('Error ordering equipment:', error);
+    alert('Error placing equipment order: ' + (error.response?.data?.error || 'Unknown error'));
+  }
+});
+
+// ==================== MY RESERVATIONS ====================
+async function loadMyReservations() {
+  try {
+    // Load user's reservations
+    const response = await api.get('/res/api/court-reservations/');
+    const reservations = response.data.reservations || [];
+
+    const reservationsHtml = reservations.map(reservation => `
+      <tr>
+        <td>Court</td>
+        <td>${reservation.terrain_name || 'Court'}</td>
+        <td>${reservation.date}</td>
+        <td>${reservation.start_time} - ${reservation.end_time}</td>
+        <td><span class="badge bg-success">Confirmed</span></td>
+        <td>
+          <button class="btn btn-sm btn-danger" onclick="cancelReservation(${reservation.id})">Cancel</button>
+        </td>
+      </tr>
+    `).join('');
+
+    document.getElementById('myReservationsTableBody').innerHTML = reservationsHtml ||
+      '<tr><td colspan="6" class="text-center text-muted">No reservations found</td></tr>';
+
+  } catch (error) {
+    console.error('Error loading my reservations:', error);
+    document.getElementById('myReservationsTableBody').innerHTML =
+      '<tr><td colspan="6" class="text-center text-danger">Error loading reservations</td></tr>';
+  }
+}
+
+// Cancel reservation
+async function cancelReservation(reservationId) {
+  if (confirm('Are you sure you want to cancel this reservation?')) {
+    try {
+      const response = await api.delete(`/res/api/reservations/${reservationId}/cancel/`);
+
+      if (response.status === 200) {
+        alert('Reservation cancelled successfully!');
+        loadMyReservations();
+        loadDashboardData();
+      }
+    } catch (error) {
+      console.error('Error cancelling reservation:', error);
+      alert('Error cancelling reservation: ' + (error.response?.data?.error || 'Unknown error'));
+    }
+  }
+}
+
+// ==================== EQUIPMENT FUNCTIONS ====================
+async function loadEquipment() {
+  try {
+    const response = await api.get('/res/api/equipment/');
+    const equipment = response.data;
+
+    // This would populate equipment selection
+    console.log('Available equipment:', equipment);
+
+  } catch (error) {
+    console.error('Error loading equipment:', error);
+  }
+}
+
+// ==================== TOURNAMENT FUNCTIONS ====================
+async function loadTournaments() {
+  try {
+    const response = await api.get('/res/api/tournaments/');
+    const tournaments = response.data;
+
+    // This would display available tournaments
+    console.log('Available tournaments:', tournaments);
+
+  } catch (error) {
+    console.error('Error loading tournaments:', error);
+  }
+}
+
+async function registerForTournament(tournamentId) {
+  try {
+    const response = await api.post(`/res/api/tournaments/${tournamentId}/register/`);
+
+    if (response.status === 200) {
+      alert('Successfully registered for tournament!');
+      loadTournaments();
+    }
+  } catch (error) {
+    console.error('Error registering for tournament:', error);
+    alert('Error registering for tournament: ' + (error.response?.data?.error || 'Unknown error'));
+  }
+}
+</script>
+
+{% endblock %}

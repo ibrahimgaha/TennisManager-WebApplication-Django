@@ -588,3 +588,576 @@ def base(request):
 
 def reservation(request):
     return render(request, 'html/reservation.html')
+
+
+# ==================== NEW API ENDPOINTS ====================
+
+from .models import Equipment, EquipmentOrder, Tournament, TournamentRegistration, Notification, Payment
+from django.db import models
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def terrain_management(request):
+    """Complete terrain management API"""
+    if request.method == 'GET':
+        terrains = Terrain.objects.all().values(
+            'id', 'name', 'location', 'price_per_hour', 'available'
+        )
+        return Response(list(terrains))
+
+    elif request.method == 'POST':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        data = request.data
+        terrain = Terrain.objects.create(
+            name=data['name'],
+            location=data['location'],
+            price_per_hour=Decimal(data['price_per_hour']),
+            available=data.get('available', True)
+        )
+        return Response({'message': 'Terrain created successfully', 'id': terrain.id})
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def terrain_detail(request, terrain_id):
+    """Terrain detail management"""
+    try:
+        terrain = Terrain.objects.get(id=terrain_id)
+    except Terrain.DoesNotExist:
+        return Response({'error': 'Terrain not found'}, status=404)
+
+    if request.method == 'GET':
+        return Response({
+            'id': terrain.id,
+            'name': terrain.name,
+            'location': terrain.location,
+            'price_per_hour': str(terrain.price_per_hour),
+            'available': terrain.available
+        })
+
+    elif request.method == 'PUT':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        data = request.data
+        terrain.name = data.get('name', terrain.name)
+        terrain.location = data.get('location', terrain.location)
+        terrain.price_per_hour = Decimal(data.get('price_per_hour', terrain.price_per_hour))
+        terrain.available = data.get('available', terrain.available)
+        terrain.save()
+
+        return Response({'message': 'Terrain updated successfully'})
+
+    elif request.method == 'DELETE':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        terrain.delete()
+        return Response({'message': 'Terrain deleted successfully'})
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def court_reservations(request):
+    """Court reservations management"""
+    if request.method == 'GET':
+        if request.user.role == 'admin':
+            reservations = Reservation.objects.all()
+        else:
+            reservations = Reservation.objects.filter(user=request.user)
+
+        reservation_list = []
+        for reservation in reservations:
+            reservation_list.append({
+                'id': reservation.id,
+                'user': reservation.user.username,
+                'terrain': reservation.terrain.name,
+                'terrain_name': reservation.terrain.name,
+                'date': reservation.date,
+                'start_time': reservation.start_time,
+                'end_time': reservation.end_time,
+            })
+
+        return Response({'reservations': reservation_list})
+
+    elif request.method == 'POST':
+        data = request.data
+        try:
+            terrain = Terrain.objects.get(id=data['terrain_id'])
+        except Terrain.DoesNotExist:
+            return Response({'error': 'Terrain not found'}, status=404)
+
+        # Check if terrain is available
+        if not terrain.available:
+            return Response({'error': 'Terrain is not available'}, status=400)
+
+        # Create reservation
+        reservation = Reservation.objects.create(
+            user=request.user,
+            terrain=terrain,
+            date=data['date'],
+            start_time=data['start_time'],
+            end_time=data['end_time']
+        )
+
+        return Response({
+            'message': 'Reservation created successfully',
+            'reservation_id': reservation.id
+        })
+
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def cancel_reservation(request, reservation_id):
+    """Cancel a reservation"""
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+    except Reservation.DoesNotExist:
+        return Response({'error': 'Reservation not found'}, status=404)
+
+    # Check if user owns the reservation or is admin
+    if reservation.user != request.user and request.user.role != 'admin':
+        return Response({'error': 'Permission denied'}, status=403)
+
+    reservation.delete()
+    return Response({'message': 'Reservation cancelled successfully'})
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def equipment_list(request):
+    """Equipment management"""
+    if request.method == 'GET':
+        equipment = Equipment.objects.all().values(
+            'id', 'name', 'type', 'price', 'stock_quantity', 'description'
+        )
+        return Response(list(equipment))
+
+    elif request.method == 'POST':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        data = request.data
+        equipment = Equipment.objects.create(
+            name=data['name'],
+            type=data['type'],
+            price=Decimal(data['price']),
+            stock_quantity=data['stock_quantity'],
+            description=data.get('description', '')
+        )
+        return Response({'message': 'Equipment created successfully', 'id': equipment.id})
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def order_equipment(request):
+    """Order equipment"""
+    data = request.data
+    try:
+        equipment = Equipment.objects.get(id=data['equipment_id'])
+    except Equipment.DoesNotExist:
+        return Response({'error': 'Equipment not found'}, status=404)
+
+    quantity = int(data['quantity'])
+    if equipment.stock_quantity < quantity:
+        return Response({'error': 'Insufficient stock'}, status=400)
+
+    total_price = equipment.price * quantity
+
+    # Create order
+    order = EquipmentOrder.objects.create(
+        user=request.user,
+        equipment=equipment,
+        quantity=quantity,
+        total_price=total_price,
+        delivery_address=data.get('delivery_address', ''),
+        status='pending'
+    )
+
+    # Update stock
+    equipment.stock_quantity -= quantity
+    equipment.save()
+
+    return Response({
+        'message': 'Order placed successfully',
+        'order_id': order.id,
+        'total_price': str(total_price)
+    })
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_orders(request):
+    """Get user's equipment orders"""
+    orders = EquipmentOrder.objects.filter(user=request.user)
+
+    order_list = []
+    for order in orders:
+        order_list.append({
+            'id': order.id,
+            'equipment_name': order.equipment.name,
+            'quantity': order.quantity,
+            'total_price': str(order.total_price),
+            'order_date': order.order_date,
+            'status': order.status,
+            'delivery_address': order.delivery_address
+        })
+
+    return Response(order_list)
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def tournament_list(request):
+    """Tournament management"""
+    if request.method == 'GET':
+        tournaments = Tournament.objects.all().values(
+            'id', 'name', 'description', 'start_date', 'end_date',
+            'entry_fee', 'max_participants', 'status'
+        )
+        return Response(list(tournaments))
+
+    elif request.method == 'POST':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        data = request.data
+        tournament = Tournament.objects.create(
+            name=data['name'],
+            description=data.get('description', ''),
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            entry_fee=Decimal(data.get('entry_fee', 0)),
+            max_participants=data.get('max_participants', 32),
+            status=data.get('status', 'upcoming')
+        )
+        return Response({'message': 'Tournament created successfully', 'id': tournament.id})
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def register_tournament(request, tournament_id):
+    """Register for tournament"""
+    try:
+        tournament = Tournament.objects.get(id=tournament_id)
+    except Tournament.DoesNotExist:
+        return Response({'error': 'Tournament not found'}, status=404)
+
+    # Check if already registered
+    if TournamentRegistration.objects.filter(user=request.user, tournament=tournament).exists():
+        return Response({'error': 'Already registered for this tournament'}, status=400)
+
+    # Check if tournament is full
+    current_participants = TournamentRegistration.objects.filter(tournament=tournament).count()
+    if current_participants >= tournament.max_participants:
+        return Response({'error': 'Tournament is full'}, status=400)
+
+    # Create registration
+    registration = TournamentRegistration.objects.create(
+        user=request.user,
+        tournament=tournament,
+        registration_date=datetime.now().date()
+    )
+
+    return Response({
+        'message': 'Successfully registered for tournament',
+        'registration_id': registration.id
+    })
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dashboard_stats(request):
+    """Get comprehensive dashboard statistics"""
+    try:
+        # Get counts for different models
+        total_users = User.objects.count()
+        total_terrains = Terrain.objects.count()
+        total_coaches = Coach.objects.count()
+        total_reservations = Reservation.objects.count()
+        total_equipment = Equipment.objects.count()
+        total_tournaments = Tournament.objects.count()
+
+        # User role distribution
+        admin_count = User.objects.filter(role='admin').count()
+        coach_count = User.objects.filter(role='coach').count()
+        player_count = User.objects.filter(role='joueur').count()
+        subscriber_count = User.objects.filter(role='abonnée').count()
+
+        # Equipment orders
+        total_equipment_orders = EquipmentOrder.objects.count()
+        pending_orders = EquipmentOrder.objects.filter(status='pending').count()
+
+        # Tournament registrations
+        total_tournament_registrations = TournamentRegistration.objects.count()
+
+        # Calculate total revenue from payments
+        total_revenue = Payment.objects.aggregate(
+            total=models.Sum('amount')
+        )['total'] or 0
+
+        # Monthly revenue (current month)
+        current_month = datetime.now().month
+        current_year = datetime.now().year
+        monthly_revenue = Payment.objects.filter(
+            payment_date__month=current_month,
+            payment_date__year=current_year
+        ).aggregate(total=models.Sum('amount'))['total'] or 0
+
+        # User-specific stats (if not admin)
+        user_stats = {}
+        if request.user.role != 'admin':
+            user_reservations = Reservation.objects.filter(user=request.user).count()
+            user_equipment_orders = EquipmentOrder.objects.filter(user=request.user).count()
+            user_tournament_registrations = TournamentRegistration.objects.filter(user=request.user).count()
+
+            user_stats = {
+                'court_reservations': user_reservations,
+                'equipment_orders': user_equipment_orders,
+                'tournament_registrations': user_tournament_registrations,
+                'coach_sessions': 0  # This would be from coach reservations
+            }
+
+        return Response({
+            # Overall stats
+            'total_users': total_users,
+            'total_terrains': total_terrains,
+            'total_coaches': total_coaches,
+            'total_reservations': total_reservations,
+            'total_equipment': total_equipment,
+            'total_tournaments': total_tournaments,
+            'total_revenue': float(total_revenue),
+            'monthly_revenue': float(monthly_revenue),
+
+            # User distribution
+            'admin_count': admin_count,
+            'coach_count': coach_count,
+            'player_count': player_count,
+            'subscriber_count': subscriber_count,
+
+            # Orders and registrations
+            'total_equipment_orders': total_equipment_orders,
+            'pending_orders': pending_orders,
+            'total_tournament_registrations': total_tournament_registrations,
+
+            # User-specific stats
+            **user_stats
+        })
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_list(request):
+    """Get all users (admin only)"""
+    if request.user.role != 'admin':
+        return Response({'error': 'Admin access required'}, status=403)
+
+    users = User.objects.all().values(
+        'id', 'username', 'email', 'role', 'date_joined', 'is_active'
+    )
+    return Response(list(users))
+
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_user_role(request, user_id):
+    """Update user role (admin only)"""
+    if request.user.role != 'admin':
+        return Response({'error': 'Admin access required'}, status=403)
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
+
+    new_role = request.data.get('role')
+    if new_role not in ['admin', 'coach', 'joueur', 'abonnée']:
+        return Response({'error': 'Invalid role'}, status=400)
+
+    user.role = new_role
+    user.save()
+
+    return Response({'message': 'User role updated successfully'})
+
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_user(request, user_id):
+    """Delete user (admin only)"""
+    if request.user.role != 'admin':
+        return Response({'error': 'Admin access required'}, status=403)
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
+
+    if user.role == 'admin':
+        return Response({'error': 'Cannot delete admin user'}, status=400)
+
+    user.delete()
+    return Response({'message': 'User deleted successfully'})
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_notifications(request):
+    """Get user notifications"""
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+
+    notification_list = []
+    for notification in notifications:
+        notification_list.append({
+            'id': notification.id,
+            'title': notification.title,
+            'message': notification.message,
+            'is_read': notification.is_read,
+            'created_at': notification.created_at
+        })
+
+    return Response(notification_list)
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def mark_notification_read(request, notification_id):
+    """Mark notification as read"""
+    try:
+        notification = Notification.objects.get(id=notification_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return Response({'message': 'Notification marked as read'})
+    except Notification.DoesNotExist:
+        return Response({'error': 'Notification not found'}, status=404)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def coach_schedule(request):
+    """Get coach schedule"""
+    if request.user.role != 'coach':
+        return Response({'error': 'Coach access required'}, status=403)
+
+    # This would get the coach associated with the user
+    # For now, return sample data
+    schedules = []
+    return Response(schedules)
+
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_schedule(request, schedule_id):
+    """Delete schedule (coach only)"""
+    if request.user.role != 'coach':
+        return Response({'error': 'Coach access required'}, status=403)
+
+    try:
+        schedule = Schedule.objects.get(id=schedule_id)
+        schedule.delete()
+        return Response({'message': 'Schedule deleted successfully'})
+    except Schedule.DoesNotExist:
+        return Response({'error': 'Schedule not found'}, status=404)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_payments(request):
+    """Get user payments"""
+    payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+
+    payment_list = []
+    for payment in payments:
+        payment_list.append({
+            'id': payment.id,
+            'amount': str(payment.amount),
+            'payment_date': payment.payment_date,
+            'description': payment.description,
+            'status': payment.status
+        })
+
+    return Response(payment_list)
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def create_payment(request):
+    """Create payment"""
+    data = request.data
+
+    payment = Payment.objects.create(
+        user=request.user,
+        amount=Decimal(data['amount']),
+        description=data.get('description', ''),
+        status=data.get('status', 'pending')
+    )
+
+    return Response({
+        'message': 'Payment created successfully',
+        'payment_id': payment.id
+    })
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def add_equipment(request):
+    """Add equipment (admin only)"""
+    if request.user.role != 'admin':
+        return Response({'error': 'Admin access required'}, status=403)
+
+    if request.method == 'POST':
+        data = request.data
+        equipment = Equipment.objects.create(
+            name=data['name'],
+            type=data['type'],
+            price=Decimal(data['price']),
+            stock_quantity=data['stock_quantity'],
+            description=data.get('description', '')
+        )
+        return Response({'message': 'Equipment added successfully', 'id': equipment.id})
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def equipment_detail(request, equipment_id):
+    """Equipment detail management"""
+    try:
+        equipment = Equipment.objects.get(id=equipment_id)
+    except Equipment.DoesNotExist:
+        return Response({'error': 'Equipment not found'}, status=404)
+
+    if request.method == 'GET':
+        return Response({
+            'id': equipment.id,
+            'name': equipment.name,
+            'type': equipment.type,
+            'price': str(equipment.price),
+            'stock_quantity': equipment.stock_quantity,
+            'description': equipment.description
+        })
+
+    elif request.method == 'PUT':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        data = request.data
+        equipment.name = data.get('name', equipment.name)
+        equipment.type = data.get('type', equipment.type)
+        equipment.price = Decimal(data.get('price', equipment.price))
+        equipment.stock_quantity = data.get('stock_quantity', equipment.stock_quantity)
+        equipment.description = data.get('description', equipment.description)
+        equipment.save()
+
+        return Response({'message': 'Equipment updated successfully'})
+
+    elif request.method == 'DELETE':
+        if request.user.role != 'admin':
+            return Response({'error': 'Admin access required'}, status=403)
+
+        equipment.delete()
+        return Response({'message': 'Equipment deleted successfully'})

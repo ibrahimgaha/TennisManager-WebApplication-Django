@@ -1,0 +1,1179 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block title %}Subscriber Dashboard - Tennis Club{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+.modern-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  min-height: 100vh;
+}
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  margin: 0 -15px 0 -15px;
+  color: white;
+}
+
+.sidebar-header h6 {
+  color: white !important;
+}
+
+.sidebar-header .text-muted {
+  color: rgba(255,255,255,0.8) !important;
+}
+
+.sidebar-logo {
+  width: 45px;
+  height: 45px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-nav {
+  padding: 1rem 0;
+}
+
+.sidebar-nav .nav-link {
+  color: #6c757d;
+  padding: 0.75rem 1.5rem;
+  margin: 0.25rem 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.sidebar-nav .nav-link.active {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+
+.btn-logout {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border: none;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  color: white;
+}
+
+.btn-logout i {
+  margin-right: 0.5rem;
+}
+
+.main-content {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Main content styling */
+.main-content {
+  background: #f8f9fc;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Modern card styling */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  transition: all 0.3s ease;
+  background: #ffffff;
+  margin-bottom: 1.5rem;
+  border-left: 0.25rem solid #ffc107;
+}
+
+.card:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+/* Utility classes */
+.border-left-primary { border-left: 0.25rem solid #007bff !important; }
+.border-left-success { border-left: 0.25rem solid #28a745 !important; }
+.border-left-info { border-left: 0.25rem solid #17a2b8 !important; }
+.border-left-warning { border-left: 0.25rem solid #ffc107 !important; }
+
+.text-xs { font-size: 0.75rem; }
+.font-weight-bold { font-weight: 700 !important; }
+.text-gray-800 { color: #5a5c69 !important; }
+.shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important; }
+
+.no-gutters { margin-right: 0; margin-left: 0; }
+.no-gutters > .col, .no-gutters > [class*="col-"] { padding-right: 0; padding-left: 0; }
+
+@media (max-width: 768px) {
+  .modern-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    z-index: 1050;
+    transition: left 0.3s ease;
+  }
+
+  .modern-sidebar.show {
+    left: 0;
+  }
+
+  .sidebar-footer {
+    position: relative;
+    bottom: auto;
+    margin-top: 2rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Modern Sidebar -->
+    <!-- Clean Beautiful Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-md-block collapse" style="
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+      position: relative;
+    ">
+      <div class="position-sticky pt-0">
+        <!-- Header Section -->
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+          <div class="d-flex align-items-center">
+            <div style="
+              width: 50px;
+              height: 50px;
+              background: rgba(255,255,255,0.2);
+              border-radius: 15px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 1.5rem;
+              margin-right: 12px;
+            ">⭐</div>
+            <div>
+              <h6 style="color: white; margin: 0; font-size: 1rem; font-weight: 600;">Subscriber Panel</h6>
+              <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;" id="subscriberName">Welcome, Subscriber</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div style="padding: 1rem 0;">
+          <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')" style="
+            color: white;
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateX(5px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(0)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">📊</span>
+            <span>Dashboard</span>
+          </a>
+
+          <a class="nav-link" href="#tennis-subscriptions" onclick="showSection('tennis-subscriptions')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🎾</span>
+            <span>Tennis Subscriptions</span>
+          </a>
+
+          <a class="nav-link" href="#equipment-orders" onclick="showSection('equipment-orders')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🛠️</span>
+            <span>Equipment Orders</span>
+          </a>
+
+          <a class="nav-link" href="#billing" onclick="showSection('billing')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">💳</span>
+            <span>Billing & Payments</span>
+          </a>
+
+          <a class="nav-link" href="#profile" onclick="showSection('profile')" style="
+            color: rgba(255,255,255,0.9);
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
+            <span style="margin-right: 0.8rem; font-size: 1.1rem;">👤</span>
+            <span>Profile</span>
+          </a>
+        </div>
+
+        <!-- Logout Section -->
+        <div style="position: absolute; bottom: 1rem; left: 0.8rem; right: 0.8rem;">
+          <button onclick="logout()" style="
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <span style="margin-right: 0.5rem;">🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+      <!-- Modern Dashboard Header -->
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+          <h1 class="h2 text-warning">
+            🎾 Subscriber Dashboard
+            <span class="badge bg-warning ms-2">Premium</span>
+          </h1>
+          <p class="text-muted mb-0">Enjoy premium access to courts, coaches, and exclusive features</p>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-warning" onclick="refreshData()">
+              🔄 Refresh
+            </button>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+              ⭐
+            </div>
+            <div>
+              <small class="fw-bold" id="subscriberNameHeader">Subscriber</small><br>
+              <small class="text-muted">Premium Member</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Overview -->
+      <div id="dashboard" class="section">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="activeTennisSubscriptions">0</h4>
+                    <p class="card-text">Tennis Subscriptions</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-calendar-check fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-success">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="totalEquipmentOrders">0</h4>
+                    <p class="card-text">Equipment Orders</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-tools fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-warning">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="totalSpent">$0</h4>
+                    <p class="card-text">Total Spent</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-currency-dollar fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-info">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h4 id="membershipStatus">Active</h4>
+                    <p class="card-text">Membership Status</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-check-circle fs-2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Quick Actions</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4 mb-2">
+                    <button class="btn btn-primary w-100" onclick="showSection('tennis-subscriptions')">
+                      <i class="bi bi-calendar-plus"></i><br>New Tennis Subscription
+                    </button>
+                  </div>
+                  <div class="col-md-4 mb-2">
+                    <button class="btn btn-success w-100" onclick="showSection('equipment-orders')">
+                      <i class="bi bi-cart-plus"></i><br>Order Equipment
+                    </button>
+                  </div>
+                  <div class="col-md-4 mb-2">
+                    <button class="btn btn-warning w-100" onclick="showSection('billing')">
+                      <i class="bi bi-receipt"></i><br>View Billing
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Subscriptions -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Current Subscriptions</h5>
+              </div>
+              <div class="card-body">
+                <div id="currentSubscriptions">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tennis Subscriptions -->
+      <div id="tennis-subscriptions" class="section d-none">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>New Tennis Subscription</h5>
+              </div>
+              <div class="card-body">
+                <form id="tennisSubscriptionForm">
+                  <div class="mb-3">
+                    <label for="subscriptionType" class="form-label">Subscription Type</label>
+                    <select class="form-select" id="subscriptionType" required>
+                      <option value="">Select type...</option>
+                      <option value="hiver">Winter (October-June)</option>
+                      <option value="ete">Summer (July-August)</option>
+                    </select>
+                    <div class="form-text">
+                      Winter: 9 months | Summer: 2 months
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="terrainType" class="form-label">Court Type</label>
+                    <select class="form-select" id="terrainType" required>
+                      <option value="">Select court type...</option>
+                      <option value="terre battue">Clay Court (Terre Battue)</option>
+                      <option value="dur">Hard Court (Dur)</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" required>
+                  </div>
+                  <div class="mb-3">
+                    <div class="alert alert-info">
+                      <strong>Pricing:</strong><br>
+                      Winter Subscription: $300/season<br>
+                      Summer Subscription: $100/season
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Subscribe Now</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>My Tennis Subscriptions</h5>
+              </div>
+              <div class="card-body">
+                <div id="myTennisSubscriptions">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipment Orders -->
+      <div id="equipment-orders" class="section d-none">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>Order Equipment</h5>
+              </div>
+              <div class="card-body">
+                <form id="equipmentOrderForm">
+                  <div class="mb-3">
+                    <label for="equipmentType" class="form-label">Equipment Type</label>
+                    <select class="form-select" id="equipmentType" required>
+                      <option value="">Select equipment...</option>
+                      <option value="RAQUETTE">Tennis Racket</option>
+                      <option value="SAC">Tennis Bag</option>
+                      <option value="BALLE">Tennis Balls</option>
+                      <option value="CHAUSSURE">Tennis Shoes</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" min="1" max="10" required>
+                  </div>
+                  <div class="mb-3">
+                    <div class="alert alert-info">
+                      <strong>Equipment Pricing:</strong><br>
+                      Racket: $50 each<br>
+                      Bag: $30 each<br>
+                      Balls (set of 3): $10 each<br>
+                      Shoes: $80 each
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-success w-100">Place Order</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5>My Equipment Orders</h5>
+              </div>
+              <div class="card-body">
+                <div id="myEquipmentOrders">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Billing & Payments -->
+      <div id="billing" class="section d-none">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h5>Billing History</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="billingHistoryBody">
+                      <tr>
+                        <td colspan="5" class="text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Payment Summary</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <strong>Total Spent This Year:</strong>
+                  <span id="yearlyTotal" class="float-end">$0.00</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Active Subscriptions:</strong>
+                  <span id="activeSubsCount" class="float-end">0</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Pending Payments:</strong>
+                  <span id="pendingPayments" class="float-end">$0.00</span>
+                </div>
+                <hr>
+                <div class="mb-3">
+                  <strong>Next Payment Due:</strong>
+                  <span id="nextPaymentDate" class="float-end">N/A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div id="profile" class="section d-none">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h5>Profile Information</h5>
+              </div>
+              <div class="card-body">
+                <form id="profileForm">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="profileUsername" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="profileUsername" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="profileEmail" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="profileEmail" readonly>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="profilePhone" class="form-label">Phone Number</label>
+                      <input type="tel" class="form-control" id="profilePhone" placeholder="Enter phone number">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="profileAddress" class="form-label">Address</label>
+                      <input type="text" class="form-control" id="profileAddress" placeholder="Enter address">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="profileBio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="profileBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-warning">Update Profile</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Account Statistics</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <strong>Member Since:</strong>
+                  <span id="memberSince" class="float-end">N/A</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Total Subscriptions:</strong>
+                  <span id="totalSubscriptions" class="float-end">0</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Total Orders:</strong>
+                  <span id="totalOrders" class="float-end">0</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Account Status:</strong>
+                  <span id="accountStatus" class="float-end badge bg-success">Active</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+<script>
+// Authentication check
+if (!localStorage.getItem('token') || localStorage.getItem('role') !== 'abonnée') {
+  window.location.href = '/auth/login/';
+}
+
+// Set subscriber name
+document.getElementById('subscriberName').textContent = `Welcome, ${localStorage.getItem('username')}`;
+
+// Global variables
+let currentSection = 'dashboard';
+
+// API helper
+const api = axios.create({
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  }
+});
+
+// Section management
+function showSection(sectionName) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.add('d-none');
+  });
+  
+  // Show selected section
+  document.getElementById(sectionName).classList.remove('d-none');
+  
+  // Update active nav
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  currentSection = sectionName;
+  
+  // Load section data
+  loadSectionData(sectionName);
+}
+
+// Load section data
+function loadSectionData(section) {
+  switch(section) {
+    case 'dashboard':
+      loadDashboardData();
+      break;
+    case 'tennis-subscriptions':
+      loadTennisSubscriptions();
+      break;
+    case 'equipment-orders':
+      loadEquipmentOrders();
+      break;
+    case 'billing':
+      loadBilling();
+      break;
+    case 'profile':
+      loadProfile();
+      break;
+  }
+}
+
+// Load dashboard data
+async function loadDashboardData() {
+  try {
+    // Load subscriptions and orders
+    const [tennisRes, equipmentRes] = await Promise.all([
+      api.get('/api/abonnements/'),
+      api.get('/api/equipement-choices/')
+    ]);
+    
+    // Update dashboard stats
+    document.getElementById('activeTennisSubscriptions').textContent = tennisRes.data.length || 0;
+    
+    // Load current subscriptions
+    loadCurrentSubscriptions();
+    
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+  }
+}
+
+// Load current subscriptions
+async function loadCurrentSubscriptions() {
+  try {
+    const response = await api.get('/api/abonnements/');
+    const subscriptions = response.data || [];
+    
+    const subscriptionsHtml = subscriptions.map(sub => `
+      <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+        <div>
+          <strong>${sub.type_abonnement} - ${sub.type_terrain}</strong><br>
+          <small class="text-muted">${sub.date_debut} to ${sub.date_fin}</small>
+        </div>
+        <span class="badge ${sub.est_actif ? 'bg-success' : 'bg-secondary'}">
+          ${sub.est_actif ? 'Active' : 'Inactive'}
+        </span>
+      </div>
+    `).join('');
+    
+    document.getElementById('currentSubscriptions').innerHTML = subscriptionsHtml || '<p class="text-muted">No active subscriptions</p>';
+    
+  } catch (error) {
+    console.error('Error loading current subscriptions:', error);
+    document.getElementById('currentSubscriptions').innerHTML = '<p class="text-danger">Error loading subscriptions</p>';
+  }
+}
+
+// Form handlers
+document.getElementById('tennisSubscriptionForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    type_abonnement: document.getElementById('subscriptionType').value,
+    type_terrain: document.getElementById('terrainType').value,
+    date_debut: document.getElementById('startDate').value
+  };
+  
+  try {
+    await api.post('/api/abonnement/tennis/', formData);
+    alert('Tennis subscription created successfully!');
+    loadDashboardData();
+    showSection('dashboard');
+  } catch (error) {
+    console.error('Error creating tennis subscription:', error);
+    alert('Error creating subscription. Please try again.');
+  }
+});
+
+document.getElementById('equipmentOrderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  try {
+    // First, get available equipment to find the equipment ID
+    const equipmentResponse = await api.get('/res/api/equipment/');
+    const equipment = equipmentResponse.data;
+
+    const selectedType = document.getElementById('equipmentType').value;
+    const quantity = parseInt(document.getElementById('quantity').value);
+
+    // Find equipment by type
+    const selectedEquipment = equipment.find(item => item.type === selectedType);
+
+    if (!selectedEquipment) {
+      alert('Selected equipment not found!');
+      return;
+    }
+
+    const formData = {
+      equipment_id: selectedEquipment.id,
+      quantity: quantity,
+      delivery_address: 'Club Address' // This could be from user profile
+    };
+
+    const response = await api.post('/res/api/equipment/order/', formData);
+
+    if (response.status === 200) {
+      alert('Equipment order placed successfully!');
+      document.getElementById('equipmentOrderForm').reset();
+      loadEquipmentOrders();
+      loadDashboardData();
+    }
+  } catch (error) {
+    console.error('Error placing equipment order:', error);
+    alert('Error placing order: ' + (error.response?.data?.error || 'Please try again.'));
+  }
+});
+
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('startDate').min = today;
+  
+  // Load profile data
+  document.getElementById('profileUsername').value = localStorage.getItem('username') || '';
+  document.getElementById('profileEmail').value = localStorage.getItem('email') || '';
+  
+  loadDashboardData();
+});
+
+// Refresh data
+function refreshData() {
+  loadSectionData(currentSection);
+}
+
+// Logout
+function logout() {
+  localStorage.clear();
+  window.location.href = '/auth/login/';
+}
+
+// ==================== TENNIS SUBSCRIPTIONS ====================
+async function loadTennisSubscriptions() {
+  try {
+    // Load all tennis subscriptions for the user
+    const response = await api.get('/api/abonnements/');
+    const subscriptions = response.data || [];
+
+    const subscriptionsHtml = subscriptions.map(sub => `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">${sub.type_abonnement} Subscription</h5>
+          <p class="card-text">
+            <strong>Court Type:</strong> ${sub.type_terrain}<br>
+            <strong>Start Date:</strong> ${sub.date_debut}<br>
+            <strong>End Date:</strong> ${sub.date_fin}<br>
+            <strong>Status:</strong>
+            <span class="badge bg-${sub.est_actif ? 'success' : 'secondary'}">
+              ${sub.est_actif ? 'Active' : 'Inactive'}
+            </span>
+          </p>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-primary" onclick="renewSubscription(${sub.id})">Renew</button>
+            <button class="btn btn-sm btn-warning" onclick="modifySubscription(${sub.id})">Modify</button>
+            <button class="btn btn-sm btn-danger" onclick="cancelSubscription(${sub.id})">Cancel</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('subscriptionsList').innerHTML = subscriptionsHtml ||
+      '<div class="alert alert-info">No tennis subscriptions found. Create your first subscription!</div>';
+
+  } catch (error) {
+    console.error('Error loading tennis subscriptions:', error);
+    document.getElementById('subscriptionsList').innerHTML =
+      '<div class="alert alert-danger">Error loading subscriptions</div>';
+  }
+}
+
+function renewSubscription(subscriptionId) {
+  if (confirm('Are you sure you want to renew this subscription?')) {
+    alert(`Renewing subscription ${subscriptionId} - functionality ready for implementation`);
+  }
+}
+
+function modifySubscription(subscriptionId) {
+  alert(`Modifying subscription ${subscriptionId} - functionality ready for implementation`);
+}
+
+async function cancelSubscription(subscriptionId) {
+  if (confirm('Are you sure you want to cancel this subscription?')) {
+    try {
+      // This would use a cancel subscription API
+      alert(`Subscription ${subscriptionId} cancelled successfully!`);
+      loadTennisSubscriptions();
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      alert('Error cancelling subscription');
+    }
+  }
+}
+
+// ==================== EQUIPMENT ORDERS ====================
+async function loadEquipmentOrders() {
+  try {
+    // Load equipment orders using the new API
+    const response = await api.get('/res/api/equipment/orders/');
+    const orders = response.data || [];
+
+    const ordersHtml = orders.map(order => `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Order #${order.id}</h5>
+          <p class="card-text">
+            <strong>Equipment:</strong> ${order.equipment_name || 'Equipment'}<br>
+            <strong>Quantity:</strong> ${order.quantity}<br>
+            <strong>Total Price:</strong> $${order.total_price}<br>
+            <strong>Order Date:</strong> ${new Date(order.order_date).toLocaleDateString()}<br>
+            <strong>Status:</strong>
+            <span class="badge bg-${getOrderStatusColor(order.status)}">${order.status}</span>
+          </p>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-info" onclick="trackOrder(${order.id})">Track Order</button>
+            <button class="btn btn-sm btn-secondary" onclick="downloadInvoice(${order.id})">Download Invoice</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Update both the orders list and the my equipment orders section
+    const ordersContainer = document.getElementById('ordersList') || document.getElementById('myEquipmentOrders');
+    if (ordersContainer) {
+      ordersContainer.innerHTML = ordersHtml ||
+        '<div class="alert alert-info">No equipment orders found. Place your first order!</div>';
+    }
+
+  } catch (error) {
+    console.error('Error loading equipment orders:', error);
+    const ordersContainer = document.getElementById('ordersList') || document.getElementById('myEquipmentOrders');
+    if (ordersContainer) {
+      ordersContainer.innerHTML = '<div class="alert alert-danger">Error loading orders</div>';
+    }
+  }
+}
+
+function getOrderStatusColor(status) {
+  const colors = {
+    'pending': 'warning',
+    'processing': 'info',
+    'shipped': 'primary',
+    'delivered': 'success',
+    'cancelled': 'danger'
+  };
+  return colors[status] || 'secondary';
+}
+
+function trackOrder(orderId) {
+  alert(`Tracking order ${orderId} - functionality ready for implementation`);
+}
+
+function downloadInvoice(orderId) {
+  alert(`Downloading invoice for order ${orderId} - functionality ready for implementation`);
+}
+
+// ==================== BILLING MANAGEMENT ====================
+async function loadBilling() {
+  try {
+    // Load billing information and payment history
+    const paymentsResponse = await api.get('/res/api/payments/');
+    const payments = paymentsResponse.data || [];
+
+    // Calculate billing summary
+    const totalSpent = payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
+    const thisMonthPayments = payments.filter(payment => {
+      const paymentDate = new Date(payment.payment_date);
+      const now = new Date();
+      return paymentDate.getMonth() === now.getMonth() && paymentDate.getFullYear() === now.getFullYear();
+    });
+    const thisMonthSpent = thisMonthPayments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
+
+    // Update billing summary
+    document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+    document.getElementById('thisMonthSpent').textContent = `$${thisMonthSpent.toFixed(2)}`;
+    document.getElementById('nextBilling').textContent = getNextBillingDate();
+
+    // Display payment history
+    const paymentsHtml = payments.map(payment => `
+      <tr>
+        <td>${new Date(payment.payment_date).toLocaleDateString()}</td>
+        <td>${payment.description || 'Tennis Service'}</td>
+        <td>$${payment.amount}</td>
+        <td><span class="badge bg-${payment.status === 'completed' ? 'success' : 'warning'}">${payment.status}</span></td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary" onclick="downloadReceipt('${payment.id}')">Receipt</button>
+        </td>
+      </tr>
+    `).join('');
+
+    document.getElementById('paymentsTableBody').innerHTML = paymentsHtml ||
+      '<tr><td colspan="5" class="text-center text-muted">No payment history found</td></tr>';
+
+  } catch (error) {
+    console.error('Error loading billing:', error);
+    document.getElementById('paymentsTableBody').innerHTML =
+      '<tr><td colspan="5" class="text-center text-danger">Error loading billing information</td></tr>';
+  }
+}
+
+function getNextBillingDate() {
+  const nextMonth = new Date();
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  nextMonth.setDate(1);
+  return nextMonth.toLocaleDateString();
+}
+
+function downloadReceipt(paymentId) {
+  alert(`Downloading receipt for payment ${paymentId} - functionality ready for implementation`);
+}
+
+function updatePaymentMethod() {
+  alert('Update Payment Method - functionality ready for implementation');
+}
+
+function downloadBillingStatement() {
+  alert('Download Billing Statement - functionality ready for implementation');
+}
+
+// ==================== PROFILE MANAGEMENT ====================
+async function loadProfile() {
+  try {
+    // Load user profile information
+    const username = localStorage.getItem('username');
+    const email = localStorage.getItem('email') || 'subscriber@tennis.com';
+    const role = localStorage.getItem('role');
+
+    // Populate profile form
+    document.getElementById('profileUsername').value = username || '';
+    document.getElementById('profileEmail').value = email;
+
+    // Display subscription status
+    const subscriptionStatus = `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Subscription Status</h5>
+          <p class="card-text">
+            <strong>Current Plan:</strong> <span class="badge bg-success">Premium Subscriber</span><br>
+            <strong>Member Since:</strong> ${new Date().toLocaleDateString()}<br>
+            <strong>Benefits:</strong> Priority booking, Equipment discounts, VIP tournaments
+          </p>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('subscriptionStatus').innerHTML = subscriptionStatus;
+
+  } catch (error) {
+    console.error('Error loading profile:', error);
+  }
+}
+
+// Handle profile form submission
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  try {
+    const formData = {
+      username: document.getElementById('profileUsername').value,
+      email: document.getElementById('profileEmail').value
+    };
+
+    // This would update the user profile
+    alert('Profile updated successfully!');
+
+    // Update localStorage
+    localStorage.setItem('username', formData.username);
+    localStorage.setItem('email', formData.email);
+
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    alert('Error updating profile');
+  }
+});
+
+// ==================== PREMIUM FEATURES ====================
+function accessVIPLounge() {
+  alert('Welcome to the VIP Lounge! Enjoy complimentary refreshments and priority court access.');
+}
+
+function bookPremiumCourt() {
+  alert('Premium Court Booking - Access to exclusive courts with premium amenities');
+}
+
+function joinVIPTournament() {
+  alert('VIP Tournament Registration - Exclusive tournaments for premium subscribers');
+}
+
+function requestPersonalTrainer() {
+  alert('Personal Trainer Request - Premium coaching services available');
+}
+</script>
+
+{% endblock %}

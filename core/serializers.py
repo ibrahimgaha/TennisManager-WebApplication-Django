@@ -16,7 +16,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             avatar=validated_data.get('avatar'),
-            role='joueur'  # Default role
+            role=validated_data.get('role', 'joueur')  # Use provided role or default to 'joueur'
 
         )
         user.set_password(validated_data['password'])

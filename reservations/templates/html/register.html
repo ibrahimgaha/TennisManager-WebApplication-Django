@@ -1,0 +1,187 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block title %}Register - Tennis Club{% endblock %}
+
+{% block content %}
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #004d00 0%, #006600 100%);">
+  <div class="row w-100 justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-success">Join Tennis Club</h2>
+            <p class="text-muted">Create your account to get started</p>
+          </div>
+
+          <div id="error" class="alert alert-danger d-none" role="alert"></div>
+          <div id="success" class="alert alert-success d-none" role="alert"></div>
+          <div id="loading" class="d-none text-center">
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <form id="registerForm">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="role" class="form-label">Account Type</label>
+              <select class="form-select" id="role" required>
+                <option value="">Select account type</option>
+                <option value="joueur">Player (Joueur)</option>
+                <option value="coach">Coach</option>
+                <option value="admin">Administrator</option>
+                <option value="abonnée">Subscriber (Abonné)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="avatar" class="form-label">Profile Picture (Optional)</label>
+              <input type="file" class="form-control" id="avatar" accept="image/*">
+            </div>
+
+            <button type="submit" id="registerBtn" class="btn btn-success w-100 py-2 mb-3">
+              Create Account
+            </button>
+          </form>
+
+          <div class="text-center">
+            <p class="mb-0">Already have an account?
+              <a href="{% url 'login_page' %}" class="text-success text-decoration-none fw-bold">Sign In</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+<script>
+// Function to get CSRF token
+function getCSRFToken() {
+  const token = document.querySelector('[name=csrfmiddlewaretoken]');
+  return token ? token.value : null;
+}
+
+// Configure axios defaults
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const role = document.getElementById('role').value;
+  const avatar = document.getElementById('avatar').files[0];
+
+  const errorDiv = document.getElementById('error');
+  const successDiv = document.getElementById('success');
+  const loadingDiv = document.getElementById('loading');
+  const registerBtn = document.getElementById('registerBtn');
+
+  // Reset states
+  errorDiv.classList.add('d-none');
+  successDiv.classList.add('d-none');
+  loadingDiv.classList.remove('d-none');
+  registerBtn.disabled = true;
+
+  // Validation
+  if (password !== confirmPassword) {
+    errorDiv.textContent = 'Passwords do not match';
+    errorDiv.classList.remove('d-none');
+    loadingDiv.classList.add('d-none');
+    registerBtn.disabled = false;
+    return;
+  }
+
+  if (password.length < 8) {
+    errorDiv.textContent = 'Password must be at least 8 characters long';
+    errorDiv.classList.remove('d-none');
+    loadingDiv.classList.add('d-none');
+    registerBtn.disabled = false;
+    return;
+  }
+
+  try {
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('role', role);
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+
+    // Register request
+    const headers = {
+      'Content-Type': 'multipart/form-data'
+    };
+
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+      headers['X-CSRFToken'] = csrfToken;
+    }
+
+    const response = await axios.post('/auth/api/register/', formData, { headers });
+
+    successDiv.textContent = 'Account created successfully! Redirecting to login...';
+    successDiv.classList.remove('d-none');
+
+    // Redirect to login after 2 seconds
+    setTimeout(() => {
+      window.location.href = '{% url "login_page" %}';
+    }, 2000);
+
+  } catch (err) {
+    console.error('Registration error:', err);
+    let errorMessage = 'Registration failed. Please try again.';
+
+    if (err.response?.data) {
+      if (typeof err.response.data === 'string') {
+        errorMessage = err.response.data;
+      } else if (err.response.data.email) {
+        errorMessage = 'Email already exists';
+      } else if (err.response.data.username) {
+        errorMessage = 'Username already exists';
+      } else if (err.response.data.password) {
+        errorMessage = err.response.data.password[0];
+      }
+    }
+
+    errorDiv.textContent = errorMessage;
+    errorDiv.classList.remove('d-none');
+  } finally {
+    loadingDiv.classList.add('d-none');
+    registerBtn.disabled = false;
+  }
+});
+</script>
+
+{% endblock %}

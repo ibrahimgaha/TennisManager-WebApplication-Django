@@ -1,0 +1,119 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block title %}Login - Tennis Club{% endblock %}
+
+{% block content %}
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #004d00 0%, #006600 100%);">
+  <div class="row w-100 justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-success">Welcome Back</h2>
+            <p class="text-muted">Sign in to your Tennis Club account</p>
+          </div>
+
+          <div id="error" class="alert alert-danger d-none" role="alert"></div>
+          <div id="loading" class="d-none text-center">
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <form id="loginForm">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" id="loginBtn" class="btn btn-success w-100 py-2 mb-3">
+              Sign In
+            </button>
+          </form>
+
+          <div class="text-center">
+            <p class="mb-0">Don't have an account?
+              <a href="{% url 'register_page' %}" class="text-success text-decoration-none fw-bold">Sign Up</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+<script>
+// Function to get CSRF token
+function getCSRFToken() {
+  const token = document.querySelector('[name=csrfmiddlewaretoken]');
+  return token ? token.value : null;
+}
+
+// Configure axios defaults
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('error');
+  const loadingDiv = document.getElementById('loading');
+  const loginBtn = document.getElementById('loginBtn');
+
+  // Reset states
+  errorDiv.classList.add('d-none');
+  loadingDiv.classList.remove('d-none');
+  loginBtn.disabled = true;
+
+  try {
+    // Login request
+    const headers = {};
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+      headers['X-CSRFToken'] = csrfToken;
+    }
+
+    const response = await axios.post('/auth/api/login/', { email, password }, { headers });
+    const { access, refresh, user } = response.data;
+    console.log('Login successful with user data:', user);
+    console.log('User role:', user.role);
+
+    // Store tokens and user info (now included in login response)
+    localStorage.setItem('token', access);
+    localStorage.setItem('refresh', refresh);
+    localStorage.setItem('role', user.role);
+    localStorage.setItem('username', user.username);
+    localStorage.setItem('email', user.email);
+    localStorage.setItem('userId', user.id);
+
+    // Redirect based on role
+    const roleRedirects = {
+      'admin': '/auth/admin-dashboard/',
+      'coach': '/auth/coach-dashboard/',
+      'joueur': '/auth/joueur-dashboard/',
+      'abonnée': '/auth/abonne-dashboard/'
+    };
+
+    console.log('Redirecting to:', roleRedirects[user.role]);
+    window.location.href = roleRedirects[user.role] || '/auth/joueur-dashboard/';
+
+  } catch (err) {
+    console.error('Login error:', err);
+    errorDiv.textContent = err.response?.data?.detail || 'Invalid email or password';
+    errorDiv.classList.remove('d-none');
+  } finally {
+    loadingDiv.classList.add('d-none');
+    loginBtn.disabled = false;
+  }
+});
+</script>
+
+{% endblock %}

@@ -9,11 +9,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule
 from core.models import User
+from reservations import views
 #from rest_framework.response import Response
 #from rest_framework.decorators import api_view
 @csrf_exempt
 def list_terrains(request):
-    terrains = Terrain.objects.all().values()
+    terrains = Terrain.objects.all().values('id', 'name', 'location', 'price_per_hour', 'available')
     return JsonResponse(list(terrains), safe=False)
 
 
@@ -96,58 +97,52 @@ def update_terrain(request, terrain_id):
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+from rest_framework.permissions import AllowAny
 
 @api_view(['POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])  # 👈 This is critical
 def make_reservation(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user = request.user
+    data = request.data
 
-        # Vérifie que l'utilisateur est bien un joueur
-        if not hasattr(user, 'role') or user.role.lower() != 'joueur':
-            return JsonResponse({'error': 'Only users with role "joueur" can make a reservation.'}, status=403)
+    try:
+        terrain = Terrain.objects.get(id=data['terrain_id'])
+    except Terrain.DoesNotExist:
+        return JsonResponse({'error': 'Terrain not found.'}, status=404)
 
-        try:
-            terrain = Terrain.objects.get(id=data['terrain_id'])
-        except Terrain.DoesNotExist:
-            return JsonResponse({'error': 'Terrain not found.'}, status=404)
+    start_time = data['start_time']
+    end_time = data['end_time']
 
-        start_time = data['start_time']
-        end_time = data['end_time']
+    start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
+    end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
 
-        start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
-        end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
+    duration = (end_time_obj - start_time_obj).seconds / 3600
+    if duration < 1:
+        duration = 1
+    duration = Decimal(duration)
 
-        duration = (end_time_obj - start_time_obj).seconds / 3600
-        if duration < 1:
-            duration = 1
-        duration = Decimal(duration)
+    total_price = duration * terrain.price_per_hour
 
-        total_price = duration * terrain.price_per_hour
+    user = request.user if request.user.is_authenticated else None
 
-        reservation = Reservation.objects.create(
-            user=user,
-            terrain=terrain,
-            date=data['date'],
-            start_time=start_time,
-            end_time=end_time
-        )
+    reservation = Reservation.objects.create(
+        user=user,
+        terrain=terrain,
+        date=data['date'],
+        start_time=start_time,
+        end_time=end_time
+    )
 
-        return JsonResponse({
-            'message': 'Reservation created successfully',
-            'reservation': {
-                'user': user.username,
-                'terrain': terrain.name,
-                'date': data['date'],
-                'start_time': start_time,
-                'end_time': end_time,
-                'total_price': str(total_price)
-            }
-        })
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({
+        'message': 'Reservation created successfully',
+        'reservation': {
+            'user': user.username if user else 'Anonymous',
+            'terrain': terrain.name,
+            'date': data['date'],
+            'start_time': start_time,
+            'end_time': end_time,
+            'total_price': str(total_price)
+        }
+    })
 
 @api_view(['PUT'])
 @authentication_classes([JWTAuthentication])
@@ -161,6 +156,10 @@ def update_reservation(request, reservation_id):
         reservation = Reservation.objects.get(id=reservation_id)
     except Reservation.DoesNotExist:
         return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    # Anonymous reservations cannot be updated
+    if reservation.user is None:
+        return JsonResponse({'error': 'Anonymous reservations cannot be updated.'}, status=403)
 
     if reservation.user != user:
         return JsonResponse({'error': 'You are not allowed to update this reservation.'}, status=403)
@@ -192,6 +191,10 @@ def delete_reservation(request, reservation_id):
         reservation = Reservation.objects.get(id=reservation_id)
     except Reservation.DoesNotExist:
         return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    # Anonymous reservations cannot be deleted
+    if reservation.user is None:
+        return JsonResponse({'error': 'Anonymous reservations cannot be deleted.'}, status=403)
 
     if reservation.user != user:
         return JsonResponse({'error': 'You are not allowed to delete this reservation.'}, status=403)
@@ -582,3 +585,6 @@ def home(request):
 
 def base(request):
     return render(request, 'html/base.html')
+
+def reservation(request):
+    return render(request, 'html/reservation.html')

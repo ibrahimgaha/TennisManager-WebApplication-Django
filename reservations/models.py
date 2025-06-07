@@ -17,7 +17,7 @@ class Terrain(models.Model):
         return self.name
 
 class Reservation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     terrain = models.ForeignKey(Terrain, on_delete=models.CASCADE)
     date = models.DateField()
     start_time = models.TimeField()
@@ -27,7 +27,8 @@ class Reservation(models.Model):
         unique_together = ('terrain', 'date', 'start_time', 'end_time')
 
     def __str__(self):
-        return f"{self.user.username} - {self.terrain.name} ({self.date} {self.start_time}-{self.end_time})"
+        username = self.user.username if self.user else "Anonymous"
+        return f"{username} - {self.terrain.name} ({self.date} {self.start_time}-{self.end_time})"
 
     def calculate_price(self):
         start = timedelta(hours=self.start_time.hour, minutes=self.start_time.minute)

@@ -7,7 +7,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule
+from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule, ScheduleSlot
 from core.models import User
 from reservations import views
 #from rest_framework.response import Response
@@ -302,16 +302,48 @@ def create_or_update_schedule(request):
 @permission_classes([IsAuthenticated])
 def check_coach_availability(request, coach_id, date):
     try:
+        from datetime import datetime
+
         # Ensure the coach exists
-        coach = get_object_or_404(Coach, id=coach_id)
+        try:
+            coach = Coach.objects.get(id=coach_id)
+        except Coach.DoesNotExist:
+            return JsonResponse({'error': 'Coach not found'}, status=404)
 
-        schedules = Schedule.objects.filter(
+        # Parse the date
+        try:
+            availability_date = datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date format. Use YYYY-MM-DD'}, status=400)
+
+        # Get available schedule slots for this coach and date
+        available_slots = ScheduleSlot.objects.filter(
             coach=coach,
-            date=date,
+            date=availability_date,
             is_booked=False
-        ).values("start_time", "end_time")
+        ).order_by('start_time')
 
-        return JsonResponse({"available_times": list(schedules)}, status=200)
+        # Format the available times
+        available_times = []
+        for slot in available_slots:
+            available_times.append({
+                'id': slot.id,
+                'start_time': slot.start_time.strftime('%H:%M'),
+                'end_time': slot.end_time.strftime('%H:%M'),
+                'date': slot.date.strftime('%Y-%m-%d')
+            })
+
+        return JsonResponse({
+            'coach': {
+                'id': coach.id,
+                'name': coach.name,
+                'price_per_hour': float(coach.price_per_hour)
+            },
+            'date': availability_date.strftime('%Y-%m-%d'),
+            'available_times': available_times,
+            'total_available': len(available_times)
+        }, status=200)
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 

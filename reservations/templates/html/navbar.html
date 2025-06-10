@@ -272,18 +272,23 @@
   <body>
     <nav>
       <div class="logo">
-        <img
-          src="{% static 'images/image-removebg-preview (1).png' %}"
-          alt="logo"
-        />
-        <h1>Tennis</h1>
-        <h1>Club</h1>
+        <a
+          href="/"
+          style="display: flex; align-items: center; text-decoration: none"
+        >
+          <img
+            src="{% static 'images/image-removebg-preview (1).png' %}"
+            alt="logo"
+          />
+          <h1>Tennis</h1>
+          <h1>Club</h1>
+        </a>
       </div>
 
       <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="#">Services</a></li>
-        <li><a href="#">Reservation</a></li>
+        <li><a href="/reservation">Reservation</a></li>
         <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
         <li><a href="#">Blog</a></li>
         <li><a href="#">Contact Us</a></li>
@@ -311,8 +316,8 @@
           </a>
         </div>
         <div class="auth-buttons">
-          <a href="./register" class="signin">Sign In</a>
-          <a href="./login" class="signup">Sign Up</a>
+          <a href="/auth/login/" class="signin">Sign In</a>
+          <a href="/auth/register/" class="signup">Sign Up</a>
         </div>
         <div
           class="hamburger"
@@ -329,17 +334,17 @@
 
     <div class="menubar">
       <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="#">Services</a></li>
-        <li><a href="#">Reservation</a></li>
+        <li><a href="/reservation">Reservation</a></li>
         <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
         <li><a href="#">Blog</a></li>
         <li><a href="#">Contact Us</a></li>
         <li class="auth-link">
-          <a href="./register" class="signin">Sign In</a>
+          <a href="/auth/login/" class="signin">Sign In</a>
         </li>
         <li class="auth-link signup">
-          <a href="./login" class="signup">Sign Up</a>
+          <a href="/auth/register/" class="signup">Sign Up</a>
         </li>
       </ul>
     </div>
@@ -646,6 +651,13 @@
         // Check if user is logged in
         const token = localStorage.getItem("token");
         const userRole = localStorage.getItem("role");
+        const username = localStorage.getItem("username");
+
+        console.log("🔍 Subscription Debug Info:");
+        console.log("Token:", token ? "Present" : "Missing");
+        console.log("User Role:", userRole);
+        console.log("Username:", username);
+        console.log("Plan Type:", planType);
 
         if (!token) {
           alert("Please login first to subscribe!");
@@ -654,11 +666,15 @@
         }
 
         if (userRole !== "joueur") {
-          alert("Only players can subscribe to premium plans!");
+          alert(
+            `Only players can subscribe to premium plans! Your current role is: ${userRole}`
+          );
           return;
         }
 
         try {
+          console.log("🚀 Sending subscription request...");
+
           const response = await axios.post(
             "/auth/api/subscribe/",
             {
@@ -672,9 +688,11 @@
             }
           );
 
+          console.log("✅ Subscription response:", response);
+
           if (response.status === 200) {
             alert(
-              `Successfully subscribed to ${planType} plan! Your role has been updated to subscriber.`
+              `🎉 Successfully subscribed to ${planType} plan! Your role has been updated to subscriber.`
             );
 
             // Update local storage
@@ -685,11 +703,29 @@
             window.location.href = "/auth/abonne-dashboard/";
           }
         } catch (error) {
-          console.error("Subscription error:", error);
-          if (error.response?.data?.error) {
-            alert(error.response.data.error);
+          console.error("❌ Subscription error:", error);
+
+          if (error.response) {
+            console.log("Error status:", error.response.status);
+            console.log("Error data:", error.response.data);
+
+            if (error.response.status === 403) {
+              alert(
+                "🚫 Access denied. Please make sure you're logged in as a player and try again."
+              );
+            } else if (error.response.status === 401) {
+              alert("🔒 Authentication failed. Please login again.");
+              localStorage.clear();
+              window.location.href = "/auth/login/";
+            } else if (error.response?.data?.error) {
+              alert(`❌ ${error.response.data.error}`);
+            } else {
+              alert("❌ Subscription failed. Please try again.");
+            }
           } else {
-            alert("Subscription failed. Please try again.");
+            alert(
+              "❌ Network error. Please check your connection and try again."
+            );
           }
         }
       }

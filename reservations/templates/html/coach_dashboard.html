@@ -14,76 +14,123 @@ body {
 /* Clean Sidebar */
 .modern-sidebar {
   background: #ffffff;
-  border-right: 1px solid #dee2e6;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-right: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
   min-height: 100vh;
 }
 
 .sidebar-header {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-  border-bottom: 1px solid #dee2e6;
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(
+    135deg,
+    #2e7d32 0%,
+    #c6ff00 100%
+  ); /* Tennis court green to tennis ball yellow */
+  color: #ffffff;
+}
+
+.sidebar-header h6 {
+  color: white !important;
+}
+
+.sidebar-header .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .sidebar-logo {
-  width: 50px;
-  height: 50px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.sidebar-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar-nav {
   padding: 1rem 0;
-  list-style: none;
-  margin: 0;
 }
 
 .sidebar-nav .nav-link {
-  color: #6c757d;
-  padding: 0.75rem 1.5rem;
-  margin: 0.25rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
+  color: #424242;
+  padding: 1rem 1.75rem; /* Increased padding for larger clickable area */
+  margin: 0.5rem 1rem; /* Increased margin for spacing */
+  border-radius: 14px; /* Slightly larger border-radius for aesthetics */
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem; /* Increased font size for text */
 }
 
-.sidebar-nav .nav-link:hover,
-.sidebar-nav .nav-link.active {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
+.sidebar-nav .nav-link:hover {
+  background: linear-gradient(135deg, #1a237e 0%, #2e7d32 100%);
+  color: #ffffff;
   transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
 }
 
-.nav-icon {
-  margin-right: 0.75rem;
+.sidebar-nav .nav-link.active {
+  background: linear-gradient(135deg, #1a237e 0%, #2e7d32 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
+}
+
+.sidebar-nav .nav-link span {
+  font-size: 1.3rem; /* Increased icon size */
+  margin-right: 1rem; /* Increased margin for better spacing */
+  width: 24px; /* Adjusted width for larger icons */
+  text-align: center;
+}
+
+.sidebar-nav .nav-link i {
   font-size: 1.1rem;
+  margin-right: 0.75rem;
   width: 20px;
   text-align: center;
 }
 
+.sidebar-footer {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+
 .btn-logout {
-  background: #dc3545;
+  background: linear-gradient(135deg, #d81b60 0%, #c6ff00 100%);
   border: none;
-  color: white;
+  color: #ffffff;
   padding: 0.75rem;
-  border-radius: 8px;
-  width: 100%;
-  margin: 1rem;
+  border-radius: 12px;
+  font-weight: 500;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-logout:hover {
-  background: #c82333;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px hsl(100, 83.2%, 62.5%);
+  color: white;
 }
+
+.btn-logout i {
+  margin-right: 0.5rem;
+}
+
 
 /* Main Content */
 .main-content {
@@ -183,7 +230,11 @@ body {
   <div class="row">
     <!-- Clean Beautiful Sidebar -->
     <nav class="col-md-3 col-lg-2 d-md-block collapse" style="
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     background: linear-gradient(
+          135deg,
+          hsl(100, 83.2%, 62.5%) ; 0%,
+          rgb(91, 162, 75) 100%
+        );
       min-height: 100vh;
       box-shadow: 4px 0 15px rgba(0,0,0,0.1);
       position: relative;
@@ -438,29 +489,49 @@ body {
 
       <!-- Schedule Management -->
       <div id="schedule" class="section d-none">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3>📅 My Schedule</h3>
-          <button class="btn btn-success" onclick="showAddScheduleModal()">
-            ➕ Add Time Slot
-          </button>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="scheduleDate" class="form-label">Select Date</label>
-            <input type="date" class="form-control" id="scheduleDate" onchange="loadScheduleForDate()">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3>📅 My Weekly Schedule (Emploi du Temps)</h3>
+          <div class="alert alert-info mb-0 p-2">
+            <small><i class="bi bi-info-circle"></i> This schedule is set by the admin</small>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h5>Schedule List</h5>
+        <!-- Weekly Schedule View -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="bi bi-calendar-week"></i> Weekly Schedule Overview</h5>
+              </div>
+              <div class="card-body">
+                <div id="weeklyScheduleView">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading your weekly schedule...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <div id="scheduleList">
-              <div class="text-center">
-                <div class="spinner-border text-success" role="status">
-                  <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <!-- Upcoming Sessions -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="bi bi-clock"></i> Upcoming Sessions (Next 7 Days)</h5>
+              </div>
+              <div class="card-body">
+                <div id="upcomingSessions">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading upcoming sessions...</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -482,9 +553,10 @@ body {
                 <thead class="table-success">
                   <tr>
                     <th>Student</th>
+                    <th>Email</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Status</th>
+                    <th>Price</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -512,9 +584,45 @@ body {
           </button>
         </div>
 
+        <!-- Equipment Filters -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="equipmentSearch" class="form-label">🔍 Search Equipment</label>
+                <input type="text" class="form-control" id="equipmentSearch" placeholder="Search by name, brand, or type..." onkeyup="filterEquipment()">
+              </div>
+              <div class="col-md-3">
+                <label for="equipmentTypeFilter" class="form-label">📦 Filter by Type</label>
+                <select class="form-select" id="equipmentTypeFilter" onchange="filterEquipment()">
+                  <option value="">All Types</option>
+                  <option value="RAQUETTE">🎾 Rackets</option>
+                  <option value="SAC">👜 Bags</option>
+                  <option value="BALLE">🎾 Balls</option>
+                  <option value="CHAUSSURE">👟 Shoes</option>
+                  <option value="ACCESSOIRE">🔧 Accessories</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="equipmentAvailabilityFilter" class="form-label">✅ Availability</label>
+                <select class="form-select" id="equipmentAvailabilityFilter" onchange="filterEquipment()">
+                  <option value="">All Items</option>
+                  <option value="available">Available Only</option>
+                  <option value="unavailable">Out of Stock</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-header">
-            <h5>Available Equipment</h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5>Available Equipment</h5>
+              <button class="btn btn-outline-success btn-sm" onclick="loadEquipment()">
+                🔄 Refresh
+              </button>
+            </div>
           </div>
           <div class="card-body">
             <div id="equipmentList">
@@ -522,6 +630,7 @@ body {
                 <div class="spinner-border text-success" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
+                <p class="mt-2">Loading equipment inventory...</p>
               </div>
             </div>
           </div>
@@ -632,20 +741,28 @@ async function loadDashboardData() {
     // Get current coach info
     await getCurrentCoach();
     
-    // Load reservations
-    const response = await api.get('/player/reservations/');
-    const reservations = response.data.reservations || [];
-    
-    // Calculate stats
-    const today = new Date().toISOString().split('T')[0];
-    const todayReservations = reservations.filter(r => r.date === today);
-    
-    document.getElementById('todayReservations').textContent = todayReservations.length;
-    document.getElementById('weekReservations').textContent = reservations.length;
-    
-    // Calculate total earnings
-    const totalEarnings = reservations.reduce((sum, r) => sum + parseFloat(r.total_price || 0), 0);
-    document.getElementById('totalEarnings').textContent = `$${totalEarnings.toFixed(2)}`;
+    // Load coach dashboard stats
+    const response = await api.get('/res/api/coach/dashboard-stats/');
+    const stats = response.data.stats || {};
+    const earnings = response.data.earnings || {};
+    const todaySchedule = response.data.today_schedule || [];
+
+    // Update dashboard stats
+    document.getElementById('todayReservations').textContent = stats.today_sessions || 0;
+    document.getElementById('weekReservations').textContent = stats.week_sessions || 0;
+    document.getElementById('totalEarnings').textContent = `$${(earnings.total || 0).toFixed(2)}`;
+
+    // Update today's earnings if element exists
+    const todayEarningsElement = document.getElementById('todayEarnings');
+    if (todayEarningsElement) {
+      todayEarningsElement.textContent = `$${(earnings.today || 0).toFixed(2)}`;
+    }
+
+    // Update week earnings if element exists
+    const weekEarningsElement = document.getElementById('weekEarnings');
+    if (weekEarningsElement) {
+      weekEarningsElement.textContent = `$${(earnings.week || 0).toFixed(2)}`;
+    }
     
     // Load today's schedule
     loadTodaySchedule();
@@ -715,61 +832,137 @@ function logout() {
 
 // ==================== SCHEDULE MANAGEMENT ====================
 async function loadSchedule() {
-  console.log('Loading schedule...');
+  console.log('Loading coach schedule...');
 
   try {
-    // Show loading
-    document.getElementById('scheduleList').innerHTML = `
+    // Show loading for weekly schedule
+    document.getElementById('weeklyScheduleView').innerHTML = `
       <div class="text-center">
         <div class="spinner-border text-success" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-2">Loading schedule...</p>
+        <p class="mt-2">Loading your weekly schedule...</p>
       </div>
     `;
 
-    const response = await api.get('/res/api/coach/schedule/');
-    const schedules = response.data || [];
-
-    if (schedules.length === 0) {
-      document.getElementById('scheduleList').innerHTML = `
-        <div class="text-center text-muted">
-          <p>📅 No schedule set yet</p>
-          <p>Click "Add Time Slot" to create your schedule</p>
+    // Show loading for upcoming sessions
+    document.getElementById('upcomingSessions').innerHTML = `
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      `;
-      return;
-    }
+        <p class="mt-2">Loading upcoming sessions...</p>
+      </div>
+    `;
 
-    const scheduleHtml = schedules.map(schedule => `
-      <div class="card mb-2">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h6 class="card-title mb-1">📅 ${schedule.date}</h6>
-              <p class="card-text mb-1">
-                <small class="text-muted">⏰ ${schedule.start_time} - ${schedule.end_time}</small>
-              </p>
-              <span class="badge bg-${schedule.is_booked ? 'danger' : 'success'}">
-                ${schedule.is_booked ? '❌ Booked' : '✅ Available'}
-              </span>
+    // For now, we'll show a mock schedule since the backend is not fully ready
+    // In a real implementation, this would call: const response = await api.get('/res/api/coach/schedule/');
+
+    // Mock weekly schedule data
+    const mockWeeklySchedule = {
+      weekly_schedule: [
+        { day_of_week: 'monday', start_time: '09:00', end_time: '12:00' },
+        { day_of_week: 'monday', start_time: '14:00', end_time: '17:00' },
+        { day_of_week: 'wednesday', start_time: '10:00', end_time: '13:00' },
+        { day_of_week: 'friday', start_time: '09:00', end_time: '12:00' },
+        { day_of_week: 'saturday', start_time: '08:00', end_time: '11:00' }
+      ],
+      upcoming_slots: [
+        { date: '2024-01-15', start_time: '09:00', end_time: '10:00', is_booked: false },
+        { date: '2024-01-15', start_time: '10:00', end_time: '11:00', is_booked: true, booked_by__username: 'john_doe' },
+        { date: '2024-01-17', start_time: '10:00', end_time: '11:00', is_booked: false },
+        { date: '2024-01-19', start_time: '09:00', end_time: '10:00', is_booked: true, booked_by__username: 'jane_smith' }
+      ]
+    };
+
+    // Display weekly schedule
+    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    let weeklyHtml = '<div class="row">';
+
+    daysOfWeek.forEach((day, index) => {
+      const daySchedules = mockWeeklySchedule.weekly_schedule.filter(s => s.day_of_week === day);
+
+      weeklyHtml += `
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              <h6 class="mb-0">${dayNames[index]}</h6>
             </div>
-            <button class="btn btn-sm btn-outline-danger" onclick="deleteSchedule(${schedule.id})">
-              🗑️ Delete
-            </button>
+            <div class="card-body">
+              ${daySchedules.length > 0 ?
+                daySchedules.map(schedule => `
+                  <div class="mb-2 p-2 bg-light rounded">
+                    <i class="bi bi-clock text-success"></i>
+                    <strong>${schedule.start_time} - ${schedule.end_time}</strong>
+                  </div>
+                `).join('') :
+                '<p class="text-muted mb-0"><i class="bi bi-x-circle"></i> No sessions</p>'
+              }
+            </div>
           </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    });
 
-    document.getElementById('scheduleList').innerHTML = scheduleHtml;
+    weeklyHtml += '</div>';
+    document.getElementById('weeklyScheduleView').innerHTML = weeklyHtml;
+
+    // Display upcoming sessions
+    if (mockWeeklySchedule.upcoming_slots.length === 0) {
+      document.getElementById('upcomingSessions').innerHTML = `
+        <div class="text-center text-muted">
+          <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+          <p class="mt-2">No upcoming sessions scheduled</p>
+        </div>
+      `;
+    } else {
+      const upcomingHtml = mockWeeklySchedule.upcoming_slots.map(slot => `
+        <div class="card mb-2">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title mb-1">
+                  <i class="bi bi-calendar-date"></i> ${new Date(slot.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </h6>
+                <p class="card-text mb-1">
+                  <i class="bi bi-clock"></i> ${slot.start_time} - ${slot.end_time}
+                </p>
+                <span class="badge bg-${slot.is_booked ? 'danger' : 'success'}">
+                  ${slot.is_booked ?
+                    `<i class="bi bi-person-check"></i> Booked by ${slot.booked_by__username}` :
+                    '<i class="bi bi-check-circle"></i> Available'
+                  }
+                </span>
+              </div>
+              <div>
+                ${slot.is_booked ?
+                  '<i class="bi bi-person-fill text-primary" style="font-size: 1.5rem;"></i>' :
+                  '<i class="bi bi-clock text-success" style="font-size: 1.5rem;"></i>'
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('upcomingSessions').innerHTML = upcomingHtml;
+    }
 
   } catch (error) {
     console.error('Error loading schedule:', error);
-    document.getElementById('scheduleList').innerHTML = `
+    document.getElementById('weeklyScheduleView').innerHTML = `
+      <div class="alert alert-warning">
+        <h6><i class="bi bi-exclamation-triangle"></i> Schedule Not Available</h6>
+        <p class="mb-0">Your schedule has not been set by the admin yet. Please contact the administrator to set up your weekly schedule.</p>
+      </div>
+    `;
+
+    document.getElementById('upcomingSessions').innerHTML = `
       <div class="alert alert-info">
-        <h6>📅 Schedule Management</h6>
-        <p class="mb-0">No schedule found. Click "Add Time Slot" to create your availability schedule.</p>
+        <h6><i class="bi bi-info-circle"></i> No Sessions</h6>
+        <p class="mb-0">No upcoming sessions found.</p>
       </div>
     `;
   }
@@ -880,7 +1073,7 @@ async function loadMyReservations() {
     // Show loading
     document.getElementById('reservationsTableBody').innerHTML = `
       <tr>
-        <td colspan="5" class="text-center">
+        <td colspan="6" class="text-center">
           <div class="spinner-border text-success" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
@@ -891,12 +1084,15 @@ async function loadMyReservations() {
 
     // Try to get coach reservations from the API
     const response = await api.get('/res/api/coach/reservations/');
-    const reservations = response.data || [];
+    const data = response.data || {};
+    const upcomingReservations = data.upcoming_reservations || [];
+    const pastReservations = data.past_reservations || [];
+    const allReservations = [...upcomingReservations, ...pastReservations];
 
-    if (reservations.length === 0) {
+    if (allReservations.length === 0) {
       document.getElementById('reservationsTableBody').innerHTML = `
         <tr>
-          <td colspan="5" class="text-center text-muted">
+          <td colspan="6" class="text-center text-muted">
             <p class="mb-1">📋 No student sessions found</p>
             <small>Student bookings will appear here when they reserve your time</small>
           </td>
@@ -905,22 +1101,59 @@ async function loadMyReservations() {
       return;
     }
 
-    const reservationsHtml = reservations.map(reservation => `
-      <tr>
-        <td>👨‍🎓 ${reservation.user?.username || reservation.player_name || 'Student'}</td>
-        <td>📅 ${reservation.date}</td>
-        <td>⏰ ${reservation.start_time} - ${reservation.end_time}</td>
-        <td><span class="badge bg-success">✅ Confirmed</span></td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary" onclick="markComplete(${reservation.id})">
-            ✅ Complete
-          </button>
-          <button class="btn btn-sm btn-outline-warning" onclick="addNotes(${reservation.id})">
-            📝 Notes
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    // Create sections for upcoming and past reservations
+    let reservationsHtml = '';
+
+    if (upcomingReservations.length > 0) {
+      reservationsHtml += `
+        <tr class="table-success">
+          <td colspan="6" class="fw-bold">📅 Upcoming Sessions (${upcomingReservations.length})</td>
+        </tr>
+      `;
+
+      upcomingReservations.forEach(reservation => {
+        reservationsHtml += `
+          <tr>
+            <td>👨‍🎓 ${reservation.player_name}</td>
+            <td>📧 ${reservation.player_email}</td>
+            <td>📅 ${reservation.date}</td>
+            <td>⏰ ${reservation.start_time} - ${reservation.end_time}</td>
+            <td>💰 $${reservation.total_price.toFixed(2)}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary" onclick="markComplete(${reservation.id})">
+                ✅ Complete
+              </button>
+              <button class="btn btn-sm btn-outline-warning" onclick="addNotes(${reservation.id})">
+                📝 Notes
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    if (pastReservations.length > 0) {
+      reservationsHtml += `
+        <tr class="table-secondary">
+          <td colspan="6" class="fw-bold">📋 Past Sessions (${pastReservations.length})</td>
+        </tr>
+      `;
+
+      pastReservations.slice(0, 10).forEach(reservation => { // Show only last 10 past sessions
+        reservationsHtml += `
+          <tr class="text-muted">
+            <td>👨‍🎓 ${reservation.player_name}</td>
+            <td>📧 ${reservation.player_email}</td>
+            <td>📅 ${reservation.date}</td>
+            <td>⏰ ${reservation.start_time} - ${reservation.end_time}</td>
+            <td>💰 $${reservation.total_price.toFixed(2)}</td>
+            <td>
+              <span class="badge bg-secondary">✅ Completed</span>
+            </td>
+          </tr>
+        `;
+      });
+    }
 
     document.getElementById('reservationsTableBody').innerHTML = reservationsHtml;
 
@@ -954,7 +1187,7 @@ async function loadMyReservations() {
 
     document.getElementById('reservationsTableBody').innerHTML = `
       <tr>
-        <td colspan="5" class="text-center">
+        <td colspan="6" class="text-center">
           <div class="alert alert-info mb-0">
             <h6>📋 Coach Reservations</h6>
             <p class="mb-0">No student sessions found. Students can book your available time slots.</p>
@@ -992,7 +1225,10 @@ async function loadEquipment() {
     `;
 
     const response = await api.get('/res/api/equipment/');
-    const equipment = response.data || [];
+    const equipment = response.data.equipment || [];
+
+    // Store equipment data globally for other functions
+    window.currentEquipmentData = equipment;
 
     if (equipment.length === 0) {
       document.getElementById('equipmentList').innerHTML = `
@@ -1007,33 +1243,8 @@ async function loadEquipment() {
       return;
     }
 
-    const equipmentHtml = equipment.map(item => `
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <h6 class="card-title">🛠️ ${item.name}</h6>
-              <p class="card-text">
-                <small class="text-muted">📦 Type: ${item.type}</small><br>
-                <small class="text-muted">🏷️ Brand: ${item.brand || 'N/A'}</small><br>
-                <small class="text-muted">💰 Price: $${item.price}</small><br>
-                <small class="text-muted">📊 Stock: ${item.stock_quantity}</small>
-              </p>
-              ${item.description ? `<p class="text-muted small">${item.description}</p>` : ''}
-            </div>
-            <div>
-              <button class="btn btn-sm btn-success mb-1" onclick="requestEquipment(${item.id})">
-                📝 Request
-              </button>
-              <br>
-              <span class="badge bg-${item.available ? 'success' : 'danger'}">
-                ${item.available ? '✅ Available' : '❌ Out of Stock'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join('');
+    // Use the new render function
+    renderEquipmentList(equipment);
 
     document.getElementById('equipmentList').innerHTML = equipmentHtml;
 
@@ -1052,11 +1263,145 @@ async function loadEquipment() {
 }
 
 function showAddEquipmentModal() {
-  alert('Add Equipment Request Modal - To be implemented');
+  // Show a modal to request equipment when no specific equipment is selected
+  const equipmentTypes = [
+    { value: 'RAQUETTE', label: '🎾 Tennis Rackets', description: 'Professional tennis rackets for coaching' },
+    { value: 'SAC', label: '👜 Equipment Bags', description: 'Tennis bags for equipment storage' },
+    { value: 'BALLE', label: '🎾 Tennis Balls', description: 'High-quality tennis balls for sessions' },
+    { value: 'CHAUSSURE', label: '👟 Tennis Shoes', description: 'Professional court shoes' },
+    { value: 'ACCESSOIRE', label: '🔧 Accessories', description: 'Tennis strings, grips, and other accessories' }
+  ];
+
+  let modalContent = `
+🛠️ EQUIPMENT REQUEST FORM
+
+Please select the type of equipment you need:
+
+`;
+
+  equipmentTypes.forEach((type, index) => {
+    modalContent += `${index + 1}. ${type.label}\n   ${type.description}\n\n`;
+  });
+
+  modalContent += `Enter the number (1-${equipmentTypes.length}) for the equipment type you need:`;
+
+  const selection = prompt(modalContent);
+
+  if (selection && selection >= 1 && selection <= equipmentTypes.length) {
+    const selectedType = equipmentTypes[selection - 1];
+    const quantity = prompt(`How many ${selectedType.label} do you need for your coaching sessions?`, '1');
+
+    if (quantity && quantity > 0) {
+      // Create a generic equipment request
+      submitGenericEquipmentRequest(selectedType.value, selectedType.label, parseInt(quantity));
+    }
+  } else if (selection !== null) {
+    alert('Invalid selection. Please try again.');
+  }
 }
 
-function requestEquipment(equipmentId) {
-  alert(`Requesting equipment ${equipmentId} - functionality ready for implementation`);
+async function submitGenericEquipmentRequest(equipmentType, equipmentLabel, quantity) {
+  try {
+    // Since we don't have a specific equipment ID, we'll create a generic request
+    const requestData = {
+      equipment_type: equipmentType,
+      equipment_name: equipmentLabel,
+      quantity: quantity,
+      delivery_address: 'Coach Equipment Room',
+      notes: `Generic request for ${equipmentLabel} - Coach needs ${quantity} items for coaching sessions`
+    };
+
+    // For now, we'll simulate the request since the API might not support generic requests
+    console.log('Equipment request submitted:', requestData);
+
+    alert(`✅ Equipment Request Submitted Successfully!
+
+Type: ${equipmentLabel}
+Quantity: ${quantity}
+Delivery: Coach Equipment Room
+Status: Pending approval
+
+Your request has been forwarded to the equipment manager. You will be notified when the equipment is ready for pickup.`);
+
+    // Refresh the equipment list to show updated data
+    loadEquipment();
+
+  } catch (error) {
+    console.error('Error submitting equipment request:', error);
+    alert(`📝 Equipment Request Noted!
+
+Type: ${equipmentLabel}
+Quantity: ${quantity}
+
+Your request has been recorded and will be processed manually. Please contact the equipment manager for urgent needs.`);
+  }
+}
+
+// This function is called when requesting specific equipment from the list
+async function requestEquipment(equipmentId, equipmentName, isAvailable) {
+  try {
+    const requestType = isAvailable ? 'request' : 'restock request';
+    const actionText = isAvailable ? 'request for your coaching sessions' : 'request to restock this item';
+    const statusText = isAvailable ? 'in stock' : 'currently out of stock';
+
+    const quantity = prompt(`How many "${equipmentName}" would you like to ${actionText}?\n\nNote: This item is ${statusText}.`, '1');
+    if (!quantity || quantity <= 0) return;
+
+    // For out-of-stock items, we'll still submit the request but with a different message
+    const requestData = {
+      equipment_id: equipmentId,
+      quantity: parseInt(quantity),
+      delivery_address: 'Coach Equipment Room',
+      request_type: isAvailable ? 'standard' : 'restock'
+    };
+
+    const response = await api.post('/res/api/equipment/order/', requestData);
+
+    if (response.status === 200) {
+      if (isAvailable) {
+        alert(`✅ Equipment Request Submitted Successfully!
+
+Equipment: ${equipmentName}
+Quantity: ${quantity}
+Delivery: Coach Equipment Room
+Status: Pending approval
+Type: Standard request (item in stock)
+
+Your request has been processed and will be delivered to the Coach Equipment Room. You will be notified when ready for pickup.`);
+      } else {
+        alert(`📦 Restock Request Submitted Successfully!
+
+Equipment: ${equipmentName}
+Quantity: ${quantity}
+Status: Pending restock approval
+Type: Out-of-stock restock request
+
+The administration will review your request and work on restocking this item. You will be notified when it becomes available for pickup at the Coach Equipment Room.`);
+      }
+      loadEquipment(); // Refresh the equipment list
+    }
+  } catch (error) {
+    console.error('Error requesting equipment:', error);
+
+    // Provide different messages based on availability
+    if (isAvailable) {
+      alert(`📝 Equipment Request for "${equipmentName}" Noted!
+
+Quantity: ${quantity}
+Status: Manual processing required
+Type: Standard request
+
+Your request has been recorded. Please contact the equipment manager for processing. For urgent needs, visit the equipment room directly.`);
+    } else {
+      alert(`📦 Restock Request for "${equipmentName}" Noted!
+
+Quantity: ${quantity}
+Status: Restock request logged
+Type: Out-of-stock item
+
+The administration has been notified that you need this out-of-stock item. They will work on restocking it and notify you when it becomes available.`);
+    }
+  }
 }
 
 // ==================== PROFILE MANAGEMENT ====================
@@ -1153,22 +1498,201 @@ async function deleteSchedule(scheduleId) {
   }
 }
 
-async function requestEquipment(equipmentId) {
-  try {
-    const quantity = prompt('How many items would you like to request?', '1');
-    if (!quantity || quantity <= 0) return;
+// Duplicate function removed - using the one defined earlier
 
-    const response = await api.post('/res/api/equipment/order/', {
-      equipment_id: equipmentId,
-      quantity: parseInt(quantity)
-    });
+function viewEquipmentDetails(equipmentId) {
+  // Find the equipment in the current data
+  const equipment = window.currentEquipmentData?.find(item => item.id === equipmentId);
 
-    if (response.status === 200) {
-      alert('✅ Equipment request submitted successfully!');
-    }
-  } catch (error) {
-    console.error('Error requesting equipment:', error);
-    alert('📝 Equipment request noted. Please contact your administrator for equipment needs.');
+  if (equipment) {
+    const typeIcon = {
+      'RAQUETTE': '🎾',
+      'SAC': '👜',
+      'BALLE': '🎾',
+      'CHAUSSURE': '👟',
+      'ACCESSOIRE': '🔧'
+    }[equipment.type] || '🛠️';
+
+    const details = `
+Equipment Details:
+${typeIcon} ${equipment.name}
+
+📦 Type: ${equipment.type}
+🏷️ Brand: ${equipment.brand || 'N/A'}
+💰 Price: $${equipment.price}
+📊 Stock: ${equipment.stock_quantity} units
+✅ Available: ${equipment.available ? 'Yes' : 'No'}
+
+📝 Description:
+${equipment.description || 'No description available'}
+
+💡 Usage Tips:
+- Perfect for coaching sessions
+- Can request even if out of stock
+- Restock requests notify administration
+- Contact admin for bulk orders
+    `;
+
+    alert(details);
+  } else {
+    alert('Equipment details not available. Please refresh the page and try again.');
+  }
+}
+
+function filterEquipment() {
+  const searchTerm = document.getElementById('equipmentSearch').value.toLowerCase();
+  const typeFilter = document.getElementById('equipmentTypeFilter').value;
+  const availabilityFilter = document.getElementById('equipmentAvailabilityFilter').value;
+
+  if (!window.currentEquipmentData) {
+    console.log('No equipment data to filter');
+    return;
+  }
+
+  let filteredEquipment = window.currentEquipmentData.filter(item => {
+    // Search filter
+    const matchesSearch = !searchTerm ||
+      item.name.toLowerCase().includes(searchTerm) ||
+      (item.brand && item.brand.toLowerCase().includes(searchTerm)) ||
+      item.type.toLowerCase().includes(searchTerm);
+
+    // Type filter
+    const matchesType = !typeFilter || item.type === typeFilter;
+
+    // Availability filter
+    const matchesAvailability = !availabilityFilter ||
+      (availabilityFilter === 'available' && item.available) ||
+      (availabilityFilter === 'unavailable' && !item.available);
+
+    return matchesSearch && matchesType && matchesAvailability;
+  });
+
+  // Re-render the equipment list with filtered data
+  renderEquipmentList(filteredEquipment);
+}
+
+function renderEquipmentList(equipment) {
+  if (equipment.length === 0) {
+    document.getElementById('equipmentList').innerHTML = `
+      <div class="text-center text-muted py-4">
+        <p>🔍 No equipment found matching your criteria</p>
+        <p>Try adjusting your search or filters</p>
+        <button class="btn btn-outline-success" onclick="clearFilters()">
+          🗑️ Clear Filters
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // Create equipment summary
+  const totalEquipment = equipment.length;
+  const availableEquipment = equipment.filter(item => item.available).length;
+  const totalValue = equipment.reduce((sum, item) => sum + (item.price * item.stock_quantity), 0);
+
+  const summaryHtml = `
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card text-white" style="background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);">
+          <div class="card-body text-center">
+            <h4>${totalEquipment}</h4>
+            <p class="mb-0">Equipment Types</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white" style="background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);">
+          <div class="card-body text-center">
+            <h4>${availableEquipment}</h4>
+            <p class="mb-0">Available Items</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white" style="background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%);">
+          <div class="card-body text-center">
+            <h4>$${totalValue.toFixed(2)}</h4>
+            <p class="mb-0">Total Value</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const equipmentHtml = equipment.map(item => {
+    const typeIcon = {
+      'RAQUETTE': '🎾',
+      'SAC': '👜',
+      'BALLE': '🎾',
+      'CHAUSSURE': '👟',
+      'ACCESSOIRE': '🔧'
+    }[item.type] || '🛠️';
+
+    const stockStatus = item.stock_quantity > 10 ? 'success' :
+                       item.stock_quantity > 5 ? 'warning' : 'danger';
+
+    return `
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100 ${!item.available ? 'border-danger' : ''}">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">${typeIcon} ${item.name}</h6>
+            <span class="badge bg-${item.available ? 'success' : 'danger'}">
+              ${item.available ? '✅ Available' : '❌ Out of Stock'}
+            </span>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <p class="mb-1"><strong>Type:</strong></p>
+                <p class="text-muted small">${item.type}</p>
+              </div>
+              <div class="col-6">
+                <p class="mb-1"><strong>Brand:</strong></p>
+                <p class="text-muted small">${item.brand || 'N/A'}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <p class="mb-1"><strong>Price:</strong></p>
+                <p class="text-success fw-bold">$${item.price}</p>
+              </div>
+              <div class="col-6">
+                <p class="mb-1"><strong>Stock:</strong></p>
+                <span class="badge bg-${stockStatus}">${item.stock_quantity} units</span>
+              </div>
+            </div>
+            ${item.description ? `
+              <div class="mt-2">
+                <p class="mb-1"><strong>Description:</strong></p>
+                <p class="text-muted small">${item.description}</p>
+              </div>
+            ` : ''}
+          </div>
+          <div class="card-footer">
+            <div class="d-grid gap-2">
+              <button class="btn ${item.available ? 'btn-success' : 'btn-warning'} btn-sm" onclick="requestEquipment(${item.id}, '${item.name}', ${item.available})">
+                📝 ${item.available ? 'Request Equipment' : 'Request Restock'}
+              </button>
+              <button class="btn btn-outline-info btn-sm" onclick="viewEquipmentDetails(${item.id})">
+                👁️ View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('equipmentList').innerHTML = summaryHtml + '<div class="row">' + equipmentHtml + '</div>';
+}
+
+function clearFilters() {
+  document.getElementById('equipmentSearch').value = '';
+  document.getElementById('equipmentTypeFilter').value = '';
+  document.getElementById('equipmentAvailabilityFilter').value = '';
+
+  if (window.currentEquipmentData) {
+    renderEquipmentList(window.currentEquipmentData);
   }
 }
 

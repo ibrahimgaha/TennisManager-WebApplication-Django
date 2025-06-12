@@ -7,13 +7,14 @@ import json
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule
+from reservations.models import Reservation, ReservationCoach, Terrain,Coach,Schedule, ScheduleSlot
 from core.models import User
+from reservations import views
 #from rest_framework.response import Response
 #from rest_framework.decorators import api_view
 @csrf_exempt
 def list_terrains(request):
-    terrains = Terrain.objects.all().values()
+    terrains = Terrain.objects.all().values('id', 'name', 'location', 'price_per_hour', 'available')
     return JsonResponse(list(terrains), safe=False)
 
 
@@ -96,58 +97,52 @@ def update_terrain(request, terrain_id):
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+from rest_framework.permissions import AllowAny
 
 @api_view(['POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])  # 👈 This is critical
 def make_reservation(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user = request.user
+    data = request.data
 
-        # Vérifie que l'utilisateur est bien un joueur
-        if not hasattr(user, 'role') or user.role.lower() != 'joueur':
-            return JsonResponse({'error': 'Only users with role "joueur" can make a reservation.'}, status=403)
+    try:
+        terrain = Terrain.objects.get(id=data['terrain_id'])
+    except Terrain.DoesNotExist:
+        return JsonResponse({'error': 'Terrain not found.'}, status=404)
 
-        try:
-            terrain = Terrain.objects.get(id=data['terrain_id'])
-        except Terrain.DoesNotExist:
-            return JsonResponse({'error': 'Terrain not found.'}, status=404)
+    start_time = data['start_time']
+    end_time = data['end_time']
 
-        start_time = data['start_time']
-        end_time = data['end_time']
+    start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
+    end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
 
-        start_time_obj = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]))
-        end_time_obj = timedelta(hours=int(end_time.split(":")[0]), minutes=int(end_time.split(":")[1]))
+    duration = (end_time_obj - start_time_obj).seconds / 3600
+    if duration < 1:
+        duration = 1
+    duration = Decimal(duration)
 
-        duration = (end_time_obj - start_time_obj).seconds / 3600
-        if duration < 1:
-            duration = 1
-        duration = Decimal(duration)
+    total_price = duration * terrain.price_per_hour
 
-        total_price = duration * terrain.price_per_hour
+    user = request.user if request.user.is_authenticated else None
 
-        reservation = Reservation.objects.create(
-            user=user,
-            terrain=terrain,
-            date=data['date'],
-            start_time=start_time,
-            end_time=end_time
-        )
+    reservation = Reservation.objects.create(
+        user=user,
+        terrain=terrain,
+        date=data['date'],
+        start_time=start_time,
+        end_time=end_time
+    )
 
-        return JsonResponse({
-            'message': 'Reservation created successfully',
-            'reservation': {
-                'user': user.username,
-                'terrain': terrain.name,
-                'date': data['date'],
-                'start_time': start_time,
-                'end_time': end_time,
-                'total_price': str(total_price)
-            }
-        })
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({
+        'message': 'Reservation created successfully',
+        'reservation': {
+            'user': user.username if user else 'Anonymous',
+            'terrain': terrain.name,
+            'date': data['date'],
+            'start_time': start_time,
+            'end_time': end_time,
+            'total_price': str(total_price)
+        }
+    })
 
 @api_view(['PUT'])
 @authentication_classes([JWTAuthentication])
@@ -161,6 +156,10 @@ def update_reservation(request, reservation_id):
         reservation = Reservation.objects.get(id=reservation_id)
     except Reservation.DoesNotExist:
         return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    # Anonymous reservations cannot be updated
+    if reservation.user is None:
+        return JsonResponse({'error': 'Anonymous reservations cannot be updated.'}, status=403)
 
     if reservation.user != user:
         return JsonResponse({'error': 'You are not allowed to update this reservation.'}, status=403)
@@ -192,6 +191,10 @@ def delete_reservation(request, reservation_id):
         reservation = Reservation.objects.get(id=reservation_id)
     except Reservation.DoesNotExist:
         return JsonResponse({'error': 'Reservation not found.'}, status=404)
+
+    # Anonymous reservations cannot be deleted
+    if reservation.user is None:
+        return JsonResponse({'error': 'Anonymous reservations cannot be deleted.'}, status=403)
 
     if reservation.user != user:
         return JsonResponse({'error': 'You are not allowed to delete this reservation.'}, status=403)
@@ -299,16 +302,48 @@ def create_or_update_schedule(request):
 @permission_classes([IsAuthenticated])
 def check_coach_availability(request, coach_id, date):
     try:
+        from datetime import datetime
+
         # Ensure the coach exists
-        coach = get_object_or_404(Coach, id=coach_id)
+        try:
+            coach = Coach.objects.get(id=coach_id)
+        except Coach.DoesNotExist:
+            return JsonResponse({'error': 'Coach not found'}, status=404)
 
-        schedules = Schedule.objects.filter(
+        # Parse the date
+        try:
+            availability_date = datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date format. Use YYYY-MM-DD'}, status=400)
+
+        # Get available schedule slots for this coach and date
+        available_slots = ScheduleSlot.objects.filter(
             coach=coach,
-            date=date,
+            date=availability_date,
             is_booked=False
-        ).values("start_time", "end_time")
+        ).order_by('start_time')
 
-        return JsonResponse({"available_times": list(schedules)}, status=200)
+        # Format the available times
+        available_times = []
+        for slot in available_slots:
+            available_times.append({
+                'id': slot.id,
+                'start_time': slot.start_time.strftime('%H:%M'),
+                'end_time': slot.end_time.strftime('%H:%M'),
+                'date': slot.date.strftime('%Y-%m-%d')
+            })
+
+        return JsonResponse({
+            'coach': {
+                'id': coach.id,
+                'name': coach.name,
+                'price_per_hour': float(coach.price_per_hour)
+            },
+            'date': availability_date.strftime('%Y-%m-%d'),
+            'available_times': available_times,
+            'total_available': len(available_times)
+        }, status=200)
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
@@ -582,6 +617,9 @@ def home(request):
 
 def base(request):
     return render(request, 'html/base.html')
+
+def reservation(request):
+    return render(request, 'html/reservation.html')
 
 
 # ==================== NEW API ENDPOINTS ====================

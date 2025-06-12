@@ -1,654 +1,735 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Responsive Navbar</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Responsive Navbar</title>
 
-  <!-- Fonts and Styles -->
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+    <!-- Fonts and Styles -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-    * {
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Poppins", sans-serif;
-    }
-
-    nav {
-      padding: 10px 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      background-color: #000;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    nav .logo {
-      display: flex;
-      align-items: center;
-    }
-
-    nav .logo img {
-      height: 45px;
-      margin-right: 15px;
-      margin-left: -10px;
-    }
-
-    nav .logo h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      background: linear-gradient(to right, #85ef50, #caf6b3);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 0;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      margin: 0;
-      padding: 0;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    nav ul li {
-      margin: 0 15px;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    nav ul li a:hover {
-      background-color: #333;
-      transform: translateY(-1px);
-    }
-
-    .right-side {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .social-icons {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .social-icons a {
-      color: #c7ea46;
-      transition: color 0.3s ease, transform 0.2s ease;
-    }
-
-    .social-icons a:hover {
-      color: #a5d025;
-      transform: scale(1.1);
-    }
-
-    .social-icons svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-
-    .auth-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .auth-buttons a {
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-    }
-
-    .auth-buttons .signin {
-      color: #fff;
-      border: 1px solid #c7ea46;
-    }
-
-    .auth-buttons .signin:hover {
-      background-color: #c7ea46;
-      color: #000;
-      transform: translateY(-1px);
-    }
-
-    .auth-buttons .signup {
-      background-color: #c7ea46;
-      color: #000;
-      border: 1px solid transparent;
-    }
-
-    .auth-buttons .signup:hover {
-      background-color: #a5d025;
-      transform: translateY(-1px);
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 20px;
-      width: 24px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    .hamburger .line {
-      width: 100%;
-      height: 2.5px;
-      background: #fff;
-      border-radius: 5px;
-      transition: all 0.3s ease;
-    }
-
-    .hamburger-active .line:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .hamburger-active .line:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger-active .line:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    .menubar {
-      position: fixed;
-      top: 0;
-      left: -100%;
-      width: 250px;
-      height: 100vh;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 80px;
-      transition: left 0.3s ease;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-      z-index: 999;
-    }
-
-    .menubar.active {
-      left: 0;
-    }
-
-    .menubar ul {
-      list-style: none;
-      padding: 0;
-      width: 100%;
-      text-align: center;
-    }
-
-    .menubar ul li {
-      margin: 20px 0;
-    }
-
-    .menubar ul li a {
-      text-decoration: none;
-      color: #000;
-      font-size: 1rem;
-      font-weight: 500;
-      padding: 10px 20px;
-      border-radius: 6px;
-      display: block;
-      transition: background-color 0.3s ease;
-    }
-
-    .menubar ul li a:hover {
-      background-color: #f0f0f0;
-    }
-
-    .menubar ul li.auth-link a {
-      border: 1px solid #c7ea46;
-      margin: 10px 20px;
-    }
-
-    .menubar ul li.auth-link.signup a {
-      background-color: #c7ea46;
-      color: #000;
-    }
-
-    .menubar ul li.auth-link.signup a:hover {
-      background-color: #a5d025;
-    }
-
-    @media screen and (max-width: 768px) {
-      nav ul {
-        display: none;
+      * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      .hamburger {
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+
+      nav {
+        padding: 10px 5%;
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #000;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
       }
 
-      .auth-buttons {
-        display: none;
+      nav .logo {
+        display: flex;
+        align-items: center;
+      }
+
+      nav .logo img {
+        height: 45px;
+        margin-right: 15px;
+        margin-left: -10px;
+      }
+
+      nav .logo h1 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        background: linear-gradient(to right, #85ef50, #caf6b3);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      nav ul li {
+        margin: 0 15px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      nav ul li a:hover {
+        background-color: #333;
+        transform: translateY(-1px);
+      }
+
+      .right-side {
+        display: flex;
+        align-items: center;
+        gap: 20px;
       }
 
       .social-icons {
-        gap: 10px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <nav>
-    <div class="logo">
-      <img src="{% static 'images/image-removebg-preview (1).png' %}" alt="logo" />
-      <h1>Tennis</h1><h1>Club</h1>
+      .social-icons a {
+        color: #c7ea46;
+        transition: color 0.3s ease, transform 0.2s ease;
+      }
+
+      .social-icons a:hover {
+        color: #a5d025;
+        transform: scale(1.1);
+      }
+
+      .social-icons svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 12px;
+      }
+
+      .auth-buttons a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .auth-buttons .signin {
+        color: #fff;
+        border: 1px solid #c7ea46;
+      }
+
+      .auth-buttons .signin:hover {
+        background-color: #c7ea46;
+        color: #000;
+        transform: translateY(-1px);
+      }
+
+      .auth-buttons .signup {
+        background-color: #c7ea46;
+        color: #000;
+        border: 1px solid transparent;
+      }
+
+      .auth-buttons .signup:hover {
+        background-color: #a5d025;
+        transform: translateY(-1px);
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 20px;
+        width: 24px;
+        cursor: pointer;
+        z-index: 1001;
+      }
+
+      .hamburger .line {
+        width: 100%;
+        height: 2.5px;
+        background: #fff;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger-active .line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .hamburger-active .line:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger-active .line:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      .menubar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 250px;
+        height: 100vh;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 80px;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+      }
+
+      .menubar.active {
+        left: 0;
+      }
+
+      .menubar ul {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .menubar ul li {
+        margin: 20px 0;
+      }
+
+      .menubar ul li a {
+        text-decoration: none;
+        color: #000;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 6px;
+        display: block;
+        transition: background-color 0.3s ease;
+      }
+
+      .menubar ul li a:hover {
+        background-color: #f0f0f0;
+      }
+
+      .menubar ul li.auth-link a {
+        border: 1px solid #c7ea46;
+        margin: 10px 20px;
+      }
+
+      .menubar ul li.auth-link.signup a {
+        background-color: #c7ea46;
+        color: #000;
+      }
+
+      .menubar ul li.auth-link.signup a:hover {
+        background-color: #a5d025;
+      }
+
+      @media screen and (max-width: 768px) {
+        nav ul {
+          display: none;
+        }
+
+        .hamburger {
+          display: flex;
+        }
+
+        .auth-buttons {
+          display: none;
+        }
+
+        .social-icons {
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <div class="logo">
+        <a
+          href="/"
+          style="display: flex; align-items: center; text-decoration: none"
+        >
+          <img
+            src="{% static 'images/image-removebg-preview (1).png' %}"
+            alt="logo"
+          />
+          <h1>Tennis</h1>
+          <h1>Club</h1>
+        </a>
+      </div>
+
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="/reservation">Reservation</a></li>
+        <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+
+      <div class="right-side">
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook" class="facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M22.675 0h-21.35c-0.732 0-1.325 0.593-1.325 1.325v21.351c0 0.731 0.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.097 1.893-4.787 4.659-4.787 1.325 0 2.466 0.099 2.797 0.143v3.243h-1.919c-1.504 0-1.795 0.715-1.795 1.763v2.313h3.587l-0.467 3.622h-3.12v9.294h6.116c0.73 0 1.324-0.593 1.324-1.324v-21.35c0-0.732-0.594-1.325-1.325-1.325z"
+              />
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M12 2.163c3.204 0 3.584 0.012 4.85 0.07 1.206 0.057 2.032 0.247 2.505 0.414a4.92 4.92 0 0 1 1.675 1.006 4.92 4.92 0 0 1 1.006 1.675c0.167 0.474 0.357 1.3 0.414 2.505 0.058 1.267 0.07 1.647 0.07 4.85s-0.012 3.584-0.07 4.85c-0.057 1.206-0.247 2.032-0.414 2.505a4.92 4.92 0 0 1-1.006 1.675 4.92 4.92 0 0 1-1.675 1.006c-0.474 0.167-1.3 0.357-2.505 0.414-1.267 0.058-1.647 0.07-4.85 0.07s-3.584-0.012-4.85-0.07c-1.206-0.057-2.032-0.247-2.505-0.414a4.902 4.902 0 0 1-2.681-2.681c-0.167-0.474-0.357-1.3-0.414-2.505-0.058-1.267-0.07-1.647-0.07-4.85s0.012-3.584 0.07-4.85c0.057-1.206 0.247-2.032 0.414-2.505a4.902 4.902 0 0 1 2.681-2.681c0.474-0.167 1.3-0.357 2.505-0.414 1.267-0.058 1.647-0.07 4.85-0.07zm0-2.163c-3.259 0-3.67 0.014-4.947 0.072-1.276 0.058-2.71 0.274-3.68 1.243-0.97 0.97-1.185 2.404-1.243 3.68-0.058 1.277-0.072 1.688-0.072 4.947s0.014 3.67 0.072 4.947c0.058 1.276 0.274 2.71 1.243 3.68 0.97 0.97 2.404 1.185 3.68 1.243 1.277 0.058 1.688 0.072 4.947 0.072s3.67-0.014 4.947-0.072c1.276-0.058 2.71-0.274 3.68-1.243 0.97-0.97 1.185-2.404 1.243-3.68 0.058-1.277 0.072-1.688 0.072-4.947s-0.014-3.67-0.072-4.947c-0.058-1.276-0.274-2.71-1.243-3.68-0.97-0.97-2.404-1.185-3.68-1.243-1.277-0.058-1.688-0.072-4.947-0.072z"
+              />
+              <path
+                d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998z"
+              />
+              <circle cx="18.406" cy="5.594" r="1.44" />
+            </svg>
+          </a>
+        </div>
+        <div class="auth-buttons">
+          <a href="/auth/login/" class="signin">Sign In</a>
+          <a href="/auth/register/" class="signup">Sign Up</a>
+        </div>
+        <div
+          class="hamburger"
+          aria-label="Menu Toggle"
+          role="button"
+          tabindex="0"
+        >
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="menubar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="/reservation">Reservation</a></li>
+        <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li class="auth-link">
+          <a href="/auth/login/" class="signin">Sign In</a>
+        </li>
+        <li class="auth-link signup">
+          <a href="/auth/register/" class="signup">Sign Up</a>
+        </li>
+      </ul>
     </div>
 
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Services</a></li>
-      <li><a href="#">Reservation</a></li>
-      <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
-      <li><a href="#">Blog</a></li>
-      <li><a href="#">Contact Us</a></li>
-    </ul>
+    <!-- Subscription Modal -->
+    <div id="subscriptionModal" class="subscription-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Subscribe to Tennis Club</h2>
+          <span class="close-modal" onclick="closeSubscriptionModal()"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body">
+          <div class="subscription-plans">
+            <div class="plan-card">
+              <h3>Basic Plan</h3>
+              <div class="price">$29.99<span>/month</span></div>
+              <ul class="features">
+                <li>✓ Access to all courts</li>
+                <li>✓ Equipment rental discount</li>
+                <li>✓ Basic coaching sessions</li>
+                <li>✓ Community events access</li>
+              </ul>
+              <button class="subscribe-btn" onclick="subscribe('basic')">
+                Subscribe Now
+              </button>
+            </div>
 
-    <div class="right-side">
-      <div class="social-icons">
-        <a href="#" aria-label="Facebook" class="facebook">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M22.675 0h-21.35c-0.732 0-1.325 0.593-1.325 1.325v21.351c0 0.731 0.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.097 1.893-4.787 4.659-4.787 1.325 0 2.466 0.099 2.797 0.143v3.243h-1.919c-1.504 0-1.795 0.715-1.795 1.763v2.313h3.587l-0.467 3.622h-3.12v9.294h6.116c0.73 0 1.324-0.593 1.324-1.324v-21.35c0-0.732-0.594-1.325-1.325-1.325z"/>
-          </svg>
-        </a>
-        <a href="#" aria-label="Instagram" class="instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12 2.163c3.204 0 3.584 0.012 4.85 0.07 1.206 0.057 2.032 0.247 2.505 0.414a4.92 4.92 0 0 1 1.675 1.006 4.92 4.92 0 0 1 1.006 1.675c0.167 0.474 0.357 1.3 0.414 2.505 0.058 1.267 0.07 1.647 0.07 4.85s-0.012 3.584-0.07 4.85c-0.057 1.206-0.247 2.032-0.414 2.505a4.92 4.92 0 0 1-1.006 1.675 4.92 4.92 0 0 1-1.675 1.006c-0.474 0.167-1.3 0.357-2.505 0.414-1.267 0.058-1.647 0.07-4.85 0.07s-3.584-0.012-4.85-0.07c-1.206-0.057-2.032-0.247-2.505-0.414a4.902 4.902 0 0 1-2.681-2.681c-0.167-0.474-0.357-1.3-0.414-2.505-0.058-1.267-0.07-1.647-0.07-4.85s0.012-3.584 0.07-4.85c0.057-1.206 0.247-2.032 0.414-2.505a4.902 4.902 0 0 1 2.681-2.681c0.474-0.167 1.3-0.357 2.505-0.414 1.267-0.058 1.647-0.07 4.85-0.07zm0-2.163c-3.259 0-3.67 0.014-4.947 0.072-1.276 0.058-2.71 0.274-3.68 1.243-0.97 0.97-1.185 2.404-1.243 3.68-0.058 1.277-0.072 1.688-0.072 4.947s0.014 3.67 0.072 4.947c0.058 1.276 0.274 2.71 1.243 3.68 0.97 0.97 2.404 1.185 3.68 1.243 1.277 0.058 1.688 0.072 4.947 0.072s3.67-0.014 4.947-0.072c1.276-0.058 2.71-0.274 3.68-1.243 0.97-0.97 1.185-2.404 1.243-3.68 0.058-1.277 0.072-1.688 0.072-4.947s-0.014-3.67-0.072-4.947c-0.058-1.276-0.274-2.71-1.243-3.68-0.97-0.97-2.404-1.185-3.68-1.243-1.277-0.058-1.688-0.072-4.947-0.072z"/>
-            <path d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998z"/>
-            <circle cx="18.406" cy="5.594" r="1.44"/>
-          </svg>
-        </a>
-      </div>
-      <div class="auth-buttons">
-        <a href="./register" class="signin">Sign In</a>
-        <a href="./login" class="signup">Sign Up</a>
-      </div>
-      <div class="hamburger" aria-label="Menu Toggle" role="button" tabindex="0">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
-      </div>
-    </div>
-  </nav>
+            <div class="plan-card premium">
+              <div class="popular-badge">Most Popular</div>
+              <h3>Premium Plan</h3>
+              <div class="price">$49.99<span>/month</span></div>
+              <ul class="features">
+                <li>✓ All Basic features</li>
+                <li>✓ Priority court booking</li>
+                <li>✓ Personal coaching sessions</li>
+                <li>✓ Free equipment rental</li>
+                <li>✓ Tournament participation</li>
+                <li>✓ Nutrition consultation</li>
+              </ul>
+              <button class="subscribe-btn" onclick="subscribe('premium')">
+                Subscribe Now
+              </button>
+            </div>
 
-  <div class="menubar">
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Services</a></li>
-      <li><a href="#">Reservation</a></li>
-      <li><a href="#" onclick="openSubscriptionModal()">Subscribe</a></li>
-      <li><a href="#">Blog</a></li>
-      <li><a href="#">Contact Us</a></li>
-      <li class="auth-link"><a href="./register" class="signin">Sign In</a></li>
-      <li class="auth-link signup"><a href="./login" class="signup">Sign Up</a></li>
-    </ul>
-  </div>
-
-  <!-- Subscription Modal -->
-  <div id="subscriptionModal" class="subscription-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Subscribe to Tennis Club</h2>
-        <span class="close-modal" onclick="closeSubscriptionModal()">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="subscription-plans">
-          <div class="plan-card">
-            <h3>Basic Plan</h3>
-            <div class="price">$29.99<span>/month</span></div>
-            <ul class="features">
-              <li>✓ Access to all courts</li>
-              <li>✓ Equipment rental discount</li>
-              <li>✓ Basic coaching sessions</li>
-              <li>✓ Community events access</li>
-            </ul>
-            <button class="subscribe-btn" onclick="subscribe('basic')">Subscribe Now</button>
-          </div>
-
-          <div class="plan-card premium">
-            <div class="popular-badge">Most Popular</div>
-            <h3>Premium Plan</h3>
-            <div class="price">$49.99<span>/month</span></div>
-            <ul class="features">
-              <li>✓ All Basic features</li>
-              <li>✓ Priority court booking</li>
-              <li>✓ Personal coaching sessions</li>
-              <li>✓ Free equipment rental</li>
-              <li>✓ Tournament participation</li>
-              <li>✓ Nutrition consultation</li>
-            </ul>
-            <button class="subscribe-btn" onclick="subscribe('premium')">Subscribe Now</button>
-          </div>
-
-          <div class="plan-card">
-            <h3>VIP Plan</h3>
-            <div class="price">$79.99<span>/month</span></div>
-            <ul class="features">
-              <li>✓ All Premium features</li>
-              <li>✓ Unlimited court access</li>
-              <li>✓ Personal trainer</li>
-              <li>✓ VIP lounge access</li>
-              <li>✓ Guest privileges</li>
-              <li>✓ Exclusive events</li>
-            </ul>
-            <button class="subscribe-btn" onclick="subscribe('vip')">Subscribe Now</button>
+            <div class="plan-card">
+              <h3>VIP Plan</h3>
+              <div class="price">$79.99<span>/month</span></div>
+              <ul class="features">
+                <li>✓ All Premium features</li>
+                <li>✓ Unlimited court access</li>
+                <li>✓ Personal trainer</li>
+                <li>✓ VIP lounge access</li>
+                <li>✓ Guest privileges</li>
+                <li>✓ Exclusive events</li>
+              </ul>
+              <button class="subscribe-btn" onclick="subscribe('vip')">
+                Subscribe Now
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <style>
-    /* Subscription Modal Styles */
-    .subscription-modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 2% auto;
-      padding: 0;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 1200px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      animation: modalSlideIn 0.3s ease-out;
-    }
-
-    @keyframes modalSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-50px);
+    <style>
+      /* Subscription Modal Styles */
+      .subscription-modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
-    .modal-header {
-      background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
-      color: #000;
-      padding: 20px 30px;
-      border-radius: 15px 15px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-
-    .close-modal {
-      font-size: 2rem;
-      font-weight: bold;
-      cursor: pointer;
-      color: #000;
-      transition: color 0.3s ease;
-    }
-
-    .close-modal:hover {
-      color: #666;
-    }
-
-    .modal-body {
-      padding: 30px;
-    }
-
-    .subscription-plans {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 20px;
-    }
-
-    .plan-card {
-      background: #fff;
-      border: 2px solid #e9ecef;
-      border-radius: 15px;
-      padding: 30px 25px;
-      text-align: center;
-      position: relative;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .plan-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      border-color: #c7ea46;
-    }
-
-    .plan-card.premium {
-      border-color: #c7ea46;
-      transform: scale(1.05);
-    }
-
-    .popular-badge {
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
-      color: #000;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .plan-card h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #333;
-    }
-
-    .price {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #c7ea46;
-      margin-bottom: 25px;
-    }
-
-    .price span {
-      font-size: 1rem;
-      color: #666;
-      font-weight: 400;
-    }
-
-    .features {
-      list-style: none;
-      padding: 0;
-      margin: 25px 0;
-      text-align: left;
-    }
-
-    .features li {
-      padding: 8px 0;
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .subscribe-btn {
-      background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
-      color: #000;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-
-    .subscribe-btn:hover {
-      background: linear-gradient(135deg, #a5d025 0%, #8bc34a 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(199, 234, 70, 0.4);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
       .modal-content {
-        width: 95%;
-        margin: 5% auto;
+        background-color: #fff;
+        margin: 2% auto;
+        padding: 0;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 1200px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease-out;
       }
 
-      .subscription-plans {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .plan-card.premium {
-        transform: none;
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .modal-header {
-        padding: 15px 20px;
+        background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       .modal-header h2 {
-        font-size: 1.5rem;
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .close-modal {
+        font-size: 2rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+        transition: color 0.3s ease;
+      }
+
+      .close-modal:hover {
+        color: #666;
       }
 
       .modal-body {
-        padding: 20px;
-      }
-    }
-  </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
-  <script>
-    const hamburger = document.querySelector(".hamburger");
-    const menubar = document.querySelector(".menubar");
-
-    hamburger.addEventListener("click", () => {
-      hamburger.classList.toggle("hamburger-active");
-      menubar.classList.toggle("active");
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!menubar.contains(e.target) && !hamburger.contains(e.target) && menubar.classList.contains("active")) {
-        hamburger.classList.remove("hamburger-active");
-        menubar.classList.remove("active");
-      }
-    });
-
-    // Subscription Modal Functions
-    function openSubscriptionModal() {
-      document.getElementById('subscriptionModal').style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeSubscriptionModal() {
-      document.getElementById('subscriptionModal').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modal = document.getElementById('subscriptionModal');
-      if (event.target === modal) {
-        closeSubscriptionModal();
-      }
-    }
-
-    // Subscribe function
-    async function subscribe(planType) {
-      // Check if user is logged in
-      const token = localStorage.getItem('token');
-      const userRole = localStorage.getItem('role');
-
-      if (!token) {
-        alert('Please login first to subscribe!');
-        window.location.href = '/auth/login/';
-        return;
+        padding: 30px;
       }
 
-      if (userRole !== 'joueur') {
-        alert('Only players can subscribe to premium plans!');
-        return;
+      .subscription-plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 20px;
       }
 
-      try {
-        const response = await axios.post('/auth/api/subscribe/', {
-          plan_type: planType
-        }, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+      .plan-card {
+        background: #fff;
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 30px 25px;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
 
-        if (response.status === 200) {
-          alert(`Successfully subscribed to ${planType} plan! Your role has been updated to subscriber.`);
+      .plan-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        border-color: #c7ea46;
+      }
 
-          // Update local storage
-          localStorage.setItem('role', 'abonnée');
+      .plan-card.premium {
+        border-color: #c7ea46;
+        transform: scale(1.05);
+      }
 
-          // Close modal and redirect to subscriber dashboard
+      .popular-badge {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
+        color: #000;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .plan-card h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #c7ea46;
+        margin-bottom: 25px;
+      }
+
+      .price span {
+        font-size: 1rem;
+        color: #666;
+        font-weight: 400;
+      }
+
+      .features {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+        text-align: left;
+      }
+
+      .features li {
+        padding: 8px 0;
+        color: #555;
+        font-size: 0.95rem;
+      }
+
+      .subscribe-btn {
+        background: linear-gradient(135deg, #c7ea46 0%, #a5d025 100%);
+        color: #000;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .subscribe-btn:hover {
+        background: linear-gradient(135deg, #a5d025 0%, #8bc34a 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(199, 234, 70, 0.4);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .modal-content {
+          width: 95%;
+          margin: 5% auto;
+        }
+
+        .subscription-plans {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .plan-card.premium {
+          transform: none;
+        }
+
+        .modal-header {
+          padding: 15px 20px;
+        }
+
+        .modal-header h2 {
+          font-size: 1.5rem;
+        }
+
+        .modal-body {
+          padding: 20px;
+        }
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    <script>
+      const hamburger = document.querySelector(".hamburger");
+      const menubar = document.querySelector(".menubar");
+
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("hamburger-active");
+        menubar.classList.toggle("active");
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener("click", (e) => {
+        if (
+          !menubar.contains(e.target) &&
+          !hamburger.contains(e.target) &&
+          menubar.classList.contains("active")
+        ) {
+          hamburger.classList.remove("hamburger-active");
+          menubar.classList.remove("active");
+        }
+      });
+
+      // Subscription Modal Functions
+      function openSubscriptionModal() {
+        document.getElementById("subscriptionModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeSubscriptionModal() {
+        document.getElementById("subscriptionModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modal = document.getElementById("subscriptionModal");
+        if (event.target === modal) {
           closeSubscriptionModal();
-          window.location.href = '/auth/abonne-dashboard/';
         }
-      } catch (error) {
-        console.error('Subscription error:', error);
-        if (error.response?.data?.error) {
-          alert(error.response.data.error);
-        } else {
-          alert('Subscription failed. Please try again.');
+      };
+
+      // Subscribe function
+      async function subscribe(planType) {
+        // Check if user is logged in
+        const token = localStorage.getItem("token");
+        const userRole = localStorage.getItem("role");
+        const username = localStorage.getItem("username");
+
+        console.log("🔍 Subscription Debug Info:");
+        console.log("Token:", token ? "Present" : "Missing");
+        console.log("User Role:", userRole);
+        console.log("Username:", username);
+        console.log("Plan Type:", planType);
+
+        if (!token) {
+          alert("Please login first to subscribe!");
+          window.location.href = "/auth/login/";
+          return;
+        }
+
+        if (userRole !== "joueur") {
+          alert(
+            `Only players can subscribe to premium plans! Your current role is: ${userRole}`
+          );
+          return;
+        }
+
+        try {
+          console.log("🚀 Sending subscription request...");
+
+          const response = await axios.post(
+            "/auth/api/subscribe/",
+            {
+              plan_type: planType,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          console.log("✅ Subscription response:", response);
+
+          if (response.status === 200) {
+            alert(
+              `🎉 Successfully subscribed to ${planType} plan! Your role has been updated to subscriber.`
+            );
+
+            // Update local storage
+            localStorage.setItem("role", "abonnée");
+
+            // Close modal and redirect to subscriber dashboard
+            closeSubscriptionModal();
+            window.location.href = "/auth/abonne-dashboard/";
+          }
+        } catch (error) {
+          console.error("❌ Subscription error:", error);
+
+          if (error.response) {
+            console.log("Error status:", error.response.status);
+            console.log("Error data:", error.response.data);
+
+            if (error.response.status === 403) {
+              alert(
+                "🚫 Access denied. Please make sure you're logged in as a player and try again."
+              );
+            } else if (error.response.status === 401) {
+              alert("🔒 Authentication failed. Please login again.");
+              localStorage.clear();
+              window.location.href = "/auth/login/";
+            } else if (error.response?.data?.error) {
+              alert(`❌ ${error.response.data.error}`);
+            } else {
+              alert("❌ Subscription failed. Please try again.");
+            }
+          } else {
+            alert(
+              "❌ Network error. Please check your connection and try again."
+            );
+          }
         }
       }
-    }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

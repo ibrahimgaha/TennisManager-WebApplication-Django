@@ -1,0 +1,296 @@
+/* Tennis Management System - Main Styles */
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* Tennis Theme Colors */
+:root {
+    --tennis-green: #2E8B57;
+    --tennis-light-green: #32CD32;
+    --tennis-dark-green: #228B22;
+    --tennis-yellow: #FFD700;
+    --tennis-white: #FFFFFF;
+    --tennis-gray: #6c757d;
+}
+
+/* Header Styles */
+.header {
+    background: linear-gradient(135deg, var(--tennis-green) 0%, var(--tennis-dark-green) 100%);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Navigation */
+.navbar {
+    background: var(--tennis-green) !important;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+}
+
+.nav-link {
+    color: white !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--tennis-yellow) !important;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--tennis-green) 0%, var(--tennis-light-green) 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    border: none;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--tennis-green) 0%, var(--tennis-light-green) 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--tennis-dark-green) 0%, var(--tennis-green) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--tennis-light-green) 0%, var(--tennis-green) 100%);
+    border: none;
+    border-radius: 25px;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, var(--tennis-green) 0%, var(--tennis-dark-green) 100%);
+}
+
+/* Dashboard Specific */
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Equipment Cards */
+.equipment-card {
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.equipment-card:hover {
+    border-color: var(--tennis-green);
+    transform: scale(1.02);
+}
+
+.equipment-image {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Forms */
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--tennis-green);
+    box-shadow: 0 0 0 0.2rem rgba(46, 139, 87, 0.25);
+}
+
+/* Tables */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--tennis-green);
+    color: white;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(46, 139, 87, 0.1);
+}
+
+/* Badges */
+.badge {
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+}
+
+.badge-success {
+    background: var(--tennis-green);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Loading Spinner */
+.spinner-border-tennis {
+    color: var(--tennis-green);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-card {
+        padding: 1rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Tennis Ball Animation */
+.tennis-ball {
+    width: 30px;
+    height: 30px;
+    background: var(--tennis-yellow);
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Court Background Pattern */
+.court-pattern {
+    background-image: 
+        linear-gradient(90deg, rgba(46, 139, 87, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(46, 139, 87, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Success/Error Messages */
+.alert-success {
+    background: linear-gradient(135deg, var(--tennis-light-green) 0%, var(--tennis-green) 100%);
+    border: none;
+    color: white;
+    border-radius: 10px;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    color: white;
+    border-radius: 10px;
+}
+
+/* Equipment Purchase Button */
+.purchase-btn {
+    background: linear-gradient(135deg, var(--tennis-yellow) 0%, #FFA500 100%);
+    color: #333;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.purchase-btn:hover {
+    background: linear-gradient(135deg, #FFA500 0%, var(--tennis-yellow) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+/* Match Cards */
+.match-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-left: 5px solid var(--tennis-green);
+}
+
+.join-match-btn {
+    background: linear-gradient(135deg, var(--tennis-green) 0%, var(--tennis-light-green) 100%);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.join-match-btn:hover {
+    background: linear-gradient(135deg, var(--tennis-dark-green) 0%, var(--tennis-green) 100%);
+    transform: scale(1.05);
+}

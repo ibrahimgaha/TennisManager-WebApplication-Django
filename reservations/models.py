@@ -15,7 +15,7 @@ class Terrain(models.Model):
         return self.name
 
 class Reservation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     terrain = models.ForeignKey(Terrain, on_delete=models.CASCADE)
     date = models.DateField()
     start_time = models.TimeField()
@@ -25,7 +25,8 @@ class Reservation(models.Model):
         unique_together = ('terrain', 'date', 'start_time', 'end_time')
 
     def __str__(self):
-        return f"{self.user.username} - {self.terrain.name} ({self.date} {self.start_time}-{self.end_time})"
+        username = self.user.username if self.user else "Anonymous"
+        return f"{username} - {self.terrain.name} ({self.date} {self.start_time}-{self.end_time})"
 
     def calculate_price(self):
         """Calculate the total price for the reservation"""
@@ -57,15 +58,27 @@ class Reservation(models.Model):
 
 
 class Coach(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='coach_profile')
     name = models.CharField(max_length=100)
-    price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=50.00)
     phone = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(unique=True)
-    experience = models.IntegerField(null=True)  # Allow experience to be null
+    experience = models.IntegerField(null=True, default=1)  # Allow experience to be null
+    bio = models.TextField(blank=True, null=True)
+    specialization = models.CharField(max_length=200, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        pass  # Use default table name
+        db_table = 'coach'  # Use the table name from the original migration
+
     def __str__(self):
+        return self.name
+
+    @property
+    def full_name(self):
+        if self.user:
+            return f"{self.user.first_name} {self.user.last_name}".strip() or self.name
         return self.name
 
 
@@ -81,7 +94,7 @@ class ReservationCoach(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        db_table = 'coach_reservations'  # Use a different table name
+        db_table = 'reservations_coach'  # Use the actual table name from migration
 
     def save(self, *args, **kwargs):
         duration = (self.end_time.hour + self.end_time.minute / 60) - (self.start_time.hour + self.start_time.minute / 60)
@@ -94,18 +107,51 @@ class ReservationCoach(models.Model):
 
 
 class Schedule(models.Model):
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="schedules")  # Same here, directly reference Coach
+    DAYS_OF_WEEK = [
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ]
 
-    date = models.DateField(default=False)
-    start_time = models.TimeField(default=False)
-    end_time = models.TimeField(default=False)
-    is_booked = models.BooleanField(default=False)
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="schedules")
+    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_schedules")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.coach.name} - {self.date} ({self.start_time} to {self.end_time})"
+        return f"{self.coach.name} - {self.get_day_of_week_display()} ({self.start_time} to {self.end_time})"
 
     class Meta:
-        db_table = 'reservations_coach_model'  # Optional, based on your needs
+        db_table = 'reservations_coach_model'  # Use the actual table name from migration
+        unique_together = ['coach', 'day_of_week', 'start_time', 'end_time']
+
+
+class ScheduleSlot(models.Model):
+    """Individual time slots for specific dates based on coach schedules"""
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, related_name="schedule_slots")
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_booked = models.BooleanField(default=False)
+    booked_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="booked_slots")
+    created_from_schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        status = "Booked" if self.is_booked else "Available"
+        return f"{self.coach.name} - {self.date} ({self.start_time} to {self.end_time}) - {status}"
+
+    class Meta:
+        db_table = 'coach_schedule_slots'
+        unique_together = ['coach', 'date', 'start_time', 'end_time']
 
 
 # Equipment Model

@@ -1,346 +1,457 @@
-{% extends 'html/base.html' %}
-{% load static %}
-
-{% block title %}Player Dashboard - Tennis Club{% endblock %}
-
-{% block extra_css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+{% extends 'html/base.html' %} {% load static %} {% block title %}Player
+Dashboard - Tennis Club{% endblock %} {% block extra_css %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
 <style>
-.modern-sidebar {
-  background: #ffffff;
-  border-right: 1px solid #e3e6f0;
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-  min-height: 100vh;
-}
-
-.sidebar-header {
-  padding: 2rem 1.5rem;
-  border-bottom: 1px solid #e3e6f0;
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-}
-
-.sidebar-header h6 {
-  color: white !important;
-}
-
-.sidebar-header .text-muted {
-  color: rgba(255,255,255,0.8) !important;
-}
-
-.sidebar-logo {
-  width: 60px;
-  height: 60px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(15px);
-  border: 2px solid rgba(255,255,255,0.3);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-.sidebar-logo:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-}
-
-.sidebar-nav {
-  padding: 1rem 0;
-}
-
-.sidebar-nav .nav-link {
-  color: #6c757d;
-  padding: 0.75rem 1.5rem;
-  margin: 0.25rem 1rem;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.sidebar-nav .nav-link:hover {
-  background: linear-gradient(135deg, #17a2b8 0%, #007bff 100%);
-  color: white;
-  transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
-}
-
-.sidebar-nav .nav-link.active {
-  background: linear-gradient(135deg, #17a2b8 0%, #007bff 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
-}
-
-.sidebar-nav .nav-link i {
-  font-size: 1.1rem;
-  margin-right: 0.75rem;
-  width: 20px;
-  text-align: center;
-}
-
-.sidebar-footer {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-}
-
-.btn-logout {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-  border: none;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-logout:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-  color: white;
-}
-
-.btn-logout i {
-  margin-right: 0.5rem;
-}
-
-.main-content {
-  background: #f8f9fa;
-  min-height: 100vh;
-}
-
-.card {
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* Main content styling */
-.main-content {
-  background: #f8f9fc;
-  min-height: 100vh;
-  padding: 2rem;
-}
-
-/* Modern card styling */
-.card {
-  border: none;
-  border-radius: 0.75rem;
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-  transition: all 0.3s ease;
-  background: #ffffff;
-  margin-bottom: 1.5rem;
-  border-left: 0.25rem solid #28a745;
-}
-
-.card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
-}
-
-/* Utility classes */
-.border-left-primary { border-left: 0.25rem solid #007bff !important; }
-.border-left-success { border-left: 0.25rem solid #28a745 !important; }
-.border-left-info { border-left: 0.25rem solid #17a2b8 !important; }
-.border-left-warning { border-left: 0.25rem solid #ffc107 !important; }
-
-.text-xs { font-size: 0.75rem; }
-.font-weight-bold { font-weight: 700 !important; }
-.text-gray-800 { color: #5a5c69 !important; }
-.shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important; }
-
-.no-gutters { margin-right: 0; margin-left: 0; }
-.no-gutters > .col, .no-gutters > [class*="col-"] { padding-right: 0; padding-left: 0; }
-
-@media (max-width: 768px) {
   .modern-sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 280px;
-    z-index: 1050;
-    transition: left 0.3s ease;
+    background: #ffffff;
+    border-right: 1px solid #e3e6f0;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    min-height: 100vh;
   }
 
-  .modern-sidebar.show {
-    left: 0;
+  .sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    background: linear-gradient(
+      135deg,
+      #2e7d32 0%,
+      #c6ff00 100%
+    ); /* Tennis court green to tennis ball yellow */
+    color: #ffffff;
+  }
+
+  .sidebar-header h6 {
+    color: white !important;
+  }
+
+  .sidebar-header .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .sidebar-logo {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar-nav {
+    padding: 1rem 0;
+  }
+
+  .sidebar-nav .nav-link {
+    color: #424242;
+    padding: 1rem 1.75rem; /* Increased padding for larger clickable area */
+    margin: 0.5rem 1rem; /* Increased margin for spacing */
+    border-radius: 14px; /* Slightly larger border-radius for aesthetics */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem; /* Increased font size for text */
+  }
+
+  .sidebar-nav .nav-link:hover {
+    background: linear-gradient(135deg, #1a237e 0%, #2e7d32 100%);
+    color: #ffffff;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
+  }
+
+  .sidebar-nav .nav-link.active {
+    background: linear-gradient(135deg, #1a237e 0%, #2e7d32 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
+  }
+
+  .sidebar-nav .nav-link span {
+    font-size: 1.3rem; /* Increased icon size */
+    margin-right: 1rem; /* Increased margin for better spacing */
+    width: 24px; /* Adjusted width for larger icons */
+    text-align: center;
+  }
+
+  .sidebar-nav .nav-link i {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
   }
 
   .sidebar-footer {
-    position: relative;
-    bottom: auto;
-    margin-top: 2rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .btn-logout {
+    background: linear-gradient(135deg, #d81b60 0%, #c6ff00 100%);
+    border: none;
+    color: #ffffff;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px hsl(100, 83.2%, 62.5%);
+    color: white;
+  }
+
+  .btn-logout i {
+    margin-right: 0.5rem;
   }
 
   .main-content {
-    padding: 1rem;
+    background: #f8f9fa;
+    min-height: 100vh;
   }
-}
-</style>
-{% endblock %}
 
-{% block content %}
+  .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Main content styling */
+
+  /* Main content styling */
+  .main-content {
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  /* Modern card styling */
+  .card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: #ffffff;
+    margin-bottom: 1.5rem;
+    border-left: 0.25rem solid #2e7d32; /* Tennis green accent */
+  }
+  .card:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+  }
+
+  /* Utility classes */
+  .border-left-primary {
+    border-left: 0.25rem solid #1a237e !important; /* Navy blue */
+  }
+  .border-left-success {
+    border-left: 0.25rem solid #2e7d32 !important; /* Tennis green */
+  }
+  .border-left-info {
+    border-left: 0.25rem solid #c6ff00 !important; /* Tennis ball yellow */
+  }
+  .border-left-warning {
+    border-left: 0.25rem solid #d81b60 !important; /* Clay red */
+  }
+
+  .text-xs {
+    font-size: 0.75rem;
+  }
+  .font-weight-bold {
+    font-weight: 700 !important;
+  }
+  .text-gray-800 {
+    color: #5a5c69 !important;
+  }
+  .shadow {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+  }
+
+  .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .no-gutters > .col,
+  .no-gutters > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  @media (max-width: 768px) {
+    .modern-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 280px;
+      z-index: 1050;
+      transition: left 0.3s ease;
+    }
+
+    .modern-sidebar.show {
+      left: 0;
+    }
+
+    .sidebar-footer {
+      position: relative;
+      bottom: auto;
+      margin-top: 2rem;
+    }
+
+    .main-content {
+      padding: 1rem;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
 <div class="container-fluid">
   <div class="row">
     <!-- Modern Sidebar -->
     <!-- Clean Beautiful Sidebar -->
-    <nav class="col-md-3 col-lg-2 d-md-block collapse" style="
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-      position: relative;
-    ">
+    <nav
+      class="col-md-3 col-lg-2 d-md-block collapse"
+      style="
+        background: linear-gradient(
+          135deg,
+          hsl(100, 83.2%, 62.5%) ; 0%,
+          rgb(91, 162, 75) 100%
+        );
+        min-height: 100vh;
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+      "
+    >
       <div class="position-sticky pt-0">
         <!-- Header Section -->
-        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+        <div
+          style="
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          "
+        >
           <div class="d-flex align-items-center">
-            <div style="
-              width: 50px;
-              height: 50px;
-              background: rgba(255,255,255,0.2);
-              border-radius: 15px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 1.5rem;
-              margin-right: 12px;
-            ">🏃‍♂️</div>
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                margin-right: 12px;
+              "
+            >
+              🏃‍♂️
+            </div>
             <div>
-              <h6 style="color: white; margin: 0; font-size: 1rem; font-weight: 600;">Player Panel</h6>
-              <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;" id="playerName">Welcome, Player</small>
+              <h6
+                style="
+                  color: white;
+                  margin: 0;
+                  font-size: 1rem;
+                  font-weight: 600;
+                "
+              >
+                Player Panel
+              </h6>
+              <small
+                style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem"
+                id="playerName"
+                >Welcome, Player</small
+              >
             </div>
           </div>
         </div>
 
         <!-- Navigation Menu -->
-        <div style="padding: 1rem 0;">
-          <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')" style="
-            color: white;
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateX(5px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(0)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">📊</span>
+        <div style="padding: 1rem 0">
+          <a
+            class="nav-link active"
+            href="#dashboard"
+            onclick="showSection('dashboard')"
+            style="
+              color: white;
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.2);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateX(5px)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(0)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">📊</span>
             <span>Dashboard</span>
           </a>
 
-          <a class="nav-link" href="#court-reservations" onclick="showSection('court-reservations')" style="
-            color: rgba(255,255,255,0.9);
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🏟️</span>
+          <a
+            class="nav-link"
+            href="#court-reservations"
+            onclick="showSection('court-reservations')"
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.1);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">🏟️</span>
             <span>Court Reservations</span>
           </a>
 
-          <a class="nav-link" href="#coach-reservations" onclick="showSection('coach-reservations')" style="
-            color: rgba(255,255,255,0.9);
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">👨‍🏫</span>
+          <a
+            class="nav-link"
+            href="#coach-reservations"
+            onclick="showSection('coach-reservations')"
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.1);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">👨‍🏫</span>
             <span>Coach Sessions</span>
           </a>
 
-          <a class="nav-link" href="#matchmaking" onclick="showSection('matchmaking')" style="
-            color: rgba(255,255,255,0.9);
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">🏆</span>
+          <a
+            class="nav-link"
+            href="#matchmaking"
+            onclick="showSection('matchmaking')"
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.1);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">🏆</span>
             <span>Find Matches</span>
           </a>
 
-          <a class="nav-link" href="#subscriptions" onclick="showSection('subscriptions')" style="
-            color: rgba(255,255,255,0.9);
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">💳</span>
+          <a
+            class="nav-link"
+            href="#subscriptions"
+            onclick="showSection('subscriptions')"
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.1);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">💳</span>
             <span>Subscriptions</span>
           </a>
 
-          <a class="nav-link" href="#my-reservations" onclick="showSection('my-reservations')" style="
-            color: rgba(255,255,255,0.9);
-            padding: 0.8rem 1rem;
-            margin: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'">
-            <span style="margin-right: 0.8rem; font-size: 1.1rem;">📅</span>
+          <a
+            class="nav-link"
+            href="#my-reservations"
+            onclick="showSection('my-reservations')"
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              padding: 0.8rem 1rem;
+              margin: 0.3rem 0.8rem;
+              border-radius: 12px;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              background: rgba(255, 255, 255, 0.1);
+              font-weight: 500;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateX(5px)'; this.style.color='white'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateX(0)'; this.style.color='rgba(255,255,255,0.9)'"
+          >
+            <span style="margin-right: 0.8rem; font-size: 1.1rem">📅</span>
             <span>My Reservations</span>
           </a>
         </div>
 
         <!-- Logout Section -->
-        <div style="position: absolute; bottom: 1rem; left: 0.8rem; right: 0.8rem;">
-          <button onclick="logout()" style="
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            border: none;
-            color: white;
-            padding: 0.8rem;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <span style="margin-right: 0.5rem;">🚪</span>
+        <div
+          style="position: absolute; bottom: 1rem; left: 0.8rem; right: 0.8rem"
+        >
+          <button
+            onclick="logout()"
+            style="
+              background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+              border: none;
+              color: white;
+              padding: 0.8rem;
+              border-radius: 12px;
+              width: 100%;
+              font-weight: 600;
+              transition: all 0.3s ease;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.4)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+          >
+            <span style="margin-right: 0.5rem">🚪</span>
             <span>Logout</span>
           </button>
         </div>
@@ -350,26 +461,37 @@
     <!-- Main content -->
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
       <!-- Modern Dashboard Header -->
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+      >
         <div>
           <h1 class="h2 text-success">
             🎾 Player Dashboard
             <span class="badge bg-success ms-2">Active</span>
           </h1>
-          <p class="text-muted mb-0">Book courts, coaches, and manage your tennis activities</p>
+          <p class="text-muted mb-0">
+            Book courts, coaches, and manage your tennis activities
+          </p>
         </div>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-success" onclick="refreshData()">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-success"
+              onclick="refreshData()"
+            >
               🔄 Refresh
             </button>
           </div>
           <div class="d-flex align-items-center">
-            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+            <div
+              class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px"
+            >
               🏃‍♂️
             </div>
             <div>
-              <small class="fw-bold" id="playerNameHeader">Player</small><br>
+              <small class="fw-bold" id="playerNameHeader">Player</small><br />
               <small class="text-muted">Tennis Player</small>
             </div>
           </div>
@@ -441,6 +563,91 @@
           </div>
         </div>
 
+        <!-- Today's Sessions & This Week Earnings -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card border-left-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                  <i class="bi bi-calendar-day"></i> Today's Sessions
+                </h5>
+              </div>
+              <div class="card-body">
+                <div id="todaysSessions">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading today's sessions...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-left-warning">
+              <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">
+                  <i class="bi bi-cash-coin"></i> This Week Total Earnings
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h2 class="text-warning mb-0" id="weeklyEarnings">$0.00</h2>
+                    <p class="text-muted mb-0">Total spent this week</p>
+                  </div>
+                  <div class="align-self-center">
+                    <i class="bi bi-graph-up fs-1 text-warning"></i>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <div class="progress" style="height: 8px">
+                    <div
+                      class="progress-bar bg-warning"
+                      role="progressbar"
+                      style="width: 0%"
+                      id="weeklyProgress"
+                    ></div>
+                  </div>
+                  <small class="text-muted">Weekly spending progress</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coach Schedules for Today -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">
+                    <i class="bi bi-people"></i> Today's Coach Schedules
+                  </h5>
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    onclick="loadTodaysCoachSchedules()"
+                  >
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="todaysCoachSchedules">
+                  <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading today's coach schedules...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="row mb-4">
           <div class="col-12">
@@ -451,23 +658,35 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-3 mb-2">
-                    <button class="btn btn-primary w-100" onclick="showSection('court-reservations')">
-                      <i class="bi bi-calendar-plus"></i><br>Book Court
+                    <button
+                      class="btn btn-primary w-100"
+                      onclick="showSection('court-reservations')"
+                    >
+                      <i class="bi bi-calendar-plus"></i><br />Book Court
                     </button>
                   </div>
                   <div class="col-md-3 mb-2">
-                    <button class="btn btn-success w-100" onclick="showSection('coach-reservations')">
-                      <i class="bi bi-person-check"></i><br>Book Coach
+                    <button
+                      class="btn btn-success w-100"
+                      onclick="showSection('coach-reservations')"
+                    >
+                      <i class="bi bi-person-check"></i><br />Book Coach
                     </button>
                   </div>
                   <div class="col-md-3 mb-2">
-                    <button class="btn btn-warning w-100" onclick="showSection('matchmaking')">
-                      <i class="bi bi-trophy"></i><br>Find Match
+                    <button
+                      class="btn btn-warning w-100"
+                      onclick="showSection('matchmaking')"
+                    >
+                      <i class="bi bi-trophy"></i><br />Find Match
                     </button>
                   </div>
                   <div class="col-md-3 mb-2">
-                    <button class="btn btn-info w-100" onclick="showSection('subscriptions')">
-                      <i class="bi bi-credit-card"></i><br>Subscriptions
+                    <button
+                      class="btn btn-info w-100"
+                      onclick="showSection('subscriptions')"
+                    >
+                      <i class="bi bi-credit-card"></i><br />Subscriptions
                     </button>
                   </div>
                 </div>
@@ -476,19 +695,26 @@
           </div>
         </div>
 
-        <!-- Upcoming Reservations -->
+        <!-- My Upcoming Reservations -->
         <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>Upcoming Reservations</h5>
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5>
+                    <i class="bi bi-calendar-check"></i> My Upcoming
+                    Reservations
+                  </h5>
+                  <span class="badge bg-success" id="upcomingCount">0</span>
+                </div>
               </div>
               <div class="card-body">
                 <div id="upcomingReservations">
                   <div class="text-center">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="spinner-border text-success" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>
+                    <p class="mt-2">Loading your upcoming reservations...</p>
                   </div>
                 </div>
               </div>
@@ -500,7 +726,7 @@
       <!-- Court Reservations -->
       <div id="court-reservations" class="section d-none">
         <h3>Court Reservations</h3>
-        
+
         <div class="row mb-4">
           <div class="col-md-6">
             <div class="card">
@@ -526,26 +752,47 @@
               <div class="card-body">
                 <form id="courtReservationForm">
                   <div class="mb-3">
-                    <label for="courtSelect" class="form-label">Select Court</label>
+                    <label for="courtSelect" class="form-label"
+                      >Select Court</label
+                    >
                     <select class="form-select" id="courtSelect" required>
                       <option value="">Choose a court...</option>
                     </select>
                   </div>
                   <div class="mb-3">
                     <label for="reservationDate" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="reservationDate" required>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="reservationDate"
+                      required
+                    />
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="startTime" class="form-label">Start Time</label>
-                      <input type="time" class="form-control" id="startTime" required>
+                      <label for="startTime" class="form-label"
+                        >Start Time</label
+                      >
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="startTime"
+                        required
+                      />
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="endTime" class="form-label">End Time</label>
-                      <input type="time" class="form-control" id="endTime" required>
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="endTime"
+                        required
+                      />
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary w-100">Book Court</button>
+                  <button type="submit" class="btn btn-primary w-100">
+                    Book Court
+                  </button>
                 </form>
               </div>
             </div>
@@ -555,13 +802,22 @@
 
       <!-- Coach Reservations -->
       <div id="coach-reservations" class="section d-none">
-        <h3>Coach Sessions</h3>
-        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-person-check"></i> Coach Sessions</h3>
+          <div class="alert alert-info mb-0 p-2">
+            <small
+              ><i class="bi bi-info-circle"></i> Book sessions based on coach
+              availability</small
+            >
+          </div>
+        </div>
+
+        <!-- Coach Selection -->
         <div class="row mb-4">
-          <div class="col-md-6">
+          <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>Available Coaches</h5>
+                <h5><i class="bi bi-people"></i> Available Coaches</h5>
               </div>
               <div class="card-body">
                 <div id="availableCoaches">
@@ -569,34 +825,90 @@
                     <div class="spinner-border text-primary" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>
+                    <p class="mt-2">Loading available coaches...</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+        </div>
+
+        <!-- Coach Schedule and Booking -->
+        <div class="row" id="coachScheduleSection" style="display: none">
+          <div class="col-md-8">
             <div class="card">
               <div class="card-header">
-                <h5>Book Coach Session</h5>
+                <h5>
+                  <i class="bi bi-calendar-week"></i> Coach Schedule:
+                  <span id="selectedCoachName"></span>
+                </h5>
               </div>
               <div class="card-body">
-                <form id="coachReservationForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="scheduleStartDate" class="form-label"
+                      >Start Date</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="scheduleStartDate"
+                      onchange="loadCoachAvailability()"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="scheduleEndDate" class="form-label"
+                      >End Date</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="scheduleEndDate"
+                      onchange="loadCoachAvailability()"
+                    />
+                  </div>
+                </div>
+
+                <div id="coachAvailabilityCalendar">
+                  <div class="text-center">
+                    <p class="text-muted">
+                      Select a date range to view available time slots
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="bi bi-bookmark-check"></i> Book Session</h5>
+              </div>
+              <div class="card-body">
+                <div id="bookingForm" style="display: none">
                   <div class="mb-3">
-                    <label for="coachSelect" class="form-label">Select Coach</label>
-                    <select class="form-select" id="coachSelect" required>
-                      <option value="">Choose a coach...</option>
-                    </select>
+                    <label class="form-label">Selected Slot</label>
+                    <div id="selectedSlotInfo" class="p-2 bg-light rounded">
+                      No slot selected
+                    </div>
                   </div>
                   <div class="mb-3">
-                    <label for="coachDate" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="coachDate" required onchange="checkCoachAvailability()">
+                    <label class="form-label">Total Price</label>
+                    <div id="totalPrice" class="h5 text-success">$0.00</div>
                   </div>
-                  <div id="availableTimeSlots" class="mb-3 d-none">
-                    <label class="form-label">Available Time Slots</label>
-                    <div id="timeSlotsList"></div>
-                  </div>
-                  <button type="submit" class="btn btn-success w-100">Book Session</button>
-                </form>
+                  <button
+                    type="button"
+                    class="btn btn-success w-100"
+                    onclick="confirmBooking()"
+                  >
+                    <i class="bi bi-check-circle"></i> Confirm Booking
+                  </button>
+                </div>
+                <div id="bookingInstructions" class="text-center text-muted">
+                  <i class="bi bi-arrow-left"></i>
+                  <p>Select an available time slot to book</p>
+                </div>
               </div>
             </div>
           </div>
@@ -622,22 +934,53 @@
                     </select>
                   </div>
                   <div class="mb-3">
-                    <label for="matchDate" class="form-label">Preferred Date</label>
-                    <input type="date" class="form-control" id="matchDate" required>
+                    <label for="matchDate" class="form-label"
+                      >Preferred Date</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="matchDate"
+                      required
+                    />
                   </div>
                   <div class="mb-3">
-                    <label for="matchTime" class="form-label">Preferred Time</label>
-                    <input type="time" class="form-control" id="matchTime" required>
+                    <label for="matchTime" class="form-label"
+                      >Preferred Time</label
+                    >
+                    <input
+                      type="time"
+                      class="form-control"
+                      id="matchTime"
+                      required
+                    />
                   </div>
                   <div class="mb-3">
-                    <label for="matchLocation" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="matchLocation" placeholder="Court or location" required>
+                    <label for="matchLocation" class="form-label"
+                      >Location</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="matchLocation"
+                      placeholder="Court or location"
+                      required
+                    />
                   </div>
                   <div class="mb-3">
-                    <label for="matchNotes" class="form-label">Notes (Optional)</label>
-                    <textarea class="form-control" id="matchNotes" rows="3" placeholder="Additional information..."></textarea>
+                    <label for="matchNotes" class="form-label"
+                      >Notes (Optional)</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="matchNotes"
+                      rows="3"
+                      placeholder="Additional information..."
+                    ></textarea>
                   </div>
-                  <button type="submit" class="btn btn-warning w-100">Create Match Request</button>
+                  <button type="submit" class="btn btn-warning w-100">
+                    Create Match Request
+                  </button>
                 </form>
               </div>
             </div>
@@ -663,82 +1006,112 @@
 
       <!-- Subscriptions -->
       <div id="subscriptions" class="section d-none">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header">
-                <h5>Tennis Subscriptions</h5>
-              </div>
-              <div class="card-body">
-                <form id="tennisSubscriptionForm">
-                  <div class="mb-3">
-                    <label for="subscriptionType" class="form-label">Subscription Type</label>
-                    <select class="form-select" id="subscriptionType" required>
-                      <option value="">Select type...</option>
-                      <option value="hiver">Winter (October-June)</option>
-                      <option value="ete">Summer (July-August)</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="terrainType" class="form-label">Court Type</label>
-                    <select class="form-select" id="terrainType" required>
-                      <option value="">Select court type...</option>
-                      <option value="terre battue">Clay Court</option>
-                      <option value="dur">Hard Court</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="startDate" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="startDate" required>
-                  </div>
-                  <button type="submit" class="btn btn-info w-100">Subscribe</button>
-                </form>
-              </div>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-credit-card"></i> Tennis Subscriptions</h3>
+          <div class="alert alert-info mb-0 p-2">
+            <small
+              ><i class="bi bi-info-circle"></i> Choose the perfect plan for
+              your tennis journey</small
+            >
           </div>
-          <div class="col-md-6">
+        </div>
+
+        <!-- Current Subscription Status -->
+        <div class="row mb-4">
+          <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>Equipment Subscriptions</h5>
+                <h5>
+                  <i class="bi bi-person-badge"></i> My Current Subscription
+                </h5>
               </div>
               <div class="card-body">
-                <form id="equipmentSubscriptionForm">
-                  <div class="mb-3">
-                    <label for="equipmentType" class="form-label">Equipment Type</label>
-                    <select class="form-select" id="equipmentType" required>
-                      <option value="">Select equipment...</option>
-                      <option value="RAQUETTE">Racket</option>
-                      <option value="SAC">Bag</option>
-                      <option value="BALLE">Balls</option>
-                      <option value="CHAUSSURE">Shoes</option>
-                    </select>
+                <div id="currentSubscription">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading subscription status...</p>
                   </div>
-                  <div class="mb-3">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" min="1" required>
-                  </div>
-                  <button type="submit" class="btn btn-secondary w-100">Order Equipment</button>
-                </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <!-- My Subscriptions -->
-        <div class="row mt-4">
+
+        <!-- Available Plans -->
+        <div class="row mb-4">
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>My Subscriptions</h5>
+                <h5><i class="bi bi-star"></i> Available Plans</h5>
               </div>
               <div class="card-body">
-                <div id="mySubscriptions">
+                <div id="subscriptionPlans">
                   <div class="text-center">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="spinner-border text-success" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>
+                    <p class="mt-2">Loading subscription plans...</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Equipment Orders -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="bi bi-bag"></i> Order Tennis Equipment</h5>
+              </div>
+              <div class="card-body">
+                <form id="equipmentSubscriptionForm">
+                  <div class="row">
+                    <div class="col-md-4 mb-3">
+                      <label for="equipmentType" class="form-label"
+                        >Equipment Type</label
+                      >
+                      <select class="form-select" id="equipmentType" required>
+                        <option value="">Select equipment...</option>
+                        <option value="RAQUETTE">🎾 Tennis Racket</option>
+                        <option value="SAC">👜 Tennis Bag</option>
+                        <option value="BALLE">🎾 Tennis Balls</option>
+                        <option value="CHAUSSURE">👟 Tennis Shoes</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="quantity" class="form-label">Quantity</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="quantity"
+                        min="1"
+                        value="1"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label">&nbsp;</label>
+                      <button
+                        type="submit"
+                        class="btn w-100"
+                        style="
+                          background: linear-gradient(
+                            135deg,
+                            #32cd32 0%,
+                            #228b22 100%
+                          );
+                          color: white;
+                        "
+                      >
+                        <i class="bi bi-cart-plus"></i> Order Equipment
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -747,32 +1120,99 @@
 
       <!-- My Reservations -->
       <div id="my-reservations" class="section d-none">
-        <h3>My Reservations</h3>
-        
-        <div class="card">
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Court/Coach</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="myReservationsTableBody">
-                  <tr>
-                    <td colspan="6" class="text-center">
-                      <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-calendar-check"></i> My Reservation History</h3>
+          <div class="alert alert-info mb-0 p-2">
+            <small
+              ><i class="bi bi-info-circle"></i> View all your court and coach
+              bookings</small
+            >
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div
+              class="card text-white"
+              style="
+                background: linear-gradient(135deg, #2e8b57 0%, #228b22 100%);
+              "
+            >
+              <div class="card-body text-center">
+                <h4 id="totalReservationsCount">0</h4>
+                <p class="mb-0">Total Reservations</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div
+              class="card text-white"
+              style="
+                background: linear-gradient(135deg, #32cd32 0%, #228b22 100%);
+              "
+            >
+              <div class="card-body text-center">
+                <h4 id="upcomingReservationsCount">0</h4>
+                <p class="mb-0">Upcoming</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div
+              class="card text-white"
+              style="
+                background: linear-gradient(135deg, #90ee90 0%, #32cd32 100%);
+              "
+            >
+              <div class="card-body text-center">
+                <h4 id="pastReservationsCount">0</h4>
+                <p class="mb-0">Completed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Reservations -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>
+                  <i class="bi bi-calendar-event"></i> Upcoming Reservations
+                </h5>
+              </div>
+              <div class="card-body">
+                <div id="upcomingReservationsTable">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading upcoming reservations...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Past Reservations -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="bi bi-clock-history"></i> Past Reservations</h5>
+              </div>
+              <div class="card-body">
+                <div id="pastReservationsTable">
+                  <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading past reservations...</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -783,343 +1223,1061 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
 <script>
-// Authentication check
-if (!localStorage.getItem('token') || localStorage.getItem('role') !== 'joueur') {
-  window.location.href = '/auth/login/';
-}
-
-// Set player name
-document.getElementById('playerName').textContent = `Welcome, ${localStorage.getItem('username')}`;
-
-// Global variables
-let currentSection = 'dashboard';
-
-// API helper
-const api = axios.create({
-  headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  // Authentication check
+  if (
+    !localStorage.getItem("token") ||
+    localStorage.getItem("role") !== "joueur"
+  ) {
+    window.location.href = "/auth/login/";
   }
-});
 
-// Section management
-function showSection(sectionName) {
-  // Hide all sections
-  document.querySelectorAll('.section').forEach(section => {
-    section.classList.add('d-none');
+  // Set player name
+  document.getElementById(
+    "playerName"
+  ).textContent = `Welcome, ${localStorage.getItem("username")}`;
+
+  // Global variables
+  let currentSection = "dashboard";
+
+  // API helper
+  const api = axios.create({
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   });
-  
-  // Show selected section
-  document.getElementById(sectionName).classList.remove('d-none');
-  
-  // Update active nav
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.remove('active');
-  });
-  event.target.classList.add('active');
-  
-  currentSection = sectionName;
-  
-  // Load section data
-  loadSectionData(sectionName);
-}
 
-// Load section data
-function loadSectionData(section) {
-  switch(section) {
-    case 'dashboard':
-      loadDashboardData();
-      break;
-    case 'court-reservations':
-      loadCourtReservations();
-      break;
-    case 'coach-reservations':
-      loadCoachReservations();
-      break;
-    case 'matchmaking':
-      loadMatchmaking();
-      break;
-    case 'subscriptions':
-      loadSubscriptions();
-      break;
-    case 'my-reservations':
-      loadMyReservations();
-      break;
-  }
-}
-
-// Load dashboard data
-async function loadDashboardData() {
-  try {
-    // Load user statistics using new API
-    const statsRes = await api.get('/res/api/dashboard/stats/');
-    const stats = statsRes.data;
-
-    document.getElementById('totalCourtReservations').textContent = stats.court_reservations || 0;
-    document.getElementById('totalCoachSessions').textContent = stats.coach_sessions || 0;
-    document.getElementById('totalMatches').textContent = stats.equipment_orders || 0;
-    document.getElementById('activeSubscriptions').textContent = localStorage.getItem('role') === 'abonnée' ? 1 : 0;
-
-    // Load upcoming reservations
-    loadUpcomingReservations();
-
-  } catch (error) {
-    console.error('Error loading dashboard data:', error);
-    // Fallback to individual API calls
-    loadDashboardDataFallback();
-  }
-}
-
-// Fallback dashboard data loading
-async function loadDashboardDataFallback() {
-  try {
-    const [courtRes, coachRes] = await Promise.all([
-      api.get('/res/api/court-reservations/'),
-      api.get('/res/api/equipment/')
-    ]);
-
-    document.getElementById('totalCourtReservations').textContent = courtRes.data.reservations?.length || 0;
-    document.getElementById('totalMatches').textContent = coachRes.data.length || 0;
-
-  } catch (error) {
-    console.error('Error loading fallback dashboard data:', error);
-  }
-}
-
-// Load upcoming reservations
-async function loadUpcomingReservations() {
-  try {
-    const response = await api.get('/reservations/');
-    const reservations = response.data.reservations || [];
-    
-    const today = new Date();
-    const upcoming = reservations.filter(r => new Date(r.date) >= today).slice(0, 5);
-    
-    const upcomingHtml = upcoming.map(reservation => `
-      <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-        <div>
-          <strong>${reservation.terrain}</strong><br>
-          <small class="text-muted">${reservation.date} at ${reservation.start_time}</small>
-        </div>
-        <span class="badge bg-primary">Confirmed</span>
-      </div>
-    `).join('');
-    
-    document.getElementById('upcomingReservations').innerHTML = upcomingHtml || '<p class="text-muted">No upcoming reservations</p>';
-    
-  } catch (error) {
-    console.error('Error loading upcoming reservations:', error);
-    document.getElementById('upcomingReservations').innerHTML = '<p class="text-danger">Error loading reservations</p>';
-  }
-}
-
-// Set minimum date to today
-document.addEventListener('DOMContentLoaded', function() {
-  const today = new Date().toISOString().split('T')[0];
-  const dateInputs = ['reservationDate', 'coachDate', 'matchDate', 'startDate'];
-  dateInputs.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) element.min = today;
-  });
-  
-  loadDashboardData();
-});
-
-// Refresh data
-function refreshData() {
-  loadSectionData(currentSection);
-}
-
-// Logout
-function logout() {
-  localStorage.clear();
-  window.location.href = '/auth/login/';
-}
-
-// ==================== COURT RESERVATIONS ====================
-async function loadCourtReservations() {
-  try {
-    // Load available courts using new API
-    const response = await api.get('/res/api/terrains/');
-    const courts = response.data;
-
-    // Populate court select
-    const courtSelect = document.getElementById('courtSelect');
-    courtSelect.innerHTML = '<option value="">Choose a court...</option>';
-    courts.forEach(court => {
-      courtSelect.innerHTML += `<option value="${court.id}">${court.name} - $${court.price_per_hour}/hour</option>`;
+  // Section management
+  function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll(".section").forEach((section) => {
+      section.classList.add("d-none");
     });
 
-    // Display available courts
-    const courtsHtml = courts.map(court => `
+    // Show selected section
+    document.getElementById(sectionName).classList.remove("d-none");
+
+    // Update active nav
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.classList.remove("active");
+    });
+    event.target.classList.add("active");
+
+    currentSection = sectionName;
+
+    // Load section data
+    loadSectionData(sectionName);
+  }
+
+  // Load section data
+  function loadSectionData(section) {
+    switch (section) {
+      case "dashboard":
+        loadDashboardData();
+        break;
+      case "court-reservations":
+        loadCourtReservations();
+        break;
+      case "coach-reservations":
+        loadCoachReservations();
+        break;
+      case "matchmaking":
+        loadMatchmaking();
+        break;
+      case "subscriptions":
+        loadSubscriptions();
+        break;
+      case "my-reservations":
+        loadMyReservations();
+        break;
+    }
+  }
+
+  // Load dashboard data
+  async function loadDashboardData() {
+    try {
+      // Load user statistics using new API
+      const statsRes = await api.get("/res/api/dashboard/stats/");
+      const stats = statsRes.data;
+
+      document.getElementById("totalCourtReservations").textContent =
+        stats.court_reservations || 0;
+      document.getElementById("totalCoachSessions").textContent =
+        stats.coach_sessions || 0;
+      document.getElementById("totalMatches").textContent =
+        stats.equipment_orders || 0;
+      // Load subscription count
+      loadSubscriptionCount();
+
+      // Load upcoming reservations
+      loadUpcomingReservations();
+
+      // Load new dashboard sections
+      loadTodaysSessions();
+      loadWeeklySpending();
+      loadTodaysCoachSchedules();
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+      // Fallback to individual API calls
+      loadDashboardDataFallback();
+    }
+  }
+
+  // Fallback dashboard data loading
+  async function loadDashboardDataFallback() {
+    try {
+      const [courtRes, coachRes] = await Promise.all([
+        api.get("/res/api/court-reservations/"),
+        api.get("/res/api/equipment/"),
+      ]);
+
+      document.getElementById("totalCourtReservations").textContent =
+        courtRes.data.reservations?.length || 0;
+      document.getElementById("totalMatches").textContent =
+        coachRes.data.length || 0;
+    } catch (error) {
+      console.error("Error loading fallback dashboard data:", error);
+    }
+  }
+
+  // Load today's sessions for the user
+  async function loadTodaysSessions() {
+    try {
+      const response = await api.get("/res/api/player/weekly-spending/");
+      const data = response.data;
+      const todaysSessions = data.todays_sessions || [];
+
+      const sessionsContainer = document.getElementById("todaysSessions");
+
+      if (todaysSessions.length === 0) {
+        sessionsContainer.innerHTML = `
+          <div class="text-center text-muted py-3">
+            <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+            <p class="mt-2 mb-0">No sessions scheduled for today</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sessionsHtml = todaysSessions
+        .map(
+          (session) => `
+        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+          <div>
+            <div class="d-flex align-items-center">
+              <span class="badge bg-${
+                session.type === "court" ? "primary" : "success"
+              } me-2">
+                ${session.type === "court" ? "🏟️" : "👨‍🏫"}
+              </span>
+              <div>
+                <strong>${session.title}</strong>
+                <br>
+                <small class="text-muted">${session.time}</small>
+              </div>
+            </div>
+          </div>
+          <div class="text-end">
+            <span class="fw-bold text-success">$${session.price.toFixed(
+              2
+            )}</span>
+            <br>
+            <span class="badge bg-success bg-opacity-20 text-success">
+              ${session.status}
+            </span>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+
+      sessionsContainer.innerHTML = sessionsHtml;
+    } catch (error) {
+      console.error("Error loading today's sessions:", error);
+      document.getElementById("todaysSessions").innerHTML = `
+        <div class="text-center text-danger py-3">
+          <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+          <p class="mt-2 mb-0">Error loading today's sessions</p>
+        </div>
+      `;
+    }
+  }
+
+  // Load weekly spending data
+  async function loadWeeklySpending() {
+    try {
+      const response = await api.get("/res/api/player/weekly-spending/");
+      const data = response.data;
+      const spending = data.spending;
+
+      // Update weekly earnings display
+      const totalSpending = spending.total_spending || 0;
+      document.getElementById(
+        "weeklyEarnings"
+      ).textContent = `$${totalSpending.toFixed(2)}`;
+
+      // Calculate progress (assuming $500 as weekly budget)
+      const weeklyBudget = 500;
+      const progressPercentage = Math.min(
+        (totalSpending / weeklyBudget) * 100,
+        100
+      );
+      document.getElementById(
+        "weeklyProgress"
+      ).style.width = `${progressPercentage}%`;
+
+      // Update progress bar color based on spending
+      const progressBar = document.getElementById("weeklyProgress");
+      if (progressPercentage < 50) {
+        progressBar.className = "progress-bar bg-success";
+      } else if (progressPercentage < 80) {
+        progressBar.className = "progress-bar bg-warning";
+      } else {
+        progressBar.className = "progress-bar bg-danger";
+      }
+    } catch (error) {
+      console.error("Error loading weekly spending:", error);
+      document.getElementById("weeklyEarnings").textContent = "$0.00";
+    }
+  }
+
+  // Load today's coach schedules
+  async function loadTodaysCoachSchedules() {
+    try {
+      const response = await api.get("/res/api/player/todays-coach-schedules/");
+      const data = response.data;
+      const coachesSchedules = data.coaches_schedules || [];
+      const summary = data.summary;
+
+      const schedulesContainer = document.getElementById(
+        "todaysCoachSchedules"
+      );
+
+      if (coachesSchedules.length === 0) {
+        schedulesContainer.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+            <p class="mt-2">No coach schedules for today</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Summary stats
+      let summaryHtml = `
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-primary bg-opacity-10 rounded">
+              <h4 class="text-primary mb-0">${summary.total_coaches}</h4>
+              <small class="text-muted">Active Coaches</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-success bg-opacity-10 rounded">
+              <h4 class="text-success mb-0">${summary.total_available}</h4>
+              <small class="text-muted">Available Slots</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-warning bg-opacity-10 rounded">
+              <h4 class="text-warning mb-0">${summary.total_booked}</h4>
+              <small class="text-muted">Booked Slots</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-info bg-opacity-10 rounded">
+              <h4 class="text-info mb-0">$${summary.total_earnings.toFixed(
+                2
+              )}</h4>
+              <small class="text-muted">Today's Earnings</small>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Coach schedules
+      const coachesHtml = coachesSchedules
+        .map((coachSchedule) => {
+          const coach = coachSchedule.coach;
+          const schedule = coachSchedule.schedule;
+
+          return `
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card h-100">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">${coach.name}</h6>
+                  <span class="badge bg-primary">$${
+                    coach.price_per_hour
+                  }/hr</span>
+                </div>
+                <small class="text-muted">${coach.specialization}</small>
+              </div>
+              <div class="card-body">
+                <div class="row text-center mb-3">
+                  <div class="col-4">
+                    <div class="text-success">
+                      <strong>${schedule.available_slots}</strong>
+                      <br><small>Available</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-warning">
+                      <strong>${schedule.booked_slots}</strong>
+                      <br><small>Booked</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-info">
+                      <strong>$${schedule.todays_earnings.toFixed(2)}</strong>
+                      <br><small>Earned</small>
+                    </div>
+                  </div>
+                </div>
+
+                ${
+                  schedule.slots.length > 0
+                    ? `
+                  <div class="schedule-slots">
+                    <h6 class="mb-2">Today's Schedule:</h6>
+                    ${schedule.slots
+                      .map(
+                        (slot) => `
+                      <div class="d-flex justify-content-between align-items-center mb-1 p-2 rounded ${
+                        slot.is_booked ? "bg-light" : "bg-success bg-opacity-10"
+                      }">
+                        <span class="small">
+                          <i class="bi bi-clock"></i> ${slot.start_time} - ${
+                          slot.end_time
+                        }
+                        </span>
+                        <span class="badge ${
+                          slot.is_booked ? "bg-secondary" : "bg-success"
+                        }">
+                          ${slot.is_booked ? "Booked" : "Available"}
+                        </span>
+                      </div>
+                    `
+                      )
+                      .join("")}
+                  </div>
+                `
+                    : `
+                  <div class="text-center text-muted">
+                    <small>No schedule for today</small>
+                  </div>
+                `
+                }
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-outline-primary w-100" onclick="selectCoachForBooking(${
+                  coach.id
+                }, '${coach.name}')">
+                  <i class="bi bi-calendar-plus"></i> Book Session
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        })
+        .join("");
+
+      schedulesContainer.innerHTML =
+        summaryHtml + '<div class="row">' + coachesHtml + "</div>";
+    } catch (error) {
+      console.error("Error loading today's coach schedules:", error);
+      document.getElementById("todaysCoachSchedules").innerHTML = `
+        <div class="text-center text-danger py-4">
+          <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+          <p class="mt-2">Error loading coach schedules</p>
+          <button class="btn btn-sm btn-outline-danger" onclick="loadTodaysCoachSchedules()">
+            <i class="bi bi-arrow-clockwise"></i> Retry
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  // Helper function to select coach for booking
+  function selectCoachForBooking(coachId, coachName) {
+    // Switch to coach reservations section and pre-select the coach
+    showSection("coach-reservations");
+
+    // Wait a moment for the section to load, then select the coach
+    setTimeout(() => {
+      selectCoach(coachId, coachName);
+    }, 500);
+  }
+
+  // Load player's upcoming reservations
+  async function loadUpcomingReservations() {
+    try {
+      const response = await api.get("/res/api/player/upcoming-reservations/");
+      const data = response.data;
+      const reservations = data.upcoming_reservations || [];
+
+      // Update the count badge
+      document.getElementById("upcomingCount").textContent = data.count || 0;
+
+      if (reservations.length === 0) {
+        document.getElementById("upcomingReservations").innerHTML = `
+          <div class="text-center py-4">
+            <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+            <h6 class="text-muted mt-3">No Upcoming Reservations</h6>
+            <p class="text-muted">You don't have any upcoming court or coach bookings.</p>
+            <div class="mt-3">
+              <button class="btn btn-success me-2" onclick="showSection('court-reservations')">
+                <i class="bi bi-calendar-plus"></i> Book Court
+              </button>
+              <button class="btn btn-primary" onclick="showSection('coach-reservations')">
+                <i class="bi bi-person-plus"></i> Book Coach
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const upcomingHtml = reservations
+        .map((reservation) => {
+          const dateObj = new Date(reservation.date);
+          const formattedDate = dateObj.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          });
+
+          const typeColor =
+            reservation.type === "court" ? "primary" : "success";
+          const typeIcon =
+            reservation.icon || (reservation.type === "court" ? "🏟️" : "🎾");
+
+          return `
+            <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+              <div class="d-flex align-items-center flex-grow-1">
+                <div class="me-3" style="font-size: 1.5rem;">${typeIcon}</div>
+                <div class="flex-grow-1">
+                  <h6 class="mb-1">${reservation.title}</h6>
+                  <small class="text-muted">
+                    <i class="bi bi-calendar"></i> ${formattedDate} at ${
+            reservation.start_time
+          } - ${reservation.end_time}
+                  </small>
+                  ${
+                    reservation.location
+                      ? `<br><small class="text-muted"><i class="bi bi-geo-alt"></i> ${reservation.location}</small>`
+                      : ""
+                  }
+                </div>
+              </div>
+              <div class="text-end me-3">
+                <span class="badge bg-${typeColor} mb-1">${
+            reservation.type === "court" ? "Court" : "Coach"
+          }</span>
+                <br>
+                <small class="text-success fw-bold">$${
+                  reservation.price
+                }</small>
+              </div>
+              <div class="d-flex flex-column gap-1">
+                <button class="btn btn-sm btn-outline-primary" onclick="updateReservation('${
+                  reservation.type
+                }', ${reservation.id}, '${reservation.title}', '${
+            reservation.date
+          }', '${reservation.start_time}', '${
+            reservation.end_time
+          }')" title="Update Reservation">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteReservation('${
+                  reservation.type
+                }', ${reservation.id}, '${
+            reservation.title
+          }')" title="Delete Reservation">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+
+      document.getElementById("upcomingReservations").innerHTML = upcomingHtml;
+    } catch (error) {
+      console.error("Error loading upcoming reservations:", error);
+      document.getElementById("upcomingReservations").innerHTML = `
+        <div class="text-center py-4">
+          <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+          <h6 class="text-muted mt-3">Error Loading Reservations</h6>
+          <p class="text-muted">Unable to load your upcoming reservations. Please try again.</p>
+          <button class="btn btn-outline-primary" onclick="loadUpcomingReservations()">
+            <i class="bi bi-arrow-clockwise"></i> Retry
+          </button>
+        </div>
+      `;
+      document.getElementById("upcomingCount").textContent = "!";
+    }
+  }
+
+  // Set minimum date to today
+  document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date().toISOString().split("T")[0];
+    const dateInputs = [
+      "reservationDate",
+      "coachDate",
+      "matchDate",
+      "startDate",
+    ];
+    dateInputs.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) element.min = today;
+    });
+
+    loadDashboardData();
+  });
+
+  // Refresh data
+  function refreshData() {
+    loadSectionData(currentSection);
+  }
+
+  // Logout
+  function logout() {
+    localStorage.clear();
+    window.location.href = "/auth/login/";
+  }
+
+  // ==================== COURT RESERVATIONS ====================
+  async function loadCourtReservations() {
+    try {
+      // Load available courts using new API
+      const response = await api.get("/res/api/terrains/");
+      const courts = response.data;
+
+      // Populate court select
+      const courtSelect = document.getElementById("courtSelect");
+      courtSelect.innerHTML = '<option value="">Choose a court...</option>';
+      courts.forEach((court) => {
+        courtSelect.innerHTML += `<option value="${court.id}">${court.name} - $${court.price_per_hour}/hour</option>`;
+      });
+
+      // Display available courts
+      const courtsHtml = courts
+        .map(
+          (court) => `
       <div class="card mb-2">
         <div class="card-body">
           <h6 class="card-title">${court.name}</h6>
           <p class="card-text">
             <small>Location: ${court.location}</small><br>
             <small>Price: $${court.price_per_hour}/hour</small><br>
-            <span class="badge bg-${court.available ? 'success' : 'danger'}">${court.available ? 'Available' : 'Unavailable'}</span>
+            <span class="badge bg-${court.available ? "success" : "danger"}">${
+            court.available ? "Available" : "Unavailable"
+          }</span>
           </p>
         </div>
       </div>
-    `).join('');
+    `
+        )
+        .join("");
 
-    document.getElementById('availableCourts').innerHTML = courtsHtml;
-
-  } catch (error) {
-    console.error('Error loading courts:', error);
-    document.getElementById('availableCourts').innerHTML = '<div class="alert alert-danger">Error loading courts</div>';
-  }
-}
-
-// Handle court reservation form submission
-document.getElementById('courtReservationForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  try {
-    const formData = {
-      terrain_id: document.getElementById('courtSelect').value,
-      date: document.getElementById('reservationDate').value,
-      start_time: document.getElementById('startTime').value,
-      end_time: document.getElementById('endTime').value
-    };
-
-    const response = await api.post('/res/api/court-reservations/', formData);
-
-    if (response.status === 200) {
-      alert('Court reservation successful!');
-      this.reset();
-      loadDashboardData();
+      document.getElementById("availableCourts").innerHTML = courtsHtml;
+    } catch (error) {
+      console.error("Error loading courts:", error);
+      document.getElementById("availableCourts").innerHTML =
+        '<div class="alert alert-danger">Error loading courts</div>';
     }
-  } catch (error) {
-    console.error('Error making reservation:', error);
-    alert('Error making reservation: ' + (error.response?.data?.error || 'Unknown error'));
   }
-});
 
-// ==================== COACH RESERVATIONS ====================
-async function loadCoachReservations() {
-  try {
-    // Load available coaches
-    const response = await api.get('/res/coaches/');
-    const coaches = response.data;
+  // Handle court reservation form submission
+  document
+    .getElementById("courtReservationForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-    // Populate coach select
-    const coachSelect = document.getElementById('coachSelect');
-    coachSelect.innerHTML = '<option value="">Choose a coach...</option>';
-    coaches.forEach(coach => {
-      coachSelect.innerHTML += `<option value="${coach.id}">${coach.name} - $${coach.price_per_hour}/hour</option>`;
+      try {
+        const formData = {
+          terrain_id: document.getElementById("courtSelect").value,
+          date: document.getElementById("reservationDate").value,
+          start_time: document.getElementById("startTime").value,
+          end_time: document.getElementById("endTime").value,
+        };
+
+        const response = await api.post(
+          "/res/api/court-reservations/",
+          formData
+        );
+
+        if (response.status === 200) {
+          alert("Court reservation successful!");
+          this.reset();
+          loadDashboardData();
+        }
+      } catch (error) {
+        console.error("Error making reservation:", error);
+        alert(
+          "Error making reservation: " +
+            (error.response?.data?.error || "Unknown error")
+        );
+      }
     });
 
-    // Display available coaches
-    const coachesHtml = coaches.map(coach => `
-      <div class="card mb-2">
-        <div class="card-body">
-          <h6 class="card-title">${coach.name}</h6>
-          <p class="card-text">
-            <small>Email: ${coach.email}</small><br>
-            <small>Price: $${coach.price_per_hour}/hour</small><br>
-            <small>Experience: ${coach.experience || 'N/A'} years</small>
-          </p>
+  // ==================== COACH RESERVATIONS ====================
+  let selectedCoach = null;
+  let selectedSlot = null;
+
+  async function loadCoachReservations() {
+    try {
+      // Load available coaches
+      const response = await api.get("/res/coaches/");
+      const coaches = response.data;
+
+      // Display available coaches with enhanced UI
+      const coachesHtml = coaches
+        .map(
+          (coach) => `
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100 coach-card" style="cursor: pointer;" onclick="selectCoach(${
+          coach.id
+        }, '${coach.name}', ${coach.price_per_hour})">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0">${coach.name}</h6>
+              <span class="badge bg-success">Available</span>
+            </div>
+            <p class="card-text">
+              <small class="text-muted">
+                <i class="bi bi-envelope"></i> ${coach.email}<br>
+                <i class="bi bi-currency-dollar"></i> $${
+                  coach.price_per_hour
+                }/hour<br>
+                <i class="bi bi-award"></i> ${
+                  coach.experience || "N/A"
+                } years experience
+              </small>
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-success">
+                <i class="bi bi-check-circle"></i> Click to view schedule
+              </small>
+              <i class="bi bi-arrow-right text-primary"></i>
+            </div>
+          </div>
         </div>
       </div>
-    `).join('');
+    `
+        )
+        .join("");
 
-    document.getElementById('availableCoaches').innerHTML = coachesHtml;
+      document.getElementById("availableCoaches").innerHTML = `
+      <div class="row">
+        ${coachesHtml}
+      </div>
+    `;
 
-  } catch (error) {
-    console.error('Error loading coaches:', error);
-    document.getElementById('availableCoaches').innerHTML = '<div class="alert alert-danger">Error loading coaches</div>';
+      // Hide schedule section initially
+      document.getElementById("coachScheduleSection").style.display = "none";
+    } catch (error) {
+      console.error("Error loading coaches:", error);
+      document.getElementById("availableCoaches").innerHTML =
+        '<div class="alert alert-danger">Error loading coaches</div>';
+    }
   }
-}
 
-// Check coach availability
-async function checkCoachAvailability() {
-  const coachId = document.getElementById('coachSelect').value;
-  const date = document.getElementById('coachDate').value;
+  function selectCoach(coachId, coachName, pricePerHour) {
+    selectedCoach = { id: coachId, name: coachName, price: pricePerHour };
 
-  if (!coachId || !date) return;
+    // Update UI
+    document.getElementById("selectedCoachName").textContent = coachName;
+    document.getElementById("coachScheduleSection").style.display = "block";
 
-  try {
-    // This would check coach availability - for now show sample time slots
-    const timeSlots = [
-      '09:00-10:00', '10:00-11:00', '11:00-12:00',
-      '14:00-15:00', '15:00-16:00', '16:00-17:00'
-    ];
+    // Set default date range (today to 7 days from now)
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
 
-    const slotsHtml = timeSlots.map(slot => `
+    document.getElementById("scheduleStartDate").value = today
+      .toISOString()
+      .split("T")[0];
+    document.getElementById("scheduleEndDate").value = nextWeek
+      .toISOString()
+      .split("T")[0];
+
+    // Load coach availability
+    loadCoachAvailability();
+
+    // Scroll to schedule section
+    document
+      .getElementById("coachScheduleSection")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+  async function loadCoachAvailability() {
+    if (!selectedCoach) return;
+
+    const startDate = document.getElementById("scheduleStartDate").value;
+    const endDate = document.getElementById("scheduleEndDate").value;
+
+    if (!startDate || !endDate) return;
+
+    try {
+      // Show loading
+      document.getElementById("coachAvailabilityCalendar").innerHTML = `
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2">Loading coach availability...</p>
+        </div>
+      `;
+
+      // For now, we'll show mock availability since the backend is not fully ready
+      // In a real implementation, this would call:
+      // const response = await api.get(`/res/api/coach/${selectedCoach.id}/availability/?start_date=${startDate}&end_date=${endDate}`);
+
+      // Mock availability data
+      const mockAvailability = generateMockAvailability(startDate, endDate);
+
+      displayCoachAvailability(mockAvailability);
+    } catch (error) {
+      console.error("Error loading coach availability:", error);
+      document.getElementById("coachAvailabilityCalendar").innerHTML = `
+        <div class="alert alert-warning">
+          <h6><i class="bi bi-exclamation-triangle"></i> Availability Not Available</h6>
+          <p class="mb-0">Unable to load coach availability. Please try again later.</p>
+        </div>
+      `;
+    }
+  }
+
+  function generateMockAvailability(startDate, endDate) {
+    const availability = [];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dayOfWeek = d.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+      // Skip Sundays for this example
+      if (dayOfWeek === 0) continue;
+
+      const dateStr = d.toISOString().split("T")[0];
+      const slots = [];
+
+      // Generate some sample time slots based on day of week
+      if (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) {
+        // Mon, Wed, Fri
+        slots.push(
+          { start_time: "09:00", end_time: "10:00", is_booked: false },
+          {
+            start_time: "10:00",
+            end_time: "11:00",
+            is_booked: Math.random() > 0.7,
+          },
+          { start_time: "11:00", end_time: "12:00", is_booked: false },
+          {
+            start_time: "14:00",
+            end_time: "15:00",
+            is_booked: Math.random() > 0.8,
+          },
+          { start_time: "15:00", end_time: "16:00", is_booked: false }
+        );
+      } else if (dayOfWeek === 6) {
+        // Saturday
+        slots.push(
+          { start_time: "08:00", end_time: "09:00", is_booked: false },
+          { start_time: "09:00", end_time: "10:00", is_booked: false },
+          {
+            start_time: "10:00",
+            end_time: "11:00",
+            is_booked: Math.random() > 0.6,
+          }
+        );
+      }
+
+      if (slots.length > 0) {
+        availability.push({ date: dateStr, slots });
+      }
+    }
+
+    return availability;
+  }
+
+  function displayCoachAvailability(availability) {
+    if (availability.length === 0) {
+      document.getElementById("coachAvailabilityCalendar").innerHTML = `
+        <div class="text-center text-muted">
+          <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+          <p class="mt-2">No availability found for the selected date range</p>
+        </div>
+      `;
+      return;
+    }
+
+    const availabilityHtml = availability
+      .map(
+        (day) => `
+      <div class="mb-3">
+        <h6 class="border-bottom pb-2">
+          <i class="bi bi-calendar-date"></i>
+          ${new Date(day.date).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </h6>
+        <div class="row">
+          ${day.slots
+            .map(
+              (slot) => `
+            <div class="col-md-6 mb-2">
+              <button
+                type="button"
+                class="btn ${
+                  slot.is_booked
+                    ? "btn-outline-secondary"
+                    : "btn-outline-success"
+                } w-100 time-slot-btn"
+                ${
+                  slot.is_booked
+                    ? "disabled"
+                    : `onclick="selectTimeSlot('${day.date}', '${slot.start_time}', '${slot.end_time}')"`
+                }
+              >
+                <i class="bi bi-clock"></i> ${slot.start_time} - ${
+                slot.end_time
+              }
+                ${
+                  slot.is_booked
+                    ? '<br><small class="text-muted">Booked</small>'
+                    : '<br><small class="text-success">Available</small>'
+                }
+              </button>
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+      </div>
+    `
+      )
+      .join("");
+
+    document.getElementById("coachAvailabilityCalendar").innerHTML =
+      availabilityHtml;
+  }
+
+  function selectTimeSlot(date, startTime, endTime) {
+    selectedSlot = { date, startTime, endTime };
+
+    // Update selected slot info
+    const slotInfo = `
+      <strong>${new Date(date).toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+      })}</strong><br>
+      <i class="bi bi-clock"></i> ${startTime} - ${endTime}<br>
+      <small class="text-muted">Coach: ${selectedCoach.name}</small>
+    `;
+    document.getElementById("selectedSlotInfo").innerHTML = slotInfo;
+
+    // Calculate price (1 hour session)
+    const price = selectedCoach.price;
+    document.getElementById("totalPrice").textContent = `$${price.toFixed(2)}`;
+
+    // Show booking form
+    document.getElementById("bookingForm").style.display = "block";
+    document.getElementById("bookingInstructions").style.display = "none";
+
+    // Highlight selected slot
+    document.querySelectorAll(".time-slot-btn").forEach((btn) => {
+      btn.classList.remove("btn-success");
+      btn.classList.add("btn-outline-success");
+    });
+    event.target.classList.remove("btn-outline-success");
+    event.target.classList.add("btn-success");
+  }
+
+  async function confirmBooking() {
+    if (!selectedCoach || !selectedSlot) {
+      alert("Please select a coach and time slot");
+      return;
+    }
+
+    try {
+      // Create coach reservation
+      const reservationData = {
+        coach_id: selectedCoach.id,
+        date: selectedSlot.date,
+        start_time: selectedSlot.startTime,
+        end_time: selectedSlot.endTime,
+      };
+
+      console.log("Booking coach session:", reservationData);
+
+      const response = await api.post(
+        "/res/api/coach/book-slot/",
+        reservationData
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert(`✅ Coach session booked successfully!
+
+Coach: ${selectedCoach.name}
+Date: ${new Date(selectedSlot.date).toLocaleDateString()}
+Time: ${selectedSlot.startTime} - ${selectedSlot.endTime}
+Price: $${selectedCoach.price.toFixed(2)}
+
+Your reservation has been confirmed!`);
+
+        // Reset form
+        selectedSlot = null;
+        document.getElementById("bookingForm").style.display = "none";
+        document.getElementById("bookingInstructions").style.display = "block";
+
+        // Reload availability
+        loadCoachAvailability();
+
+        // Reload dashboard data to update counts
+        loadDashboardData();
+        loadUpcomingReservations();
+      }
+    } catch (error) {
+      console.error("Error booking coach session:", error);
+
+      if (error.response?.status === 400) {
+        alert(
+          `❌ Booking failed!\n\n${
+            error.response?.data?.error ||
+            "This time slot may no longer be available."
+          }`
+        );
+      } else if (error.response?.status === 404) {
+        alert("❌ Coach or time slot not found. Please try again.");
+      } else {
+        alert(
+          `❌ Error booking session!\n\n${
+            error.response?.data?.error || "Unknown error occurred"
+          }`
+        );
+      }
+
+      // Reload availability to show current state
+      loadCoachAvailability();
+    }
+  }
+
+  // Check coach availability (legacy function - keeping for compatibility)
+  async function checkCoachAvailability() {
+    // This function is now handled by loadCoachAvailability()
+    console.log(
+      "checkCoachAvailability called - redirecting to loadCoachAvailability"
+    );
+    loadCoachAvailability();
+    const date = document.getElementById("coachDate").value;
+
+    if (!coachId || !date) return;
+
+    try {
+      // This would check coach availability - for now show sample time slots
+      const timeSlots = [
+        "09:00-10:00",
+        "10:00-11:00",
+        "11:00-12:00",
+        "14:00-15:00",
+        "15:00-16:00",
+        "16:00-17:00",
+      ];
+
+      const slotsHtml = timeSlots
+        .map(
+          (slot) => `
       <div class="form-check">
         <input class="form-check-input" type="radio" name="timeSlot" value="${slot}" id="slot_${slot}">
         <label class="form-check-label" for="slot_${slot}">${slot}</label>
       </div>
-    `).join('');
+    `
+        )
+        .join("");
 
-    document.getElementById('timeSlotsList').innerHTML = slotsHtml;
-    document.getElementById('availableTimeSlots').classList.remove('d-none');
-
-  } catch (error) {
-    console.error('Error checking availability:', error);
-  }
-}
-
-// Handle coach reservation form submission
-document.getElementById('coachReservationForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  try {
-    const selectedSlot = document.querySelector('input[name="timeSlot"]:checked');
-    if (!selectedSlot) {
-      alert('Please select a time slot');
-      return;
+      document.getElementById("timeSlotsList").innerHTML = slotsHtml;
+      document.getElementById("availableTimeSlots").classList.remove("d-none");
+    } catch (error) {
+      console.error("Error checking availability:", error);
     }
-
-    const [startTime, endTime] = selectedSlot.value.split('-');
-    const formData = {
-      coach_id: document.getElementById('coachSelect').value,
-      date: document.getElementById('coachDate').value,
-      start_time: startTime,
-      end_time: endTime
-    };
-
-    // Use the coach reservation API
-    const response = await api.post('/res/coach/' + formData.coach_id + '/reserve/', formData);
-
-    if (response.status === 200) {
-      alert('Coach session booked successfully!');
-      this.reset();
-      document.getElementById('availableTimeSlots').classList.add('d-none');
-      loadDashboardData();
-    }
-
-  } catch (error) {
-    console.error('Error booking coach session:', error);
-    alert('Error booking session: ' + (error.response?.data?.error || 'Unknown error'));
   }
-});
 
-// ==================== MATCHMAKING ====================
-async function loadMatchmaking() {
-  try {
-    // Load available matches - for now show sample data
-    const sampleMatches = [
-      {
-        id: 1,
-        player: 'John Doe',
-        type: 'Friendly Match',
-        date: '2024-06-10',
-        time: '15:00',
-        location: 'Court A'
-      },
-      {
-        id: 2,
-        player: 'Jane Smith',
-        type: 'Tournament',
-        date: '2024-06-12',
-        time: '10:00',
-        location: 'Court Central'
+  // Handle coach reservation form submission
+  document
+    .getElementById("coachReservationForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      try {
+        const selectedSlot = document.querySelector(
+          'input[name="timeSlot"]:checked'
+        );
+        if (!selectedSlot) {
+          alert("Please select a time slot");
+          return;
+        }
+
+        const [startTime, endTime] = selectedSlot.value.split("-");
+        const formData = {
+          coach_id: document.getElementById("coachSelect").value,
+          date: document.getElementById("coachDate").value,
+          start_time: startTime,
+          end_time: endTime,
+        };
+
+        // Use the coach reservation API
+        const response = await api.post(
+          "/res/coach/" + formData.coach_id + "/reserve/",
+          formData
+        );
+
+        if (response.status === 200) {
+          alert("Coach session booked successfully!");
+          this.reset();
+          document.getElementById("availableTimeSlots").classList.add("d-none");
+          loadDashboardData();
+        }
+      } catch (error) {
+        console.error("Error booking coach session:", error);
+        alert(
+          "Error booking session: " +
+            (error.response?.data?.error || "Unknown error")
+        );
       }
-    ];
+    });
 
-    const matchesHtml = sampleMatches.map(match => `
+  // ==================== MATCHMAKING ====================
+  async function loadMatchmaking() {
+    try {
+      // Load available matches - for now show sample data
+      const sampleMatches = [
+        {
+          id: 1,
+          player: "John Doe",
+          type: "Friendly Match",
+          date: "2024-06-10",
+          time: "15:00",
+          location: "Court A",
+        },
+        {
+          id: 2,
+          player: "Jane Smith",
+          type: "Tournament",
+          date: "2024-06-12",
+          time: "10:00",
+          location: "Court Central",
+        },
+      ];
+
+      const matchesHtml = sampleMatches
+        .map(
+          (match) => `
       <div class="card mb-2">
         <div class="card-body">
           <h6 class="card-title">${match.player}</h6>
@@ -1132,209 +2290,1033 @@ async function loadMatchmaking() {
           <button class="btn btn-sm btn-primary" onclick="joinMatch(${match.id})">Join Match</button>
         </div>
       </div>
-    `).join('');
+    `
+        )
+        .join("");
 
-    document.getElementById('availableMatches').innerHTML = matchesHtml || '<p class="text-muted">No available matches</p>';
-
-  } catch (error) {
-    console.error('Error loading matches:', error);
-    document.getElementById('availableMatches').innerHTML = '<div class="alert alert-danger">Error loading matches</div>';
+      document.getElementById("availableMatches").innerHTML =
+        matchesHtml || '<p class="text-muted">No available matches</p>';
+    } catch (error) {
+      console.error("Error loading matches:", error);
+      document.getElementById("availableMatches").innerHTML =
+        '<div class="alert alert-danger">Error loading matches</div>';
+    }
   }
-}
 
-// Handle match request form submission
-document.getElementById('matchRequestForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
+  // Handle match request form submission
+  document
+    .getElementById("matchRequestForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-  try {
-    const formData = {
-      type: document.getElementById('matchType').value,
-      date: document.getElementById('matchDate').value,
-      time: document.getElementById('matchTime').value,
-      location: document.getElementById('matchLocation').value,
-      notes: document.getElementById('matchNotes').value
-    };
+      try {
+        const formData = {
+          type: document.getElementById("matchType").value,
+          date: document.getElementById("matchDate").value,
+          time: document.getElementById("matchTime").value,
+          location: document.getElementById("matchLocation").value,
+          notes: document.getElementById("matchNotes").value,
+        };
 
-    alert('Match request created successfully!');
-    console.log('Match request data:', formData);
-    this.reset();
-
-  } catch (error) {
-    console.error('Error creating match request:', error);
-    alert('Error creating match request');
-  }
-});
-
-function joinMatch(matchId) {
-  alert(`Joining match ${matchId} - functionality ready for implementation`);
-}
-
-// ==================== SUBSCRIPTIONS ====================
-async function loadSubscriptions() {
-  try {
-    // Load user's current subscriptions
-    const userRole = localStorage.getItem('role');
-    const isSubscriber = userRole === 'abonnée';
-
-    const subscriptionStatus = `
-      <div class="card mb-3">
-        <div class="card-body">
-          <h6 class="card-title">Current Status</h6>
-          <p class="card-text">
-            <span class="badge bg-${isSubscriber ? 'success' : 'warning'}">${isSubscriber ? 'Premium Subscriber' : 'Regular Player'}</span>
-          </p>
-          ${!isSubscriber ? '<button class="btn btn-primary" onclick="openSubscriptionModal()">Upgrade to Premium</button>' : ''}
-        </div>
-      </div>
-    `;
-
-    document.getElementById('mySubscriptions').innerHTML = subscriptionStatus;
-
-  } catch (error) {
-    console.error('Error loading subscriptions:', error);
-    document.getElementById('mySubscriptions').innerHTML = '<div class="alert alert-danger">Error loading subscriptions</div>';
-  }
-}
-
-// Handle tennis subscription form
-document.getElementById('tennisSubscriptionForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  try {
-    const formData = {
-      type: document.getElementById('subscriptionType').value,
-      terrain_type: document.getElementById('terrainType').value,
-      start_date: document.getElementById('startDate').value
-    };
-
-    alert('Tennis subscription created successfully!');
-    console.log('Tennis subscription data:', formData);
-    this.reset();
-
-  } catch (error) {
-    console.error('Error creating subscription:', error);
-    alert('Error creating subscription');
-  }
-});
-
-// Handle equipment subscription form
-document.getElementById('equipmentSubscriptionForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  try {
-    const formData = {
-      equipment_type: document.getElementById('equipmentType').value,
-      quantity: document.getElementById('quantity').value
-    };
-
-    // Use the equipment order API
-    const response = await api.post('/res/api/equipment/order/', {
-      equipment_id: 1, // This would be dynamic based on equipment type
-      quantity: formData.quantity,
-      delivery_address: 'Club Address' // This would be from user profile
+        alert("Match request created successfully!");
+        console.log("Match request data:", formData);
+        this.reset();
+      } catch (error) {
+        console.error("Error creating match request:", error);
+        alert("Error creating match request");
+      }
     });
 
-    if (response.status === 200) {
-      alert('Equipment order placed successfully!');
-      this.reset();
-      loadDashboardData();
+  function joinMatch(matchId) {
+    alert(`Joining match ${matchId} - functionality ready for implementation`);
+  }
+
+  // Load subscription count for dashboard
+  async function loadSubscriptionCount() {
+    try {
+      const response = await api.get("/res/api/subscriptions/");
+      const data = response.data;
+
+      const count = data.subscription && data.subscription.is_active ? 1 : 0;
+      document.getElementById("activeSubscriptions").textContent = count;
+    } catch (error) {
+      console.error("Error loading subscription count:", error);
+      document.getElementById("activeSubscriptions").textContent = 0;
+    }
+  }
+
+  // ==================== SUBSCRIPTIONS ====================
+  async function loadSubscriptions() {
+    try {
+      // Load current subscription
+      await loadCurrentSubscription();
+
+      // Load available plans
+      await loadSubscriptionPlans();
+    } catch (error) {
+      console.error("Error loading subscriptions:", error);
+      document.getElementById("currentSubscription").innerHTML =
+        '<div class="alert alert-danger">Error loading subscription data</div>';
+    }
+  }
+
+  async function loadCurrentSubscription() {
+    try {
+      const response = await api.get("/res/api/subscriptions/");
+      const data = response.data;
+
+      let subscriptionHtml = "";
+
+      if (data.subscription) {
+        const sub = data.subscription;
+        const statusColor = sub.is_active ? "success" : "warning";
+        const statusText = sub.is_active ? "Active" : sub.status;
+
+        subscriptionHtml = `
+          <div class="row">
+            <div class="col-md-8">
+              <h6 class="mb-3">Current Plan: <span class="badge bg-${statusColor}">${sub.plan_type.toUpperCase()}</span></h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Status:</strong> <span class="badge bg-${statusColor}">${statusText}</span></p>
+                  <p><strong>Monthly Price:</strong> $${sub.monthly_price}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Start Date:</strong> ${sub.start_date}</p>
+                  <p><strong>End Date:</strong> ${sub.end_date}</p>
+                  ${
+                    sub.is_active
+                      ? `<p><strong>Days Remaining:</strong> ${sub.days_remaining} days</p>`
+                      : ""
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-end">
+              ${
+                sub.is_active
+                  ? `<button class="btn btn-outline-danger" onclick="cancelSubscription()">
+                  <i class="bi bi-x-circle"></i> Cancel Subscription
+                </button>`
+                  : `<button class="btn btn-success" onclick="showSubscriptionPlans()">
+                  <i class="bi bi-arrow-up-circle"></i> Reactivate
+                </button>`
+              }
+            </div>
+          </div>
+        `;
+      } else {
+        subscriptionHtml = `
+          <div class="text-center">
+            <div class="mb-3">
+              <i class="bi bi-person-circle" style="font-size: 3rem; color: #6c757d;"></i>
+            </div>
+            <h6 class="text-muted">No Active Subscription</h6>
+            <p class="text-muted">You're currently on the free plan. Upgrade to unlock premium features!</p>
+            <button class="btn btn-success" onclick="showSubscriptionPlans()">
+              <i class="bi bi-star"></i> Choose a Plan
+            </button>
+          </div>
+        `;
+      }
+
+      document.getElementById("currentSubscription").innerHTML =
+        subscriptionHtml;
+    } catch (error) {
+      console.error("Error loading current subscription:", error);
+      document.getElementById("currentSubscription").innerHTML =
+        '<div class="alert alert-danger">Error loading subscription status</div>';
+    }
+  }
+
+  async function loadSubscriptionPlans() {
+    try {
+      const response = await api.get("/res/api/subscriptions/plans/");
+      const plans = response.data.plans;
+
+      let plansHtml = '<div class="row">';
+
+      plans.forEach((plan) => {
+        const popularBadge = plan.popular
+          ? '<span class="badge bg-warning position-absolute top-0 start-50 translate-middle">Most Popular</span>'
+          : "";
+        const cardClass = plan.popular ? "border-warning" : "";
+
+        plansHtml += `
+          <div class="col-md-4 mb-3">
+            <div class="card h-100 ${cardClass}" style="position: relative;">
+              ${popularBadge}
+              <div class="card-header text-center">
+                <h5 class="card-title">${plan.name}</h5>
+                <h2 class="text-success">$${
+                  plan.price
+                }<small class="text-muted">/month</small></h2>
+              </div>
+              <div class="card-body">
+                <ul class="list-unstyled">
+                  ${plan.features
+                    .map(
+                      (feature) =>
+                        `<li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>${feature}</li>`
+                    )
+                    .join("")}
+                </ul>
+              </div>
+              <div class="card-footer text-center">
+                <button class="btn btn-success w-100" onclick="subscribeToPlan('${
+                  plan.type
+                }', '${plan.name}', ${plan.price})">
+                  <i class="bi bi-credit-card"></i> Subscribe Now
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      plansHtml += "</div>";
+
+      document.getElementById("subscriptionPlans").innerHTML = plansHtml;
+    } catch (error) {
+      console.error("Error loading subscription plans:", error);
+      document.getElementById("subscriptionPlans").innerHTML =
+        '<div class="alert alert-danger">Error loading subscription plans</div>';
+    }
+  }
+
+  function showSubscriptionPlans() {
+    // Scroll to subscription plans section
+    document
+      .getElementById("subscriptionPlans")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+  async function subscribeToPlan(planType, planName, price) {
+    if (confirm(`Subscribe to ${planName} for $${price}/month?`)) {
+      try {
+        const response = await api.post("/res/api/subscriptions/", {
+          plan_type: planType,
+          duration_months: 1,
+        });
+
+        if (response.status === 200) {
+          alert(`Successfully subscribed to ${planName}!`);
+          loadCurrentSubscription();
+          loadDashboardData(); // Refresh dashboard stats
+        }
+      } catch (error) {
+        console.error("Error subscribing:", error);
+        const errorMsg =
+          error.response?.data?.error || "Error creating subscription";
+        alert(errorMsg);
+      }
+    }
+  }
+
+  async function cancelSubscription() {
+    if (
+      confirm(
+        "Are you sure you want to cancel your subscription? You'll continue to have access until the end of your billing period."
+      )
+    ) {
+      try {
+        const response = await api.post("/res/api/subscriptions/cancel/");
+
+        if (response.status === 200) {
+          alert("Subscription cancelled successfully!");
+          loadCurrentSubscription();
+          loadDashboardData(); // Refresh dashboard stats
+        }
+      } catch (error) {
+        console.error("Error cancelling subscription:", error);
+        const errorMsg =
+          error.response?.data?.error || "Error cancelling subscription";
+        alert(errorMsg);
+      }
+    }
+  }
+
+  // Handle tennis subscription form
+  document
+    .getElementById("tennisSubscriptionForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      try {
+        const formData = {
+          type: document.getElementById("subscriptionType").value,
+          terrain_type: document.getElementById("terrainType").value,
+          start_date: document.getElementById("startDate").value,
+        };
+
+        alert("Tennis subscription created successfully!");
+        console.log("Tennis subscription data:", formData);
+        this.reset();
+      } catch (error) {
+        console.error("Error creating subscription:", error);
+        alert("Error creating subscription");
+      }
+    });
+
+  // Handle equipment subscription form
+  document
+    .getElementById("equipmentSubscriptionForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      try {
+        const formData = {
+          equipment_type: document.getElementById("equipmentType").value,
+          quantity: document.getElementById("quantity").value,
+        };
+
+        // Use the equipment order API
+        const response = await api.post("/res/api/equipment/order/", {
+          equipment_id: 1, // This would be dynamic based on equipment type
+          quantity: formData.quantity,
+          delivery_address: "Club Address", // This would be from user profile
+        });
+
+        if (response.status === 200) {
+          alert("Equipment order placed successfully!");
+          this.reset();
+          loadDashboardData();
+        }
+      } catch (error) {
+        console.error("Error ordering equipment:", error);
+        alert(
+          "Error placing equipment order: " +
+            (error.response?.data?.error || "Unknown error")
+        );
+      }
+    });
+
+  // ==================== RESERVATION MANAGEMENT ====================
+
+  // Delete reservation function
+  async function deleteReservation(type, reservationId, title) {
+    if (
+      !confirm(
+        `Are you sure you want to delete this reservation?\n\n${title}\n\nThis action cannot be undone.`
+      )
+    ) {
+      return;
     }
 
-  } catch (error) {
-    console.error('Error ordering equipment:', error);
-    alert('Error placing equipment order: ' + (error.response?.data?.error || 'Unknown error'));
+    try {
+      let endpoint;
+      if (type === "court") {
+        endpoint = `/res/api/reservations/${reservationId}/cancel/`;
+      } else if (type === "coach") {
+        endpoint = `/res/api/coach-reservations/${reservationId}/cancel/`;
+      } else {
+        throw new Error("Invalid reservation type");
+      }
+
+      const response = await api.delete(endpoint);
+
+      if (response.status === 200) {
+        alert(
+          `✅ Reservation deleted successfully!\n\n${title} has been cancelled.`
+        );
+
+        // Refresh the reservations display
+        loadUpcomingReservations();
+        loadDashboardData();
+      }
+    } catch (error) {
+      console.error("Error deleting reservation:", error);
+
+      if (error.response?.status === 404) {
+        alert(
+          `❌ Reservation not found.\n\nThis reservation may have already been cancelled.`
+        );
+        // Refresh to update the display
+        loadUpcomingReservations();
+      } else if (error.response?.status === 403) {
+        alert(
+          `❌ Permission denied.\n\nYou can only cancel your own reservations.`
+        );
+      } else {
+        alert(
+          `❌ Error deleting reservation.\n\n${
+            error.response?.data?.error || "Unknown error occurred"
+          }`
+        );
+      }
+    }
   }
-});
 
-// ==================== MY RESERVATIONS ====================
-async function loadMyReservations() {
-  try {
-    // Load user's reservations
-    const response = await api.get('/res/api/court-reservations/');
-    const reservations = response.data.reservations || [];
+  // Update reservation function
+  async function updateReservation(
+    type,
+    reservationId,
+    title,
+    currentDate,
+    currentStartTime,
+    currentEndTime
+  ) {
+    if (type === "coach") {
+      // For coach reservations, show coach selection modal
+      await showCoachUpdateModal(
+        reservationId,
+        title,
+        currentDate,
+        currentStartTime,
+        currentEndTime
+      );
+    } elsez
+     {
+      // For court reservations, show simple time update modal
+      await showCourtUpdateModal(
+        reservationId,
+        title,
+        currentDate,
+        currentStartTime,
+        currentEndTime
+      );
+    }
+  }
 
-    const reservationsHtml = reservations.map(reservation => `
+  // Coach reservation update modal with coach selection
+  async function showCoachUpdateModal(
+    reservationId,
+    title,
+    currentDate,
+    currentStartTime,
+    currentEndTime
+  ) {
+    const updateModal = document.createElement("div");
+    updateModal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    `;
+
+    const modalContent = document.createElement("div");
+    modalContent.style.cssText = `
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 95%;
+      max-height: 90vh;
+      overflow-y: auto;
+    `;
+
+    // Load coaches first
+    try {
+      const coachesResponse = await api.get("/res/api/coaches/");
+      const coaches = coachesResponse.data.coaches || [];
+
+      modalContent.innerHTML = `
+        <h5 class="mb-3">🔄 Update Coach Reservation</h5>
+        <p class="text-muted mb-3">${title}</p>
+
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="mb-3">📅 Select New Date & Time</h6>
+            <form id="updateCoachReservationForm">
+              <div class="mb-3">
+                <label for="updateDate" class="form-label">Date:</label>
+                <input type="date" class="form-control" id="updateDate" value="${currentDate}" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="updateStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" id="updateStartTime" value="${currentStartTime}" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="updateEndTime" class="form-label">End Time:</label>
+                <input type="time" class="form-control" id="updateEndTime" value="${currentEndTime}" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="updateCoachSelect" class="form-label">Coach (optional - leave current if not changing):</label>
+                <select class="form-control" id="updateCoachSelect">
+                  <option value="">Keep current coach</option>
+                  ${coaches
+                    .map(
+                      (coach) => `
+                    <option value="${coach.id}" data-price="${coach.price_per_hour}">
+                      ${coach.name} - $${coach.price_per_hour}/hour
+                    </option>
+                  `
+                    )
+                    .join("")}
+                </select>
+              </div>
+
+              <div id="selectedCoachAvailability" class="mb-3" style="display: none;">
+                <h6>Coach Availability:</h6>
+                <div id="coachAvailabilitySlots"></div>
+              </div>
+
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Reservation</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="mb-3">👨‍🏫 Available Coaches</h6>
+            <div class="coach-list" style="max-height: 400px; overflow-y: auto;">
+              ${coaches
+                .map(
+                  (coach) => `
+                <div class="card mb-2 coach-option" data-coach-id="${
+                  coach.id
+                }" style="cursor: pointer;">
+                  <div class="card-body p-2">
+                    <h6 class="card-title mb-1">${coach.name}</h6>
+                    <p class="card-text mb-1">
+                      <small class="text-muted">
+                        💰 $${coach.price_per_hour}/hour<br>
+                        📧 ${coach.email}<br>
+                        ${
+                          coach.experience
+                            ? `🏆 ${coach.experience} years experience`
+                            : ""
+                        }
+                      </small>
+                    </p>
+                    <button class="btn btn-sm btn-outline-primary" onclick="selectCoachForUpdate(${
+                      coach.id
+                    }, '${coach.name}', ${coach.price_per_hour})">
+                      Select Coach
+                    </button>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+        </div>
+      `;
+
+      updateModal.appendChild(modalContent);
+      document.body.appendChild(updateModal);
+
+      // Set minimum date to today
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("updateDate").min = today;
+
+      // Store modal reference globally for closing
+      window.currentUpdateModal = updateModal;
+
+      // Handle coach selection change
+      document
+        .getElementById("updateCoachSelect")
+        .addEventListener("change", function () {
+          const selectedCoachId = this.value;
+          if (selectedCoachId) {
+            loadCoachAvailabilityForUpdate(selectedCoachId);
+          } else {
+            document.getElementById("selectedCoachAvailability").style.display =
+              "none";
+          }
+        });
+
+      // Handle form submission for coach reservation
+      document
+        .getElementById("updateCoachReservationForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          await handleCoachReservationUpdate(reservationId, title);
+        });
+    } catch (error) {
+      console.error("Error loading coaches:", error);
+      alert("Error loading coaches. Please try again.");
+    }
+  }
+
+  // Court reservation update modal (simple)
+  async function showCourtUpdateModal(
+    reservationId,
+    title,
+    currentDate,
+    currentStartTime,
+    currentEndTime
+  ) {
+    const updateModal = document.createElement("div");
+    updateModal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    `;
+
+    const modalContent = document.createElement("div");
+    modalContent.style.cssText = `
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    `;
+
+    modalContent.innerHTML = `
+      <h5 class="mb-3">🔄 Update Court Reservation</h5>
+      <p class="text-muted mb-3">${title}</p>
+
+      <form id="updateCourtReservationForm">
+        <div class="mb-3">
+          <label for="updateDate" class="form-label">Date:</label>
+          <input type="date" class="form-control" id="updateDate" value="${currentDate}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="updateStartTime" class="form-label">Start Time:</label>
+          <input type="time" class="form-control" id="updateStartTime" value="${currentStartTime}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="updateEndTime" class="form-label">End Time:</label>
+          <input type="time" class="form-control" id="updateEndTime" value="${currentEndTime}" required>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+          <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Reservation</button>
+        </div>
+      </form>
+    `;
+
+    updateModal.appendChild(modalContent);
+    document.body.appendChild(updateModal);
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("updateDate").min = today;
+
+    // Store modal reference globally for closing
+    window.currentUpdateModal = updateModal;
+
+    // Handle form submission
+    document
+      .getElementById("updateReservationForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const newDate = document.getElementById("updateDate").value;
+        const newStartTime = document.getElementById("updateStartTime").value;
+        const newEndTime = document.getElementById("updateEndTime").value;
+
+        // Validate times
+        if (newStartTime >= newEndTime) {
+          alert("End time must be after start time.");
+          return;
+        }
+
+        try {
+          let endpoint;
+          const updateData = {
+            date: newDate,
+            start_time: newStartTime,
+            end_time: newEndTime,
+          };
+
+          if (type === "court") {
+            endpoint = `/res/api/court-reservations/${reservationId}/update/`;
+          } else if (type === "coach") {
+            endpoint = `/res/api/coach-reservations/${reservationId}/update/`;
+          } else {
+            throw new Error("Invalid reservation type");
+          }
+
+          const response = await api.put(endpoint, updateData);
+
+          if (response.status === 200) {
+            alert(
+              `✅ Reservation updated successfully!\n\n${title}\nNew time: ${newDate} ${newStartTime} - ${newEndTime}`
+            );
+
+            closeUpdateModal();
+            loadUpcomingReservations();
+            loadDashboardData();
+          }
+        } catch (error) {
+          console.error("Error updating reservation:", error);
+
+          if (error.response?.status === 404) {
+            alert(
+              `❌ Reservation not found.\n\nThis reservation may have been cancelled.`
+            );
+            closeUpdateModal();
+            loadUpcomingReservations();
+          } else if (error.response?.status === 403) {
+            alert(
+              `❌ Permission denied.\n\nYou can only update your own reservations.`
+            );
+          } else if (error.response?.status === 400) {
+            alert(
+              `❌ Update failed.\n\n${
+                error.response?.data?.error ||
+                "The selected time slot may not be available."
+              }`
+            );
+          } else {
+            alert(
+              `❌ Error updating reservation.\n\n${
+                error.response?.data?.error || "Unknown error occurred"
+              }`
+            );
+          }
+        }
+      });
+  }
+
+  // Close update modal function
+  function closeUpdateModal() {
+    if (window.currentUpdateModal) {
+      document.body.removeChild(window.currentUpdateModal);
+      window.currentUpdateModal = null;
+    }
+  }
+
+  // ==================== MY RESERVATIONS ====================
+  async function loadMyReservations() {
+    try {
+      // Load user's reservations
+      const response = await api.get("/res/api/court-reservations/");
+      const reservations = response.data.reservations || [];
+
+      const reservationsHtml = reservations
+        .map(
+          (reservation) => `
       <tr>
         <td>Court</td>
-        <td>${reservation.terrain_name || 'Court'}</td>
+        <td>${reservation.terrain_name || "Court"}</td>
         <td>${reservation.date}</td>
         <td>${reservation.start_time} - ${reservation.end_time}</td>
         <td><span class="badge bg-success">Confirmed</span></td>
         <td>
-          <button class="btn btn-sm btn-danger" onclick="cancelReservation(${reservation.id})">Cancel</button>
+          <button class="btn btn-sm btn-danger" onclick="cancelReservation(${
+            reservation.id
+          })">Cancel</button>
         </td>
       </tr>
-    `).join('');
+    `
+        )
+        .join("");
 
-    document.getElementById('myReservationsTableBody').innerHTML = reservationsHtml ||
-      '<tr><td colspan="6" class="text-center text-muted">No reservations found</td></tr>';
-
-  } catch (error) {
-    console.error('Error loading my reservations:', error);
-    document.getElementById('myReservationsTableBody').innerHTML =
-      '<tr><td colspan="6" class="text-center text-danger">Error loading reservations</td></tr>';
+      document.getElementById("myReservationsTableBody").innerHTML =
+        reservationsHtml ||
+        '<tr><td colspan="6" class="text-center text-muted">No reservations found</td></tr>';
+    } catch (error) {
+      console.error("Error loading my reservations:", error);
+      document.getElementById("myReservationsTableBody").innerHTML =
+        '<tr><td colspan="6" class="text-center text-danger">Error loading reservations</td></tr>';
+    }
   }
-}
 
-// Cancel reservation
-async function cancelReservation(reservationId) {
-  if (confirm('Are you sure you want to cancel this reservation?')) {
+  // Cancel reservation
+  async function cancelReservation(reservationId) {
+    if (confirm("Are you sure you want to cancel this reservation?")) {
+      try {
+        const response = await api.delete(
+          `/res/api/reservations/${reservationId}/cancel/`
+        );
+
+        if (response.status === 200) {
+          alert("Reservation cancelled successfully!");
+          loadMyReservations();
+          loadDashboardData();
+        }
+      } catch (error) {
+        console.error("Error cancelling reservation:", error);
+        alert(
+          "Error cancelling reservation: " +
+            (error.response?.data?.error || "Unknown error")
+        );
+      }
+    }
+  }
+
+  // ==================== COACH AVAILABILITY FUNCTIONS ====================
+
+  // Load all coaches availability for the update modal
+  async function loadAllCoachesAvailability() {
+    const startDate = document.getElementById("availabilityStartDate").value;
+    const endDate = document.getElementById("availabilityEndDate").value;
+
+    if (!startDate || !endDate) {
+      alert("Please select both start and end dates");
+      return;
+    }
+
+    if (startDate > endDate) {
+      alert("Start date must be before end date");
+      return;
+    }
+
+    const availabilityContainer = document.getElementById(
+      "allCoachesAvailability"
+    );
+    availabilityContainer.innerHTML =
+      '<div class="text-center"><div class="spinner-border" role="status"></div><p class="mt-2">Loading availability...</p></div>';
+
     try {
-      const response = await api.delete(`/res/api/reservations/${reservationId}/cancel/`);
+      // Get coaches list
+      const coachesResponse = await api.get("/res/api/coaches/");
+      const coaches = coachesResponse.data.coaches || [];
+
+      if (coaches.length === 0) {
+        availabilityContainer.innerHTML =
+          '<div class="text-center text-muted py-4"><p>No coaches available</p></div>';
+        return;
+      }
+
+      // Load availability for each coach
+      const coachAvailabilities = await Promise.all(
+        coaches.map(async (coach) => {
+          try {
+            const response = await api.get(
+              `/res/api/coach/${coach.id}/availability/?start_date=${startDate}&end_date=${endDate}`
+            );
+            return {
+              coach: coach,
+              availability: response.data.available_slots || [],
+            };
+          } catch (error) {
+            console.error(
+              `Error loading availability for coach ${coach.name}:`,
+              error
+            );
+            return {
+              coach: coach,
+              availability: [],
+            };
+          }
+        })
+      );
+
+      // Generate HTML for all coaches and their availability
+      let availabilityHtml = "";
+
+      coachAvailabilities.forEach(({ coach, availability }) => {
+        const hasSlots = availability.length > 0;
+
+        availabilityHtml += `
+          <div class="card mb-3 coach-availability-card" data-coach-id="${
+            coach.id
+          }">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-0">${coach.name}</h6>
+                <small class="text-muted">💰 $${
+                  coach.price_per_hour
+                }/hour | 📧 ${coach.email}</small>
+              </div>
+              <div>
+                <span class="badge ${hasSlots ? "bg-success" : "bg-secondary"}">
+                  ${
+                    hasSlots
+                      ? `${availability.length} slots available`
+                      : "No availability"
+                  }
+                </span>
+                <button class="btn btn-sm btn-outline-primary ms-2" onclick="selectCoachForUpdateFromAvailability(${
+                  coach.id
+                }, '${coach.name}', ${coach.price_per_hour})">
+                  Select Coach
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              ${
+                hasSlots
+                  ? `
+                <div class="availability-slots">
+                  ${availability
+                    .map(
+                      (slot) => `
+                    <button type="button" class="btn btn-sm btn-outline-success me-2 mb-2 availability-slot"
+                            data-coach-id="${coach.id}"
+                            data-date="${slot.date}"
+                            data-start="${slot.start_time}"
+                            data-end="${slot.end_time}"
+                            onclick="selectAvailabilitySlot(${coach.id}, '${coach.name}', '${slot.date}', '${slot.start_time}', '${slot.end_time}', ${coach.price_per_hour})">
+                      📅 ${slot.date} | ⏰ ${slot.start_time} - ${slot.end_time}
+                    </button>
+                  `
+                    )
+                    .join("")}
+                </div>
+              `
+                  : `
+                <p class="text-muted mb-0">No available time slots for the selected date range</p>
+              `
+              }
+            </div>
+          </div>
+        `;
+      });
+
+      availabilityContainer.innerHTML = availabilityHtml;
+    } catch (error) {
+      console.error("Error loading coaches availability:", error);
+      availabilityContainer.innerHTML = `
+        <div class="text-center text-danger py-4">
+          <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+          <p class="mt-2">Error loading availability. Please try again.</p>
+        </div>
+      `;
+    }
+  }
+
+  // Select coach from availability view
+  function selectCoachForUpdateFromAvailability(
+    coachId,
+    coachName,
+    pricePerHour
+  ) {
+    document.getElementById("updateCoachSelect").value = coachId;
+    highlightSelectedCoachInAvailability(coachId);
+
+    // Show success message
+    const toast = document.createElement("div");
+    toast.className =
+      "alert alert-success alert-dismissible fade show position-fixed";
+    toast.style.cssText =
+      "top: 20px; right: 20px; z-index: 10000; min-width: 300px;";
+    toast.innerHTML = `
+      <strong>Coach Selected!</strong> ${coachName} ($${pricePerHour}/hour)
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 3000);
+  }
+
+  // Select specific availability slot
+  function selectAvailabilitySlot(
+    coachId,
+    coachName,
+    date,
+    startTime,
+    endTime,
+    pricePerHour
+  ) {
+    // Update form fields
+    document.getElementById("updateDate").value = date;
+    document.getElementById("updateStartTime").value = startTime;
+    document.getElementById("updateEndTime").value = endTime;
+    document.getElementById("updateCoachSelect").value = coachId;
+
+    // Highlight selected slot
+    document.querySelectorAll(".availability-slot").forEach((btn) => {
+      btn.classList.remove("btn-success");
+      btn.classList.add("btn-outline-success");
+    });
+    event.target.classList.remove("btn-outline-success");
+    event.target.classList.add("btn-success");
+
+    // Highlight selected coach
+    highlightSelectedCoachInAvailability(coachId);
+
+    // Show success message
+    const toast = document.createElement("div");
+    toast.className =
+      "alert alert-info alert-dismissible fade show position-fixed";
+    toast.style.cssText =
+      "top: 20px; right: 20px; z-index: 10000; min-width: 350px;";
+    toast.innerHTML = `
+      <strong>Slot Selected!</strong><br>
+      Coach: ${coachName}<br>
+      Date: ${date}<br>
+      Time: ${startTime} - ${endTime}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 4000);
+  }
+
+  // Highlight selected coach in availability view
+  function highlightSelectedCoachInAvailability(coachId) {
+    document.querySelectorAll(".coach-availability-card").forEach((card) => {
+      card.classList.remove("border-primary");
+    });
+
+    const selectedCard = document.querySelector(`[data-coach-id="${coachId}"]`);
+    if (selectedCard) {
+      selectedCard.classList.add("border-primary");
+    }
+  }
+
+  // ==================== EQUIPMENT FUNCTIONS ====================
+  async function loadEquipment() {
+    try {
+      const response = await api.get("/res/api/equipment/");
+      const equipment = response.data;
+
+      // This would populate equipment selection
+      console.log("Available equipment:", equipment);
+    } catch (error) {
+      console.error("Error loading equipment:", error);
+    }
+  }
+
+  // ==================== TOURNAMENT FUNCTIONS ====================
+  async function loadTournaments() {
+    try {
+      const response = await api.get("/res/api/tournaments/");
+      const tournaments = response.data;
+
+      // This would display available tournaments
+      console.log("Available tournaments:", tournaments);
+    } catch (error) {
+      console.error("Error loading tournaments:", error);
+    }
+  }
+
+  async function registerForTournament(tournamentId) {
+    try {
+      const response = await api.post(
+        `/res/api/tournaments/${tournamentId}/register/`
+      );
 
       if (response.status === 200) {
-        alert('Reservation cancelled successfully!');
-        loadMyReservations();
-        loadDashboardData();
+        alert("Successfully registered for tournament!");
+        loadTournaments();
       }
     } catch (error) {
-      console.error('Error cancelling reservation:', error);
-      alert('Error cancelling reservation: ' + (error.response?.data?.error || 'Unknown error'));
+      console.error("Error registering for tournament:", error);
+      alert(
+        "Error registering for tournament: " +
+          (error.response?.data?.error || "Unknown error")
+      );
     }
   }
-}
-
-// ==================== EQUIPMENT FUNCTIONS ====================
-async function loadEquipment() {
-  try {
-    const response = await api.get('/res/api/equipment/');
-    const equipment = response.data;
-
-    // This would populate equipment selection
-    console.log('Available equipment:', equipment);
-
-  } catch (error) {
-    console.error('Error loading equipment:', error);
-  }
-}
-
-// ==================== TOURNAMENT FUNCTIONS ====================
-async function loadTournaments() {
-  try {
-    const response = await api.get('/res/api/tournaments/');
-    const tournaments = response.data;
-
-    // This would display available tournaments
-    console.log('Available tournaments:', tournaments);
-
-  } catch (error) {
-    console.error('Error loading tournaments:', error);
-  }
-}
-
-async function registerForTournament(tournamentId) {
-  try {
-    const response = await api.post(`/res/api/tournaments/${tournamentId}/register/`);
-
-    if (response.status === 200) {
-      alert('Successfully registered for tournament!');
-      loadTournaments();
-    }
-  } catch (error) {
-    console.error('Error registering for tournament:', error);
-    alert('Error registering for tournament: ' + (error.response?.data?.error || 'Unknown error'));
-  }
-}
 </script>
 
 {% endblock %}
